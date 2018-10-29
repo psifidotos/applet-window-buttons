@@ -41,10 +41,21 @@ Item {
     property bool isActiveWindowPinned: false
     property bool isActiveWindowMaximized: false
 
-    property string currentScheme: "kdeglobals"
     property string currentPlugin: "org.kde.breeze"
+    property string currentScheme: isInLatte ? lattePalette.scheme : "kdeglobals"
 
-    //onCurrentSchemeChanged: initializeControlButtonsModel();
+    //BEGIN Latte Dock Communicator
+    // outgoing
+    property bool disableLatteSideColoring : true
+    // ingoing
+    property bool isInLatte: false
+    property bool applyLattePalette: false
+    property QtObject lattePalette: null
+
+    readonly property bool enforceLattePalette: isInLatte && applyLattePalette && lattePalette
+    //END  Latte Dock Communicator
+
+    onCurrentSchemeChanged: initializeControlButtonsModel();
 
     Component.onCompleted: initializeControlButtonsModel();
 
