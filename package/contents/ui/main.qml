@@ -26,14 +26,22 @@ import org.kde.appletdecoration 0.1 as AppletDecoration
 Item {
     id: main
 
-    Layout.minimumWidth: buttonsArea.width
-    Layout.minimumHeight: height
+    Layout.fillHeight: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? true : false
+    Layout.fillWidth: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? false : true
+
+    Layout.minimumWidth: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? buttonsArea.width : -1
+    Layout.minimumHeight: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? -1 : buttonsArea.height
     Layout.preferredHeight: Layout.minimumHeight
     Layout.preferredWidth: Layout.minimumWidth
     Layout.maximumHeight: Layout.minimumHeight
     Layout.maximumWidth: Layout.minimumWidth
 
     Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
+
+    // visual properties
+    property int thickPadding: 2
+    property int lengthPadding: 2
+    property int spacing: 2
 
     // Window properties
     property bool noWindowActive: true
@@ -196,16 +204,30 @@ Item {
 
     ////// Visual Items
 
-    Row {
+    Grid {
         id: buttonsArea
+        rowSpacing: main.spacing
+        columnSpacing: main.spacing
+
+        leftPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? lengthPadding : thickPadding
+        rightPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? lengthPadding : thickPadding
+        bottomPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : lengthPadding
+        topPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : lengthPadding
+
+        rows: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? 1 : 0
+        columns: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? 0 : 1
+
+        readonly property int buttonSize: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
+                                              main.height - 2 * thickPadding :
+                                              main.width - 2 * thickPadding
+
         Repeater {
             model: controlButtonsModel
 
             AppletDecoration.Button {
                 id: cButton
-                anchors.topMargin: 5
                 width: height
-                height: main.height
+                height: buttonsArea.buttonSize
 
                 bridge: bridgeItem.bridge
                 settings: settingsItem
