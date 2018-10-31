@@ -175,13 +175,13 @@ void PreviewButtonItem::createButton()
     connect(this, &PreviewButtonItem::widthChanged, this, &PreviewButtonItem::syncGeometry);
     connect(this, &PreviewButtonItem::heightChanged, this, &PreviewButtonItem::syncGeometry);
 
-    /*   connect(m_button, &KDecoration2::DecorationButton::hoveredChanged, this, [&]() {
-           update();
-       });
+    connect(m_button, &KDecoration2::DecorationButton::hoveredChanged, this, [&]() {
+        update();
+    });
 
-       connect(m_button, &KDecoration2::DecorationButton::pressedChanged, this, [&]() {
-           update();
-       });*/
+    connect(m_button, &KDecoration2::DecorationButton::pressedChanged, this, [&]() {
+        update();
+    });
 
     syncGeometry();
 }
@@ -211,12 +211,32 @@ void PreviewButtonItem::mouseDoubleClickEvent(QMouseEvent *event)
 
 void PreviewButtonItem::mousePressEvent(QMouseEvent *event)
 {
-    QCoreApplication::instance()->sendEvent(decoration(), event);
+    //! this a workaround for DecorationButton::contains
+    //! to accept the event as valid. For some reason
+    //! the are coordinates that are not accepted even
+    //! though they are valid
+    QMouseEvent e(event->type(),
+                  m_button->geometry().center(),
+                  event->button(),
+                  event->buttons(),
+                  event->modifiers());
+
+    QCoreApplication::instance()->sendEvent(m_button, &e);
 }
 
 void PreviewButtonItem::mouseReleaseEvent(QMouseEvent *event)
 {
-    QCoreApplication::instance()->sendEvent(decoration(), event);
+    //! this a workaround for DecorationButton::contains
+    //! to accept the event as valid. For some reason
+    //! the are coordinates that are not accepted even
+    //! though they are valid
+    QMouseEvent e(event->type(),
+                  m_button->geometry().center(),
+                  event->button(),
+                  event->buttons(),
+                  event->modifiers());
+
+    QCoreApplication::instance()->sendEvent(m_button, &e);
 
     emit clicked();
 }
@@ -228,6 +248,10 @@ void PreviewButtonItem::mouseMoveEvent(QMouseEvent *event)
 
 void PreviewButtonItem::hoverEnterEvent(QHoverEvent *event)
 {
+    //! this a workaround for DecorationButton::contains
+    //! to accept the event as valid. For some reason
+    //! the are coordinates that are not accepted even
+    //! though they are valid
     QHoverEvent e(event->type(),
                   m_button->geometry().center(),
                   event->posF(),
@@ -238,6 +262,10 @@ void PreviewButtonItem::hoverEnterEvent(QHoverEvent *event)
 
 void PreviewButtonItem::hoverLeaveEvent(QHoverEvent *event)
 {
+    //! this a workaround for DecorationButton::contains
+    //! to accept the event as valid. For some reason
+    //! the are coordinates that are not accepted even
+    //! though they are valid
     QHoverEvent e(event->type(),
                   QPoint(-5, -5),
                   m_button->geometry().center(),
