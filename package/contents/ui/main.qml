@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http: //www.gnu.org/licenses/>.
  */
 import QtQuick 2.7
+import QtQml.Models 2.2
 import QtQuick.Layouts 1.1
 
 import org.kde.plasma.plasmoid 2.0
@@ -127,6 +128,22 @@ Item {
         bridge: bridgeItem.bridge
         borderSizesIndex: 0 // Normal
     }
+
+    /*AppletDecoration.DecorationsModel {
+        id: decorations
+    }
+
+    Repeater{
+        model:DelegateModel{
+            id: decsModel
+            model: decorations
+            delegate: Item{
+                Component.onCompleted: {
+                    console.log(index + ". " + model["display"] + " _ " + model["plugin"] + " _ " +model["theme"]);
+                }
+            }
+        }
+    }*/
 
     ///functions
     function activeTask() {
