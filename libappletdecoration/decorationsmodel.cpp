@@ -31,6 +31,7 @@
 #include <KSharedConfig>
 // Qt
 #include <QDebug>
+#include <QDir>
 
 namespace Decoration {
 namespace Applet {
@@ -38,8 +39,9 @@ namespace Applet {
 static const QString s_defaultPlugin = QStringLiteral("org.kde.breeze");
 static const QString s_defaultTheme;
 static const QString s_auroraePlugin = QStringLiteral("org.kde.kwin.aurorae");
-static const QString s_kwinrc = QStringLiteral("kwinrc");
+static const QString s_auroraeSvgTheme = QStringLiteral("__aurorae__svg__");
 
+static const QString s_kwinrc = QStringLiteral("kwinrc");
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration2");
 
 DecorationsModel::DecorationsModel(QObject *parent)
@@ -123,6 +125,9 @@ QVariant DecorationsModel::data(const QModelIndex &index, int role) const
             return d.themeName;
 
         case Qt::UserRole +6:
+            return d.themePath;
+
+        case Qt::UserRole +7:
             return d.configuration;
     }
 
@@ -135,7 +140,8 @@ QHash< int, QByteArray > DecorationsModel::roleNames() const
         {Qt::DisplayRole, QByteArrayLiteral("display")},
         {Qt::UserRole + 4, QByteArrayLiteral("plugin")},
         {Qt::UserRole + 5, QByteArrayLiteral("theme")},
-        {Qt::UserRole + 6, QByteArrayLiteral("configureable")}
+        {Qt::UserRole + 6, QByteArrayLiteral("themePath")},
+        {Qt::UserRole + 7, QByteArrayLiteral("configureable")}
     });
     return roles;
 }
@@ -236,10 +242,14 @@ void DecorationsModel::init()
                     d.pluginName = info.pluginName();
                     d.themeName = it.value().toString();
                     d.visibleName = it.key();
-                    QMetaObject::invokeMethod(themeFinder.data(), "hasConfiguration",
-                                              Q_RETURN_ARG(bool, d.configuration),
-                                              Q_ARG(QString, d.themeName));
-                    m_plugins.emplace_back(std::move(d));
+
+                    if (d.pluginName == s_auroraePlugin && d.themeName.startsWith(s_auroraeSvgTheme)) {
+                        d.themePath = auroraeThemePath(d.themeName);
+                        QMetaObject::invokeMethod(themeFinder.data(), "hasConfiguration",
+                                                  Q_RETURN_ARG(bool, d.configuration),
+                                                  Q_ARG(QString, d.themeName));
+                        m_plugins.emplace_back(std::move(d));
+                    }
                 }
 
                 // it's a theme engine, we don't want to show this entry
@@ -277,6 +287,24 @@ void DecorationsModel::kwinChanged(const QString &filename)
     }
 
     loadCurrents();
+}
+
+QString DecorationsModel::auroraeThemePath(QString themeName)
+{
+    QString f_name = themeName.replace(s_auroraeSvgTheme, "");
+
+    QString localThemePath = QDir::homePath() + "/.local/share/aurorae/themes/" + f_name;
+    QString globalThemePath = "/usr/share/aurorae/themes/" + f_name;
+
+    if (QDir(localThemePath).exists()) {
+        return localThemePath;
+    }
+
+    if (QDir(globalThemePath).exists()) {
+        return globalThemePath;
+    }
+
+    return "";
 }
 
 QModelIndex DecorationsModel::findDecoration(const QString &pluginName, const QString &themeName) const

@@ -137,18 +137,18 @@ Item {
     AppletDecoration.DecorationsModel {
         id: decorations
     }
-/*
-    Repeater{
+
+   /* Repeater{
         model:DelegateModel{
             id: decsModel
             model: decorations
             delegate: Item{
                 Component.onCompleted: {
-                    console.log(index + ". " + model["display"] + " _ " + model["plugin"] + " _ " +model["theme"]);
+                    console.log(index + ". " + model["display"] + " _ " + model["plugin"] + " _ " +model["theme"] + " _ " + model["themePath"]);
                 }
             }
         }
-    }*/
+    } */
 
     ///functions
     function activeTask() {

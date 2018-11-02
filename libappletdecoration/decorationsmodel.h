@@ -65,11 +65,14 @@ private slots:
     void setCurrentTheme(QString theme);
 
 private:
+    QString auroraeThemePath(QString themeName);
+
     struct Data
     {
         QString pluginName;
         QString themeName;
         QString visibleName;
+        QString themePath;
         bool configuration = false;
     };
 
