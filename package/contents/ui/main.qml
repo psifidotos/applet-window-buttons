@@ -50,7 +50,8 @@ Item {
     property bool isActiveWindowPinned: false
     property bool isActiveWindowMaximized: false
 
-    property string currentPlugin: "org.kde.breeze"
+    property string currentPlugin: decorations.currentPlugin
+    property string currentTheme: decorations.currentTheme
     property string currentScheme: isInLatte ? lattePalette.scheme : "kdeglobals"
 
     //BEGIN Latte Dock Communicator
@@ -64,6 +65,7 @@ Item {
     readonly property bool enforceLattePalette: isInLatte && applyLattePalette && lattePalette
     //END  Latte Dock Communicator
 
+    onCurrentPluginChanged: initializeControlButtonsModel();
     onCurrentSchemeChanged: initializeControlButtonsModel();
 
     Component.onCompleted: initializeControlButtonsModel();
@@ -121,6 +123,9 @@ Item {
     AppletDecoration.Bridge {
         id: bridgeItem
         plugin: currentPlugin
+        theme: currentTheme
+
+        onPluginChanged: initializeControlButtonsModel();
     }
 
     AppletDecoration.Settings {
@@ -129,10 +134,10 @@ Item {
         borderSizesIndex: 0 // Normal
     }
 
-    /*AppletDecoration.DecorationsModel {
+    AppletDecoration.DecorationsModel {
         id: decorations
     }
-
+/*
     Repeater{
         model:DelegateModel{
             id: decsModel

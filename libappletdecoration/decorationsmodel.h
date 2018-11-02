@@ -30,6 +30,9 @@ class DecorationsModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(int count READ count NOTIFY countChanged)
+    Q_PROPERTY(QString currentPlugin READ currentPlugin NOTIFY currentPluginChanged)
+    Q_PROPERTY(QString currentTheme READ currentTheme NOTIFY currentThemeChanged)
+
 public:
     explicit DecorationsModel(QObject *parent = nullptr);
     virtual ~DecorationsModel();
@@ -46,11 +49,20 @@ public:
 
     int count() const;
 
-public Q_SLOTS:
-    void init();
+    QString currentPlugin() const;
+    QString currentTheme() const;
 
 signals:
     void countChanged();
+    void currentThemeChanged();
+    void currentPluginChanged();
+
+private slots:
+    void init();
+    void loadCurrents();
+    void kwinChanged(const QString &filename);
+    void setCurrentPlugin(QString plugin);
+    void setCurrentTheme(QString theme);
 
 private:
     struct Data
@@ -60,6 +72,10 @@ private:
         QString visibleName;
         bool configuration = false;
     };
+
+    QString m_currentPlugin;
+    QString m_currentTheme;
+
     std::vector<Data> m_plugins;
     QMap<QString, QString> m_knsProvides;
 };

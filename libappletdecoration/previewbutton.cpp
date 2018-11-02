@@ -166,8 +166,8 @@ void PreviewButtonItem::createButton()
     client->setColorScheme(m_scheme);
 
     m_decoration->setSettings(m_settings->settings());
-    m_decoration->setProperty("visualParent", QVariant::fromValue(this));
-    m_decoration->setProperty("AnimationsEnabled", true);
+    //  m_decoration->setProperty("visualParent", QVariant::fromValue(this));
+    //  m_decoration->setProperty("AnimationsEnabled", true);
     m_decoration->init();
 
     m_button = m_bridge->createButton(m_decoration, m_type);
@@ -202,11 +202,19 @@ void PreviewButtonItem::paint(QPainter *painter)
 
 void PreviewButtonItem::mouseDoubleClickEvent(QMouseEvent *event)
 {
+    if (!m_button) {
+        return;
+    }
+
     QCoreApplication::instance()->sendEvent(decoration(), event);
 }
 
 void PreviewButtonItem::mousePressEvent(QMouseEvent *event)
 {
+    if (!m_button) {
+        return;
+    }
+
     //! this a workaround for DecorationButton::contains
     //! to accept the event as valid. For some reason
     //! the are coordinates that are not accepted even
@@ -222,6 +230,10 @@ void PreviewButtonItem::mousePressEvent(QMouseEvent *event)
 
 void PreviewButtonItem::mouseReleaseEvent(QMouseEvent *event)
 {
+    if (!m_button) {
+        return;
+    }
+
     //! this a workaround for DecorationButton::contains
     //! to accept the event as valid. For some reason
     //! the are coordinates that are not accepted even
@@ -239,6 +251,10 @@ void PreviewButtonItem::mouseReleaseEvent(QMouseEvent *event)
 
 void PreviewButtonItem::mouseMoveEvent(QMouseEvent *event)
 {
+    if (!m_button) {
+        return;
+    }
+
     //! this a workaround for DecorationButton::contains
     //! to accept the event as valid. For some reason
     //! the are coordinates that are not accepted even
@@ -254,6 +270,10 @@ void PreviewButtonItem::mouseMoveEvent(QMouseEvent *event)
 
 void PreviewButtonItem::hoverEnterEvent(QHoverEvent *event)
 {
+    if (!m_button) {
+        return;
+    }
+
     //! this a workaround for DecorationButton::contains
     //! to accept the event as valid. For some reason
     //! the are coordinates that are not accepted even
@@ -268,6 +288,10 @@ void PreviewButtonItem::hoverEnterEvent(QHoverEvent *event)
 
 void PreviewButtonItem::hoverLeaveEvent(QHoverEvent *event)
 {
+    if (!m_button) {
+        return;
+    }
+
     //! this a workaround for DecorationButton::contains
     //! to accept the event as valid. For some reason
     //! the are coordinates that are not accepted even

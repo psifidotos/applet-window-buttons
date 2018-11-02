@@ -23,15 +23,22 @@
 #include <KDecoration2/DecorationSettings>
 #include <KDecoration2/Decoration>
 // KDE
+#include <KDirWatch>
 #include <KPluginInfo>
 #include <KPluginLoader>
 #include <KPluginFactory>
 #include <KPluginTrader>
+#include <KSharedConfig>
 // Qt
 #include <QDebug>
 
 namespace Decoration {
 namespace Applet {
+
+static const QString s_defaultPlugin = QStringLiteral("org.kde.breeze");
+static const QString s_defaultTheme;
+static const QString s_auroraePlugin = QStringLiteral("org.kde.kwin.aurorae");
+static const QString s_kwinrc = QStringLiteral("kwinrc");
 
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration2");
 
@@ -39,6 +46,15 @@ DecorationsModel::DecorationsModel(QObject *parent)
     : QAbstractListModel(parent)
 {
     init();
+    loadCurrents();
+
+    const auto kwinRc = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) +
+                        QLatin1Char('/') + s_kwinrc;
+
+    KDirWatch::self()->addFile(kwinRc);
+
+    connect(KDirWatch::self(), &KDirWatch::dirty, this, &DecorationsModel::kwinChanged);
+    connect(KDirWatch::self(), &KDirWatch::created, this, &DecorationsModel::kwinChanged);
 }
 
 DecorationsModel::~DecorationsModel() = default;
@@ -46,6 +62,37 @@ DecorationsModel::~DecorationsModel() = default;
 int DecorationsModel::count() const
 {
     return m_plugins.size();
+}
+
+
+QString DecorationsModel::currentPlugin() const
+{
+    return m_currentPlugin;
+}
+
+void DecorationsModel::setCurrentPlugin(QString plugin)
+{
+    if (m_currentPlugin == plugin) {
+        return;
+    }
+
+    m_currentPlugin = plugin;
+    emit currentPluginChanged();
+}
+
+QString DecorationsModel::currentTheme() const
+{
+    return m_currentTheme;
+}
+
+void DecorationsModel::setCurrentTheme(QString theme)
+{
+    if (m_currentTheme == theme) {
+        return;
+    }
+
+    m_currentTheme = theme;
+    emit currentThemeChanged();
 }
 
 int DecorationsModel::rowCount(const QModelIndex &parent) const
@@ -211,6 +258,25 @@ void DecorationsModel::init()
     }
 
     endResetModel();
+}
+
+void DecorationsModel::loadCurrents()
+{
+    const KConfigGroup config = KSharedConfig::openConfig(s_kwinrc)->group(s_pluginName);
+    const QString plugin = config.readEntry("library", s_defaultPlugin);
+    const QString theme = config.readEntry("theme", s_defaultTheme);
+
+    setCurrentPlugin(plugin);
+    setCurrentTheme(theme);
+}
+
+void DecorationsModel::kwinChanged(const QString &filename)
+{
+    if (!filename.endsWith(s_kwinrc)) {
+        return;
+    }
+
+    loadCurrents();
 }
 
 QModelIndex DecorationsModel::findDecoration(const QString &pluginName, const QString &themeName) const
