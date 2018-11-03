@@ -84,11 +84,10 @@ void AuroraeTheme::updateAurorae(const QString &themeName)
 {
     const QString separator("__");
     const QString name = themeName.section(separator, -1, -1);
-    const QString type = themeName.section(separator, -2, -2);
     QString path;
 
-    QString localThemePath = QDir::homePath() + "/.local/share/aurorae/themes/" + m_themeName;
-    QString globalThemePath = "/usr/share/aurorae/themes/" + m_themeName;
+    QString localThemePath = QDir::homePath() + "/.local/share/aurorae/themes/" + name;
+    QString globalThemePath = "/usr/share/aurorae/themes/" + name;
 
     if (QDir(localThemePath).exists()) {
         path = localThemePath;
@@ -98,8 +97,17 @@ void AuroraeTheme::updateAurorae(const QString &themeName)
         path = "";
     }
 
+    if (QFileInfo(path + "/close.svg").exists()) {
+        m_themeType = "svg";
+    } else if (QFileInfo(path + "/close.svgz").exists()) {
+        m_themeType = "svgz";
+    } else if (QFileInfo(path + "/close.png").exists()) {
+        m_themeType = "png";
+    } else {
+        m_themeType = "svg";
+    }
+
     m_themeName = name;
-    m_themeType = type;
     m_themePath = path;
 }
 

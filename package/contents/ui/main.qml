@@ -25,7 +25,7 @@ import org.kde.taskmanager 0.1 as TaskManager
 import org.kde.appletdecoration 0.1 as AppletDecoration
 
 Item {
-    id: main
+    id: root
 
     Layout.fillHeight: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? true : false
     Layout.fillWidth: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? false : true
@@ -139,20 +139,15 @@ Item {
     }
 
     AppletDecoration.AuroraeTheme {
-        theme: decorations.isAurorae(currentPlugin, currentTheme) ? currentTheme : ""
-    }
+        id: auroraeThemeEngine
+        theme: isEnabled ? currentTheme : ""
 
-    /*Repeater{
-        model:DelegateModel{
-            id: decsModel
-            model: decorations
-            delegate: Item{
-                Component.onCompleted: {
-                    console.log(index + ". " + model["display"] + " _ " + model["plugin"] + " _ " +model["theme"] + " _ " + model["isAuroraeTheme"]);
-                }
-            }
-        }
-    }*/
+        readonly property bool isEnabled: decorations.isAurorae(currentPlugin, currentTheme);
+
+      /*  onThemeChanged:{
+            console.log("aurorae theme: " + isEnabled + " : " + themeName + " __ " + themeType + " __ "+themePath);
+        }*/
+    }
 
     ///functions
     function activeTask() {
@@ -230,8 +225,8 @@ Item {
 
     Grid {
         id: buttonsArea
-        rowSpacing: main.spacing
-        columnSpacing: main.spacing
+        rowSpacing: root.spacing
+        columnSpacing: root.spacing
 
         leftPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? lengthPadding : thickPadding
         rightPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? lengthPadding : thickPadding
@@ -242,25 +237,45 @@ Item {
         columns: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? 0 : 1
 
         readonly property int buttonSize: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
-                                              main.height - 2 * thickPadding :
-                                              main.width - 2 * thickPadding
+                                              root.height - 2 * thickPadding :
+                                              root.width - 2 * thickPadding
 
         Repeater {
             model: controlButtonsModel
+            delegate: auroraeThemeEngine.isEnabled ? auroraeButton : pluginButton
+        }
+    }
 
-            AppletDecoration.Button {
-                id: cButton
-                width: height
-                height: buttonsArea.buttonSize
+    Component {
+        id: pluginButton
+        AppletDecoration.Button {
+            id: cButton
+            width: height
+            height: buttonsArea.buttonSize
 
-                bridge: bridgeItem.bridge
-                settings: settingsItem
-                scheme: main.currentScheme
-                type: buttonType
+            bridge: bridgeItem.bridge
+            settings: settingsItem
+            scheme: root.currentScheme
+            type: buttonType
 
-                onClicked: {
-                    main.performActiveWindowAction(windowOperation);
-                }
+            onClicked: {
+                root.performActiveWindowAction(windowOperation);
+            }
+        }
+    }
+
+    Component {
+        id: auroraeButton
+        AppletDecoration.AuroraeButton {
+            width: height
+            height: buttonsArea.buttonSize
+            isOnAllDesktops: false
+            isMaximized: root.currentWindowMaximized
+            buttonType: model.buttonType
+            auroraeTheme: auroraeThemeEngine
+
+            onClicked: {
+                root.performActiveWindowAction(windowOperation);
             }
         }
     }
