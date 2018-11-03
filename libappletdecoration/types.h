@@ -61,6 +61,18 @@ public:
     };
     Q_ENUM(Actions)
 
+    enum ButtonSize
+    {
+        TinyButton = 0,
+        NormalButton,
+        LargeButton,
+        VeryLargeButton,
+        HugeButton,
+        VeryHugeButton,
+        OversizedButton
+    };
+    Q_ENUM(ButtonSize)
+
 };
 
 }

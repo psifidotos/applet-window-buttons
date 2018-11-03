@@ -34,6 +34,8 @@ namespace Applet {
 
 static const QString s_auroraeSvgTheme = QStringLiteral("__aurorae__svg__");
 static const QString s_auroraerc =  QStringLiteral("auroraerc");
+static int i_buttonSizeStep = 4;
+
 
 AuroraeTheme::AuroraeTheme(QObject *parent) :
     QObject(parent)
@@ -54,12 +56,15 @@ AuroraeTheme::~AuroraeTheme()
 
 int AuroraeTheme::buttonWidth() const
 {
-    return m_buttonWidth + ((m_buttonSize - 1) * 4);
+    int f = (int)m_buttonSize;
+    return m_buttonWidth + ((f - 1) * i_buttonSizeStep);
 }
 
 int AuroraeTheme::buttonHeight() const
 {
-    return m_buttonHeight + ((m_buttonSize - 1) * 4);
+    int f = (int)m_buttonSize;
+
+    return m_buttonHeight + ((f - 1) * i_buttonSizeStep);
 }
 
 int AuroraeTheme::buttonSpacing() const
@@ -163,9 +168,9 @@ void AuroraeTheme::loadSettings()
         KSharedConfigPtr auroraePtr = KSharedConfig::openConfig(auroraerc);
 
         const KConfigGroup themeGroup = KConfigGroup(auroraePtr, m_themeName);
-        m_buttonSize = themeGroup.readEntry("ButtonSize", 1);
+        m_buttonSize = static_cast<Types::ButtonSize>(themeGroup.readEntry("ButtonSize", (int)Types::NormalButton));
     } else {
-        m_buttonSize = 1; //NormalSize
+        m_buttonSize = Types::NormalButton;
     }
 
     KSharedConfigPtr rcPtr = KSharedConfig::openConfig(rc);

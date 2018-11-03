@@ -23,6 +23,8 @@
 
 #include <QObject>
 
+#include "types.h"
+
 namespace Decoration {
 namespace Applet {
 
@@ -74,8 +76,9 @@ private:
     int m_buttonHeight{24};
     int m_buttonWidth{24};
     int m_buttonSpacing{2};
-    int m_buttonSize{1}; //Normal size
     int m_duration{0};
+
+    Types::ButtonSize m_buttonSize{Types::NormalButton}; //Normal size
 
     QString m_theme;
     QString m_themeName;
