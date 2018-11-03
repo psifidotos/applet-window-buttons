@@ -1,3 +1,4 @@
 module org.kde.appletdecoration
 
 plugin appletdecorationplugin
+AuroraeButton 0.1 AuroraeButton.qml
