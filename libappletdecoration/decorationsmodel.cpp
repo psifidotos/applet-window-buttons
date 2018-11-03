@@ -66,7 +66,6 @@ int DecorationsModel::count() const
     return m_plugins.size();
 }
 
-
 QString DecorationsModel::currentPlugin() const
 {
     return m_currentPlugin;
@@ -125,7 +124,7 @@ QVariant DecorationsModel::data(const QModelIndex &index, int role) const
             return d.themeName;
 
         case Qt::UserRole +6:
-            return d.themePath;
+            return d.isAuroraeTheme;
 
         case Qt::UserRole +7:
             return d.configuration;
@@ -140,7 +139,7 @@ QHash< int, QByteArray > DecorationsModel::roleNames() const
         {Qt::DisplayRole, QByteArrayLiteral("display")},
         {Qt::UserRole + 4, QByteArrayLiteral("plugin")},
         {Qt::UserRole + 5, QByteArrayLiteral("theme")},
-        {Qt::UserRole + 6, QByteArrayLiteral("themePath")},
+        {Qt::UserRole + 6, QByteArrayLiteral("isAuroraeTheme")},
         {Qt::UserRole + 7, QByteArrayLiteral("configureable")}
     });
     return roles;
@@ -244,7 +243,7 @@ void DecorationsModel::init()
                     d.visibleName = it.key();
 
                     if (d.pluginName == s_auroraePlugin && d.themeName.startsWith(s_auroraeSvgTheme)) {
-                        d.themePath = auroraeThemePath(d.themeName);
+                        d.isAuroraeTheme = true;
                         QMetaObject::invokeMethod(themeFinder.data(), "hasConfiguration",
                                                   Q_RETURN_ARG(bool, d.configuration),
                                                   Q_ARG(QString, d.themeName));
@@ -276,8 +275,10 @@ void DecorationsModel::loadCurrents()
     const QString plugin = config.readEntry("library", s_defaultPlugin);
     const QString theme = config.readEntry("theme", s_defaultTheme);
 
-    setCurrentPlugin(plugin);
-    setCurrentTheme(theme);
+    bool exists{decorationExists(plugin, theme)};
+
+    setCurrentPlugin(exists ? plugin : s_defaultPlugin);
+    setCurrentTheme(exists ? theme : s_defaultTheme);
 }
 
 void DecorationsModel::kwinChanged(const QString &filename)
@@ -289,22 +290,32 @@ void DecorationsModel::kwinChanged(const QString &filename)
     loadCurrents();
 }
 
-QString DecorationsModel::auroraeThemePath(QString themeName)
+bool DecorationsModel::isAurorae(const QString &plugin, const QString &theme)
 {
-    QString f_name = themeName.replace(s_auroraeSvgTheme, "");
+    auto it = std::find_if(m_plugins.cbegin(), m_plugins.cend(),
+    [plugin, theme](const Data & d) {
+        return d.pluginName == plugin && d.themeName == theme;
+    });
 
-    QString localThemePath = QDir::homePath() + "/.local/share/aurorae/themes/" + f_name;
-    QString globalThemePath = "/usr/share/aurorae/themes/" + f_name;
-
-    if (QDir(localThemePath).exists()) {
-        return localThemePath;
+    if (it == m_plugins.cend()) {
+        return false;
     }
 
-    if (QDir(globalThemePath).exists()) {
-        return globalThemePath;
+    return (*it).isAuroraeTheme;
+}
+
+bool DecorationsModel::decorationExists(const QString &plugin, const QString &theme)
+{
+    auto it = std::find_if(m_plugins.cbegin(), m_plugins.cend(),
+    [plugin, theme](const Data & d) {
+        return d.pluginName == plugin && d.themeName == theme;
+    });
+
+    if (it == m_plugins.cend()) {
+        return false;
     }
 
-    return "";
+    return true;
 }
 
 QModelIndex DecorationsModel::findDecoration(const QString &pluginName, const QString &themeName) const

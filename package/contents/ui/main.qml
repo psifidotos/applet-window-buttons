@@ -138,17 +138,21 @@ Item {
         id: decorations
     }
 
-   /* Repeater{
+    AppletDecoration.AuroraeTheme {
+        theme: decorations.isAurorae(currentPlugin, currentTheme) ? currentTheme : ""
+    }
+
+    /*Repeater{
         model:DelegateModel{
             id: decsModel
             model: decorations
             delegate: Item{
                 Component.onCompleted: {
-                    console.log(index + ". " + model["display"] + " _ " + model["plugin"] + " _ " +model["theme"] + " _ " + model["themePath"]);
+                    console.log(index + ". " + model["display"] + " _ " + model["plugin"] + " _ " +model["theme"] + " _ " + model["isAuroraeTheme"]);
                 }
             }
         }
-    } */
+    }*/
 
     ///functions
     function activeTask() {

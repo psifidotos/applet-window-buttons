@@ -52,6 +52,9 @@ public:
     QString currentPlugin() const;
     QString currentTheme() const;
 
+public Q_SLOTS:
+    Q_INVOKABLE bool isAurorae(const QString &plugin, const QString &theme);
+
 signals:
     void countChanged();
     void currentThemeChanged();
@@ -65,14 +68,15 @@ private slots:
     void setCurrentTheme(QString theme);
 
 private:
-    QString auroraeThemePath(QString themeName);
+    bool decorationExists(const QString &plugin, const QString &theme);
 
+private:
     struct Data
     {
         QString pluginName;
         QString themeName;
         QString visibleName;
-        QString themePath;
+        bool isAuroraeTheme = false;
         bool configuration = false;
     };
 

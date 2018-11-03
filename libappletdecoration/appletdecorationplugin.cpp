@@ -21,6 +21,7 @@
 
 #include "appletdecorationplugin.h"
 
+#include "auroraetheme.h"
 #include "buttonsmodel.h"
 #include "decorationsmodel.h"
 #include "previewbridge.h"
@@ -45,6 +46,7 @@ void AppletDecorationPlugin::registerTypes(const char *uri)
 
     qmlRegisterUncreatableType<Decoration::Applet::Types>(uri, 0, 1, "Types", "Applet decoration types");
 
+    qmlRegisterType<Decoration::Applet::AuroraeTheme>(uri, 0, 1, "AuroraeTheme");
     qmlRegisterType<Decoration::Applet::BridgeItem>(uri, 0, 1, "Bridge");
     qmlRegisterType<Decoration::Applet::PreviewItem>(uri, 0, 1, "Decoration");
     qmlRegisterType<Decoration::Applet::ButtonsModel>(uri, 0, 1, "ButtonsModel");
