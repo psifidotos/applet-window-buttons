@@ -28,18 +28,13 @@ MouseArea{
 
     property bool isOnAllDesktops: false
     property bool isMaximized: false
+    readonly property bool isToggledActivated: {
+        return (isOnAllDesktops && buttonType === AppletDecoration.Types.OnAllDesktops);
+    }
+
     property int buttonType: AppletDecoration.Types.Close
     property int duration: auroraeTheme ? auroraeTheme.duration : 0
     property QtObject auroraeTheme: null
-
-    property bool isActive:{
-        if ((buttonType !== AppletDecoration.Types.OnAllDesktops && buttonType !== AppletDecoration.Types.Maximized)
-                || (buttonType === AppletDecoration.Types.OnAllDesktops && button.isOnAllDesktops)
-                || (buttonType === AppletDecoration.Types.Maximize && button.isMaximized)) {
-            return true;
-        }
-        return false;
-    }
 
     property string buttonImagePath: auroraeTheme ? auroraeTheme.themePath + '/' + iconName + '.' + auroraeTheme.themeType : ""
 
@@ -58,7 +53,7 @@ MouseArea{
     }
 
     property string svgHoveredElementId:{
-        return containsPress ? "pressed-center" : "hover-center";
+        return containsPress || isToggledActivated ? "pressed-center" : "hover-center";
     }
 
     PlasmaCore.Svg {
@@ -73,7 +68,7 @@ MouseArea{
         svg: buttonSvg
         elementId: svgNormalElementId
 
-        opacity: !containsMouse && !containsPress ? 1 : 0
+        opacity: !containsMouse && !containsPress && !isToggledActivated ? 1 : 0
 
         Behavior on opacity {
             NumberAnimation {

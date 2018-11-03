@@ -54,14 +54,15 @@ Item {
     property int spacing: auroraeThemeEngine.isEnabled ? auroraeThemeEngine.buttonSpacing : 2
 
     // Window properties
-    property bool noWindowActive: true
-    property bool currentWindowMaximized: false
-    property bool isActiveWindowPinned: false
-    property bool isActiveWindowMaximized: false
+    property bool existsWindowActive: tasksRepeater.count > 0 && activeTaskItem.isActive
+    property bool isActiveWindowPinned: existsWindowActive && activeTaskItem.isOnAllDesktops
+    property bool isActiveWindowMaximized: existsWindowActive && activeTaskItem.isMaximized
 
     property string currentPlugin: decorations.currentPlugin
     property string currentTheme: decorations.currentTheme
     property string currentScheme: isInLatte ? lattePalette.scheme : "kdeglobals"
+
+    property Item activeTaskItem
 
     //BEGIN Latte Dock Communicator
     // outgoing
@@ -104,27 +105,26 @@ Item {
         filterByScreen: true
         filterByVirtualDesktop: true
         filterByActivity: true
-
-        onActiveTaskChanged: {
-            activeWindowModel.sourceModel = tasksModel
-            updateActiveWindowInfo()
-        }
-        onDataChanged: {
-            updateActiveWindowInfo()
-        }
     }
 
-    // should return always one item
-    PlasmaCore.SortFilterModel {
-        id: activeWindowModel
-        filterRole: 'IsActive'
-        filterRegExp: 'true'
-        sourceModel: tasksModel
-        onDataChanged: {
-            updateActiveWindowInfo()
-        }
-        onCountChanged: {
-            updateActiveWindowInfo()
+    Repeater{
+        id: tasksRepeater
+        model:DelegateModel {
+            model: tasksModel
+            delegate: Item{
+                id: task
+                readonly property string title: display
+                readonly property bool isMinimized: IsMinimized === true ? true : false
+                readonly property bool isMaximized: IsMaximized === true ? true : false
+                readonly property bool isActive: IsActive === true ? true : false
+                readonly property bool isOnAllDesktops: IsOnAllVirtualDesktops === true ? true : false
+
+                onIsActiveChanged: {
+                    if (isActive) {
+                        root.activeTaskItem = task;
+                    }
+                }
+            }
         }
     }
 
@@ -152,16 +152,9 @@ Item {
         theme: isEnabled ? currentTheme : ""
 
         readonly property bool isEnabled: decorations.isAurorae(currentPlugin, currentTheme);
-
-        /*  onThemeChanged:{
-            console.log("aurorae theme: " + isEnabled + " : " + themeName + " __ " + themeType + " __ "+themePath);
-        }*/
     }
 
     ///functions
-    function activeTask() {
-        return activeWindowModel.get(0) || {}
-    }
 
     function addButton(preparedArray, buttonType) {
         if (buttonType === AppletDecoration.Types.Close) {
@@ -229,13 +222,6 @@ Item {
         tasksModel.requestVirtualDesktop(tasksModel.activeTask, 0);
     }
 
-    function updateActiveWindowInfo() {
-        var actTask = activeTask()
-        noWindowActive = activeWindowModel.count === 0 || actTask.IsActive !== true
-        currentWindowMaximized = !noWindowActive && actTask.IsMaximized === true
-        isActiveWindowPinned = actTask.VirtualDesktop === -1;
-    }
-
     ////// Visual Items
 
     Grid {
@@ -285,8 +271,8 @@ Item {
             width: auroraeTheme.buttonRatio * height
             height: buttonsArea.buttonHeight
 
-            isOnAllDesktops: false
-            isMaximized: root.currentWindowMaximized
+            isOnAllDesktops: root.isActiveWindowPinned
+            isMaximized: root.isActiveWindowMaximized
             buttonType: model.buttonType
             auroraeTheme: auroraeThemeEngine
 
