@@ -40,8 +40,10 @@ class PreviewButtonItem : public QQuickPaintedItem
     Q_OBJECT
     Q_PROPERTY(Decoration::Applet::PreviewBridge *bridge READ bridge WRITE setBridge NOTIFY bridgeChanged)
     Q_PROPERTY(Decoration::Applet::Settings *settings READ settings WRITE setSettings NOTIFY settingsChanged)
-    Q_PROPERTY(QString scheme READ scheme WRITE setScheme NOTIFY schemeChanged)
+    Q_PROPERTY(bool isMaximized READ isMaximized WRITE setIsMaximized NOTIFY isMaximizedChanged);
+    Q_PROPERTY(bool isOnAllDesktops READ isOnAllDesktops WRITE setIsOnAllDesktops NOTIFY isOnAllDesktopsChanged);
     Q_PROPERTY(int type READ typeAsInt WRITE setType NOTIFY typeChanged)
+    Q_PROPERTY(QString scheme READ scheme WRITE setScheme NOTIFY schemeChanged)
 
 public:
     explicit PreviewButtonItem(QQuickItem *parent = nullptr);
@@ -56,6 +58,12 @@ public:
 
     KDecoration2::Decoration *decoration() const;
 
+    bool isMaximized() const;
+    void setIsMaximized(bool maximized);
+
+    bool isOnAllDesktops() const;
+    void setIsOnAllDesktops(bool onalldesktops);
+
     KDecoration2::DecorationButtonType type() const;
     int typeAsInt() const;
     void setType(KDecoration2::DecorationButtonType type);
@@ -66,6 +74,8 @@ public:
 
 Q_SIGNALS:
     void bridgeChanged();
+    void isMaximizedChanged();
+    void isOnAllDesktopsChanged();
     void typeChanged();
     void schemeChanged();
     void settingsChanged();
@@ -91,6 +101,9 @@ private:
     KDecoration2::Decoration *m_decoration = nullptr;
     KDecoration2::DecorationButton *m_button = nullptr;
     KDecoration2::DecorationButtonType m_type = KDecoration2::DecorationButtonType::Custom;
+
+    bool m_isMaximized{false};
+    bool m_isOnAllDesktops{false};
 
     QString m_scheme;
 };

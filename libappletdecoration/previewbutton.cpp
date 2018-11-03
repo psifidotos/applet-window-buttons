@@ -49,6 +49,36 @@ PreviewButtonItem::~PreviewButtonItem()
     }
 }
 
+bool PreviewButtonItem::isMaximized() const
+{
+    return m_isMaximized;
+}
+
+void PreviewButtonItem::setIsMaximized(bool maximized)
+{
+    if (m_isMaximized == maximized) {
+        return;
+    }
+
+    m_isMaximized = maximized;
+    emit isMaximizedChanged();
+}
+
+bool PreviewButtonItem::isOnAllDesktops() const
+{
+    return m_isOnAllDesktops;
+}
+
+void PreviewButtonItem::setIsOnAllDesktops(bool onalldesktops)
+{
+    if (m_isOnAllDesktops == onalldesktops) {
+        return;
+    }
+
+    m_isOnAllDesktops = onalldesktops;
+    emit isOnAllDesktopsChanged();
+}
+
 void PreviewButtonItem::setType(int type)
 {
     setType(KDecoration2::DecorationButtonType(type));
@@ -164,6 +194,20 @@ void PreviewButtonItem::createButton()
     client->setActive(true);
     client->setProvidesContextHelp(true);
     client->setColorScheme(m_scheme);
+
+    if (m_isOnAllDesktops) {
+        client->setDesktop(-1);
+    } else {
+        client->setDesktop(1);
+    }
+
+    if (m_isMaximized) {
+        client->setMaximizedVertically(true);
+        client->setMaximizedHorizontally(true);
+    } else {
+        client->setMaximizedVertically(false);
+        client->setMaximizedHorizontally(false);
+    }
 
     m_decoration->setSettings(m_settings->settings());
     //  m_decoration->setProperty("visualParent", QVariant::fromValue(this));

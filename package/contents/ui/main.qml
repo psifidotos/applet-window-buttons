@@ -39,7 +39,7 @@ Item {
 
     Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
 
-    // visual properties
+    // START visual properties
     property int thickPadding: {
         if (auroraeThemeEngine.isEnabled) {
             //to fix, for some reason buttons shown smaller so I decrease the thick padding
@@ -52,17 +52,29 @@ Item {
     }
     property int lengthPadding: 2
     property int spacing: auroraeThemeEngine.isEnabled ? auroraeThemeEngine.buttonSpacing : 2
+    // END visual properties
 
-    // Window properties
+    // START window properties
     property bool existsWindowActive: tasksRepeater.count > 0 && activeTaskItem.isActive
     property bool isActiveWindowPinned: existsWindowActive && activeTaskItem.isOnAllDesktops
     property bool isActiveWindowMaximized: existsWindowActive && activeTaskItem.isMaximized
 
+    readonly property bool hasDesktopsButton: tasksPreparedArray.some(function (item) {
+        return (item.buttonType === AppletDecoration.Types.OnAllDesktops);
+    })
+
+    readonly property bool hasMaximizedButton: tasksPreparedArray.some(function (item) {
+        return (item.buttonType === AppletDecoration.Types.Maximize);
+    })
+
+    property Item activeTaskItem
+    // END Window properties
+
+    // START decoration properties
     property string currentPlugin: decorations.currentPlugin
     property string currentTheme: decorations.currentTheme
     property string currentScheme: isInLatte ? lattePalette.scheme : "kdeglobals"
-
-    property Item activeTaskItem
+    // END decoration properties
 
     //BEGIN Latte Dock Communicator
     // outgoing
@@ -76,10 +88,25 @@ Item {
     //END  Latte Dock Communicator
 
     onCurrentPluginChanged: initializeControlButtonsModel();
-    onCurrentSchemeChanged: initializeControlButtonsModel();
+    onCurrentSchemeChanged: {
+        if (!auroraeThemeEngine.isEnabled) {
+            initializeControlButtonsModel();
+        }
+    }
+    onIsActiveWindowPinnedChanged: {
+        if (hasDesktopsButton && !auroraeThemeEngine.isEnabled) {
+            initializeControlButtonsModel();
+        }
+    }
+    onIsActiveWindowMaximizedChanged: {
+        if (hasMaximizedButton && !auroraeThemeEngine.isEnabled) {
+            initializeControlButtonsModel();
+        }
+    }
 
     Component.onCompleted: initializeControlButtonsModel();
 
+    property var tasksPreparedArray: []
     ListModel {
         id: controlButtonsModel
     }
@@ -181,16 +208,16 @@ Item {
     }
 
     function initializeControlButtonsModel() {
-        var preparedArray = [];
-        addButton(preparedArray, AppletDecoration.Types.OnAllDesktops);
-        addButton(preparedArray, AppletDecoration.Types.Minimize);
-        addButton(preparedArray, AppletDecoration.Types.Maximize);
-        addButton(preparedArray, AppletDecoration.Types.Close);
+        tasksPreparedArray.length = 0;
+        addButton(tasksPreparedArray, AppletDecoration.Types.OnAllDesktops);
+        addButton(tasksPreparedArray, AppletDecoration.Types.Minimize);
+        addButton(tasksPreparedArray, AppletDecoration.Types.Maximize);
+        addButton(tasksPreparedArray, AppletDecoration.Types.Close);
 
         controlButtonsModel.clear()
 
-        for (var i = 0; i < preparedArray.length; ++i) {
-            controlButtonsModel.append(preparedArray[i]);
+        for (var i = 0; i < tasksPreparedArray.length; ++i) {
+            controlButtonsModel.append(tasksPreparedArray[i]);
         }
     }
 
@@ -258,6 +285,8 @@ Item {
             settings: settingsItem
             scheme: root.currentScheme
             type: buttonType
+            isOnAllDesktops: root.isActiveWindowPinned
+            isMaximized: root.isActiveWindowMaximized
 
             onClicked: {
                 root.performActiveWindowAction(windowOperation);
