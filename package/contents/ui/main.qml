@@ -44,8 +44,8 @@ Item {
         if (auroraeThemeEngine.isEnabled) {
             //to fix, for some reason buttons shown smaller so I decrease the thick padding
             return plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
-                        (root.height - auroraeThemeEngine.buttonHeight - 2) / 2 :
-                        (root.width - auroraeThemeEngine.buttonHeight - 2) / 2
+                        ((root.height - auroraeThemeEngine.buttonHeight) / 2) - 1 :
+                        ((root.width - auroraeThemeEngine.buttonHeight) / 2) - 1
         }
 
         return 2;

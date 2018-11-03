@@ -27,15 +27,24 @@
 #include <KSharedConfig>
 
 #include <QDebug>
+#include <KDirWatch>
 
 namespace Decoration {
 namespace Applet {
 
 static const QString s_auroraeSvgTheme = QStringLiteral("__aurorae__svg__");
+static const QString s_auroraerc =  QStringLiteral("auroraerc");
 
 AuroraeTheme::AuroraeTheme(QObject *parent) :
     QObject(parent)
 {
+    const auto auroraerc = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QLatin1Char('/') + s_auroraerc;
+
+    KDirWatch::self()->addFile(auroraerc);
+
+    connect(KDirWatch::self(), &KDirWatch::dirty, this, &AuroraeTheme::auroraeRCChanged);
+    connect(KDirWatch::self(), &KDirWatch::created, this, &AuroraeTheme::auroraeRCChanged);
+
     connect(this, &AuroraeTheme::themeChanged, this, &AuroraeTheme::loadSettings);
 }
 
@@ -45,12 +54,12 @@ AuroraeTheme::~AuroraeTheme()
 
 int AuroraeTheme::buttonWidth() const
 {
-    return m_buttonWidth;
+    return m_buttonWidth + ((m_buttonSize - 1) * 4);
 }
 
 int AuroraeTheme::buttonHeight() const
 {
-    return m_buttonHeight;
+    return m_buttonHeight + ((m_buttonSize - 1) * 4);
 }
 
 int AuroraeTheme::buttonSpacing() const
@@ -100,6 +109,15 @@ QString AuroraeTheme::themeType() const
     return m_themeType;
 }
 
+void AuroraeTheme::auroraeRCChanged(const QString &filename)
+{
+    if (!filename.endsWith(s_auroraerc)) {
+        return;
+    }
+
+    loadSettings();
+}
+
 void AuroraeTheme::updateAurorae(const QString &themeName)
 {
     const QString separator("__");
@@ -137,6 +155,17 @@ void AuroraeTheme::loadSettings()
 
     if (!QFileInfo(rc).exists()) {
         return;
+    }
+
+    const auto auroraerc = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QLatin1Char('/') + s_auroraerc;
+
+    if (QFileInfo(auroraerc).exists()) {
+        KSharedConfigPtr auroraePtr = KSharedConfig::openConfig(auroraerc);
+
+        const KConfigGroup themeGroup = KConfigGroup(auroraePtr, m_themeName);
+        m_buttonSize = themeGroup.readEntry("ButtonSize", 1);
+    } else {
+        m_buttonSize = 1; //NormalSize
     }
 
     KSharedConfigPtr rcPtr = KSharedConfig::openConfig(rc);

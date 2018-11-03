@@ -63,6 +63,9 @@ signals:
     void settingsChanged();
     void themeChanged();
 
+private slots:
+    void auroraeRCChanged(const QString &filename);
+
 private:
     void loadSettings();
     void updateAurorae(const QString &themeName);
@@ -71,6 +74,7 @@ private:
     int m_buttonHeight{24};
     int m_buttonWidth{24};
     int m_buttonSpacing{2};
+    int m_buttonSize{1}; //Normal size
     int m_duration{0};
 
     QString m_theme;
