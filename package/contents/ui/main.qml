@@ -155,36 +155,34 @@ Item {
         return activeWindowModel.get(0) || {}
     }
 
-    function addButton(preparedArray, buttonName) {
-        if (buttonName === 'close') {
+    function addButton(preparedArray, buttonType) {
+        if (buttonType === AppletDecoration.Types.Close) {
             preparedArray.push({
-                                   iconName: 'close',
-                                   windowOperation: 'close'
+                                   buttonType: AppletDecoration.Types.Close,
+                                   windowOperation: AppletDecoration.Types.ActionClose
                                });
-        } else if (buttonName === 'maximize') {
+        } else if (buttonType === AppletDecoration.Types.Maximize) {
             preparedArray.push({
-                                   iconName: 'maximize',
-                                   windowOperation: 'toggleMaximized'
+                                   buttonType: AppletDecoration.Types.Maximize,
+                                   windowOperation: AppletDecoration.Types.ToggleMaximize
                                });
-        } else if (buttonName === 'minimize') {
+        } else if (buttonType === AppletDecoration.Types.Minimize) {
             preparedArray.push({
-                                   iconName: 'minimize',
-                                   windowOperation: 'toggleMinimized'
+                                   buttonType: AppletDecoration.Types.Minimize,
+                                   windowOperation: AppletDecoration.Types.ToggleMinimize
                                });
-        } else if ((buttonName === 'pin' || buttonName === 'alldesktops')) {
+        } else if (buttonType === AppletDecoration.Types.OnAllDesktops) {
             preparedArray.push({
-                                   iconName: 'alldesktops',
-                                   windowOperation: 'togglePinToAllDesktops'
+                                   buttonType: AppletDecoration.Types.OnAllDesktops,
+                                   windowOperation: AppletDecoration.Types.TogglePinToAllDesktops
                                });
         }
     }
 
     function initializeControlButtonsModel() {
-        var buttonOrder = "minimize|close";
-        var preparedArray = []
-        buttonOrder.split('|').forEach(function (buttonName) {
-            addButton(preparedArray, buttonName);
-        });
+        var preparedArray = [];
+        addButton(preparedArray, AppletDecoration.Types.Minimize);
+        addButton(preparedArray, AppletDecoration.Types.Close);
 
         controlButtonsModel.clear()
 
@@ -194,13 +192,13 @@ Item {
     }
 
     function performActiveWindowAction(windowOperation) {
-        if (windowOperation === 'close') {
+        if (windowOperation === AppletDecoration.Types.ActionClose) {
             toggleClose()
-        } else if (windowOperation === 'toggleMaximized') {
+        } else if (windowOperation === AppletDecoration.Types.ToggleMaximize) {
             toggleMaximized()
-        } else if (windowOperation === 'toggleMinimized') {
+        } else if (windowOperation === AppletDecoration.Types.ToggleMinimize) {
             toggleMinimized()
-        } else if (windowOperation === 'togglePinToAllDesktops') {
+        } else if (windowOperation === AppletDecoration.Types.TogglePinToAllDesktops) {
             togglePinToAllDesktops()
         }
     }
@@ -254,22 +252,7 @@ Item {
                 bridge: bridgeItem.bridge
                 settings: settingsItem
                 scheme: main.currentScheme
-
-                type: {
-                    switch(iconName) {
-                    case 'menu': return 0;
-                    case 'applicationmenu': return 1;
-                    case 'alldesktops': return 2;
-                    case 'minimize': return 3;
-                    case 'maximize': return 4;
-                    case 'close': return 5;
-                    case 'contexthelp' : return 6;
-                    case 'shade': return 7;
-                    case 'keepbelow': return 8;
-                    case 'keepabove':  return 9;
-                    default: return 5;
-                    }
-                }
+                type: buttonType
 
                 onClicked: {
                     main.performActiveWindowAction(windowOperation);

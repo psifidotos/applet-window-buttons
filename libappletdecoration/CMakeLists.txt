@@ -20,6 +20,7 @@ set(appletdecoration_SRCS
     previewclient.cpp
     previewitem.cpp
     previewsettings.cpp
+    types.cpp
 )
 
 add_library(appletdecorationplugin SHARED ${appletdecoration_SRCS})

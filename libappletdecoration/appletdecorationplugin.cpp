@@ -29,6 +29,8 @@
 #include "previewitem.h"
 #include "previewsettings.h"
 
+#include "types.h"
+
 #include <QtQml>
 #include <QQmlEngine>
 
@@ -41,6 +43,8 @@ void AppletDecorationPlugin::registerTypes(const char *uri)
 {
     Q_ASSERT(uri == QLatin1String("org.kde.appletsdecoration"));
 
+    qmlRegisterUncreatableType<Decoration::Applet::Types>(uri, 0, 1, "Types", "Applet decoration types");
+
     qmlRegisterType<Decoration::Applet::BridgeItem>(uri, 0, 1, "Bridge");
     qmlRegisterType<Decoration::Applet::PreviewItem>(uri, 0, 1, "Decoration");
     qmlRegisterType<Decoration::Applet::ButtonsModel>(uri, 0, 1, "ButtonsModel");
@@ -50,6 +54,7 @@ void AppletDecorationPlugin::registerTypes(const char *uri)
     qmlRegisterType<Decoration::Applet::PreviewClient>();
     qmlRegisterType<Decoration::Applet::PreviewBridge>();
     qmlRegisterType<KDecoration2::Decoration>();
+
 }
 
 }
