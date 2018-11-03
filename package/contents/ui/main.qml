@@ -40,9 +40,18 @@ Item {
     Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
 
     // visual properties
-    property int thickPadding: 2
+    property int thickPadding: {
+        if (auroraeThemeEngine.isEnabled) {
+            //to fix, for some reason buttons shown smaller so I decrease the thick padding
+            return plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
+                        (root.height - auroraeThemeEngine.buttonHeight - 2) / 2 :
+                        (root.width - auroraeThemeEngine.buttonHeight - 2) / 2
+        }
+
+        return 2;
+    }
     property int lengthPadding: 2
-    property int spacing: 2
+    property int spacing: auroraeThemeEngine.isEnabled ? auroraeThemeEngine.buttonSpacing : 2
 
     // Window properties
     property bool noWindowActive: true
@@ -144,7 +153,7 @@ Item {
 
         readonly property bool isEnabled: decorations.isAurorae(currentPlugin, currentTheme);
 
-      /*  onThemeChanged:{
+        /*  onThemeChanged:{
             console.log("aurorae theme: " + isEnabled + " : " + themeName + " __ " + themeType + " __ "+themePath);
         }*/
     }
@@ -236,9 +245,9 @@ Item {
         rows: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? 1 : 0
         columns: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? 0 : 1
 
-        readonly property int buttonSize: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
-                                              root.height - 2 * thickPadding :
-                                              root.width - 2 * thickPadding
+        readonly property int buttonHeight: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
+                                                root.height - 2 * thickPadding :
+                                                root.width - 2 * thickPadding
 
         Repeater {
             model: controlButtonsModel
@@ -251,7 +260,7 @@ Item {
         AppletDecoration.Button {
             id: cButton
             width: height
-            height: buttonsArea.buttonSize
+            height: buttonsArea.buttonHeight
 
             bridge: bridgeItem.bridge
             settings: settingsItem
@@ -267,8 +276,9 @@ Item {
     Component {
         id: auroraeButton
         AppletDecoration.AuroraeButton {
-            width: height
-            height: buttonsArea.buttonSize
+            width: auroraeTheme.buttonRatio * height
+            height: buttonsArea.buttonHeight
+
             isOnAllDesktops: false
             isMaximized: root.currentWindowMaximized
             buttonType: model.buttonType

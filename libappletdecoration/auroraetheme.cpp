@@ -43,9 +43,29 @@ AuroraeTheme::~AuroraeTheme()
 {
 }
 
+int AuroraeTheme::buttonWidth() const
+{
+    return m_buttonWidth;
+}
+
+int AuroraeTheme::buttonHeight() const
+{
+    return m_buttonHeight;
+}
+
+int AuroraeTheme::buttonSpacing() const
+{
+    return m_buttonSpacing;
+}
+
 int AuroraeTheme::duration() const
 {
     return m_duration;
+}
+
+float AuroraeTheme::buttonRatio() const
+{
+    return ((float)m_buttonWidth / (float)m_buttonHeight);
 }
 
 QString AuroraeTheme::theme() const
@@ -122,7 +142,12 @@ void AuroraeTheme::loadSettings()
     KSharedConfigPtr rcPtr = KSharedConfig::openConfig(rc);
 
     const KConfigGroup generalGroup = KConfigGroup(rcPtr, "General");
+    const KConfigGroup layoutGroup = KConfigGroup(rcPtr, "Layout");
+
     m_duration = generalGroup.readEntry("Animation", 0);
+    m_buttonWidth = layoutGroup.readEntry("ButtonWidth", 24);
+    m_buttonHeight = layoutGroup.readEntry("ButtonHeight", 24);
+    m_buttonSpacing = layoutGroup.readEntry("ButtonSpacing", 2);
 
     emit settingsChanged();
 }

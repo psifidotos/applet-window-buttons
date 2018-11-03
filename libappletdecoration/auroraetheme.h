@@ -34,7 +34,12 @@ class AuroraeTheme: public QObject
     Q_PROPERTY(QString themePath READ themePath NOTIFY themeChanged)
     Q_PROPERTY(QString themeType READ themeType NOTIFY themeChanged)
 
+    Q_PROPERTY(int buttonHeight READ buttonHeight NOTIFY settingsChanged)
+    Q_PROPERTY(int buttonWidth READ buttonWidth NOTIFY settingsChanged)
+    Q_PROPERTY(int buttonSpacing READ buttonSpacing NOTIFY settingsChanged)
     Q_PROPERTY(int duration READ duration NOTIFY settingsChanged)
+
+    Q_PROPERTY(float buttonRatio READ buttonRatio NOTIFY settingsChanged)
 
 public:
     explicit AuroraeTheme(QObject *parent = nullptr);
@@ -47,7 +52,12 @@ public:
     QString themePath() const;
     QString themeType() const;
 
+    int buttonHeight() const;
+    int buttonWidth() const;
+    int buttonSpacing() const;
     int duration() const;
+
+    float buttonRatio() const;
 
 signals:
     void settingsChanged();
@@ -58,13 +68,15 @@ private:
     void updateAurorae(const QString &themeName);
 
 private:
+    int m_buttonHeight{24};
+    int m_buttonWidth{24};
+    int m_buttonSpacing{2};
     int m_duration{0};
 
     QString m_theme;
     QString m_themeName;
     QString m_themePath;
     QString m_themeType;
-
 };
 
 }
