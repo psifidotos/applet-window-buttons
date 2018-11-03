@@ -30,6 +30,9 @@ class AuroraeTheme: public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString theme READ theme WRITE setTheme NOTIFY themeChanged)
+    Q_PROPERTY(QString themeName READ themeName NOTIFY themeChanged)
+    Q_PROPERTY(QString themePath READ themePath NOTIFY themeChanged)
+    Q_PROPERTY(QString themeType READ themeType NOTIFY themeChanged)
 
     Q_PROPERTY(int duration READ duration NOTIFY settingsChanged)
 
@@ -40,6 +43,10 @@ public:
     QString theme() const;
     void setTheme(QString theme);
 
+    QString themeName() const;
+    QString themePath() const;
+    QString themeType() const;
+
     int duration() const;
 
 signals:
@@ -48,8 +55,7 @@ signals:
 
 private:
     void loadSettings();
-
-    QString auroraeThemePath(QString themeName);
+    void updateAurorae(const QString &themeName);
 
 private:
     int m_duration{0};
@@ -57,6 +63,7 @@ private:
     QString m_theme;
     QString m_themeName;
     QString m_themePath;
+    QString m_themeType;
 
 };
 

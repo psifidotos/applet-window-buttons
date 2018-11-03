@@ -60,27 +60,47 @@ void AuroraeTheme::setTheme(QString theme)
     }
 
     m_theme = theme;
-    m_themePath = auroraeThemePath(theme);
+    updateAurorae(theme);
 
     emit themeChanged();
 }
 
-QString AuroraeTheme::auroraeThemePath(QString themeName)
+QString AuroraeTheme::themeName() const
 {
-    m_themeName = themeName.replace(s_auroraeSvgTheme, "");
+    return m_themeName;
+}
+
+QString AuroraeTheme::themePath() const
+{
+    return m_themePath;
+}
+
+QString AuroraeTheme::themeType() const
+{
+    return m_themeType;
+}
+
+void AuroraeTheme::updateAurorae(const QString &themeName)
+{
+    const QString separator("__");
+    const QString name = themeName.section(separator, -1, -1);
+    const QString type = themeName.section(separator, -2, -2);
+    QString path;
 
     QString localThemePath = QDir::homePath() + "/.local/share/aurorae/themes/" + m_themeName;
     QString globalThemePath = "/usr/share/aurorae/themes/" + m_themeName;
 
     if (QDir(localThemePath).exists()) {
-        return localThemePath;
+        path = localThemePath;
+    } else if (QDir(globalThemePath).exists()) {
+        path = globalThemePath;
+    } else {
+        path = "";
     }
 
-    if (QDir(globalThemePath).exists()) {
-        return globalThemePath;
-    }
-
-    return "";
+    m_themeName = name;
+    m_themeType = type;
+    m_themePath = path;
 }
 
 void AuroraeTheme::loadSettings()
