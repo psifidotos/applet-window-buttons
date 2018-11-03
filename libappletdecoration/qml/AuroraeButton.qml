@@ -54,19 +54,11 @@ MouseArea{
     }
 
     property string svgNormalElementId:{
-        if (isActive && buttonType === AppletDecoration.Types.OnAllDesktops) {
-            return "pressed-center";
-        } else {
-            return "active-center";
-        }
+        return "active-center";
     }
 
     property string svgHoveredElementId:{
-        if (isActive && buttonType === AppletDecoration.Types.OnAllDesktops) {
-            return "pressed-enter";
-        } else {
-            return "hover-center";
-        }
+        return containsPress ? "pressed-center" : "hover-center";
     }
 
     PlasmaCore.Svg {
@@ -81,7 +73,7 @@ MouseArea{
         svg: buttonSvg
         elementId: svgNormalElementId
 
-        opacity: !containsMouse ? 1 : 0
+        opacity: !containsMouse && !containsPress ? 1 : 0
 
         Behavior on opacity {
             NumberAnimation {

@@ -189,25 +189,27 @@ Item {
 
     function initializeControlButtonsModel() {
         var preparedArray = [];
+        addButton(preparedArray, AppletDecoration.Types.OnAllDesktops);
         addButton(preparedArray, AppletDecoration.Types.Minimize);
+        addButton(preparedArray, AppletDecoration.Types.Maximize);
         addButton(preparedArray, AppletDecoration.Types.Close);
 
         controlButtonsModel.clear()
 
-        for (var i = 0; i < preparedArray.length ; ++i) {
-            controlButtonsModel.append(preparedArray[i])
+        for (var i = 0; i < preparedArray.length; ++i) {
+            controlButtonsModel.append(preparedArray[i]);
         }
     }
 
     function performActiveWindowAction(windowOperation) {
         if (windowOperation === AppletDecoration.Types.ActionClose) {
-            toggleClose()
+            toggleClose();
         } else if (windowOperation === AppletDecoration.Types.ToggleMaximize) {
-            toggleMaximized()
+            toggleMaximized();
         } else if (windowOperation === AppletDecoration.Types.ToggleMinimize) {
-            toggleMinimized()
+            toggleMinimized();
         } else if (windowOperation === AppletDecoration.Types.TogglePinToAllDesktops) {
-            togglePinToAllDesktops()
+            togglePinToAllDesktops();
         }
     }
 
@@ -221,6 +223,10 @@ Item {
 
     function toggleClose() {
         tasksModel.requestClose(tasksModel.activeTask);
+    }
+
+    function togglePinToAllDesktops() {
+        tasksModel.requestVirtualDesktop(tasksModel.activeTask, 0);
     }
 
     function updateActiveWindowInfo() {
