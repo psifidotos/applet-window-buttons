@@ -119,7 +119,7 @@ Item {
     MouseArea {
         id: loc
         anchors.fill: parent
-        pressAndHoldInterval: 350
+        pressAndHoldInterval: 200
 
         property int initButton: -1 // Original button in model
         property int initIndex: -1 // Original position in model

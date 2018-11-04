@@ -107,13 +107,8 @@ Item {
     property bool isActiveWindowPinned: existsWindowActive && activeTaskItem.isOnAllDesktops
     property bool isActiveWindowMaximized: existsWindowActive && activeTaskItem.isMaximized
 
-    readonly property bool hasDesktopsButton: tasksPreparedArray.some(function (item) {
-        return (item.buttonType === AppletDecoration.Types.OnAllDesktops);
-    })
-
-    readonly property bool hasMaximizedButton: tasksPreparedArray.some(function (item) {
-        return (item.buttonType === AppletDecoration.Types.Maximize);
-    })
+    property bool hasDesktopsButton: false
+    property bool hasMaximizedButton: false
 
     property Item activeTaskItem
     // END Window properties
@@ -158,30 +153,40 @@ Item {
     }
     //END Behaviors
 
-    onCurrentPluginChanged: initializeControlButtonsModel();
-    onButtonsStrChanged: initializeControlButtonsModel();
+    onButtonsStrChanged: initButtons();
 
     onIsActiveWindowPinnedChanged: {
         if (hasDesktopsButton && !auroraeThemeEngine.isEnabled) {
-            initializeControlButtonsModel();
+            initButtons();
         }
     }
 
     onIsActiveWindowMaximizedChanged: {
         if (hasMaximizedButton && !auroraeThemeEngine.isEnabled) {
-            initializeControlButtonsModel();
+            initButtons();
         }
     }
 
     Connections{
         target: !auroraeThemeEngine.isEnabled ? root : null
-        onCurrentSchemeChanged: initializeControlButtonsModel();
-        onThickPaddingChanged: initializeControlButtonsModel();
+        onCurrentSchemeChanged: initButtons();
+        onThickPaddingChanged: initButtons();
     }
 
-    Component.onCompleted: initializeControlButtonsModel();
+    Connections {
+        target: bridgeItem
+        onPluginChanged: initButtons();
+    }
+
+    Connections {
+        target: buttonsRepeater
+        onCountChanged: discoverButtons();
+    }
+
+    Component.onCompleted: initButtons();
 
     property var tasksPreparedArray: []
+
     ListModel {
         id: controlButtonsModel
     }
@@ -235,8 +240,6 @@ Item {
         id: bridgeItem
         plugin: currentPlugin
         theme: currentTheme
-
-        onPluginChanged: initializeControlButtonsModel();
     }
 
     AppletDecoration.Settings {
@@ -257,11 +260,32 @@ Item {
     }
 
     ///functions
+    function initButtons() {
+        if (!buttonsRecreator.running){
+            buttonsRecreator.start();
+        }
+    }
 
     function initializeControlButtonsModel() {
         var buttonsList = buttonsStr.split('|');
 
         ModelTools.initializeControlButtonsModel(buttonsList, tasksPreparedArray, controlButtonsModel, true);
+    }
+
+    function discoverButtons() {
+        var hasMax = false;
+        var hasPin = false;
+
+        for (var i=0; i<tasksPreparedArray.length; ++i) {
+            if (tasksPreparedArray[i].buttonType === AppletDecoration.Types.Maximize) {
+                hasMax = true;
+            } else if (tasksPreparedArray[i].buttonType === AppletDecoration.Types.OnAllDesktops) {
+                hasPin = true;
+            }
+        }
+
+        hasMaximizedButton = hasMax;
+        hasDesktopsButton = hasPin;
     }
 
     function performActiveWindowAction(windowOperation) {
@@ -292,7 +316,7 @@ Item {
         tasksModel.requestVirtualDesktop(tasksModel.activeTask, 0);
     }
 
-    ////// Visual Items
+    ///START Visual Items
 
     Grid {
         id: buttonsArea
@@ -313,6 +337,7 @@ Item {
                                                 root.width - 2 * thickPadding
 
         Repeater {
+            id: buttonsRepeater
             model: controlButtonsModel
             delegate: auroraeThemeEngine.isEnabled ? auroraeButton : pluginButton
         }
@@ -355,4 +380,11 @@ Item {
         }
     }
 
+    ///END Visual Items
+
+    Timer{
+        id: buttonsRecreator
+        interval: 500
+        onTriggered: initializeControlButtonsModel();
+    }
 }

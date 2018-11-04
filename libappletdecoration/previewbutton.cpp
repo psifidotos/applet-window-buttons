@@ -269,6 +269,7 @@ void PreviewButtonItem::mousePressEvent(QMouseEvent *event)
                   event->buttons(),
                   event->modifiers());
 
+
     QCoreApplication::instance()->sendEvent(m_button, &e);
 }
 
@@ -278,19 +279,23 @@ void PreviewButtonItem::mouseReleaseEvent(QMouseEvent *event)
         return;
     }
 
+    bool inItem {m_button->geometry().contains(event->localPos())};
+
     //! this a workaround for DecorationButton::contains
     //! to accept the event as valid. For some reason
     //! the are coordinates that are not accepted even
     //! though they are valid
     QMouseEvent e(event->type(),
-                  m_button->geometry().center(),
+                  inItem ? m_button->geometry().center() : QPoint(-5, -5),
                   event->button(),
                   event->buttons(),
                   event->modifiers());
 
-    QCoreApplication::instance()->sendEvent(m_button, &e);
+    QCoreApplication::instance()->sendEvent(m_button, event);
 
-    emit clicked();
+    if (inItem) {
+        emit clicked();
+    }
 }
 
 void PreviewButtonItem::mouseMoveEvent(QMouseEvent *event)
