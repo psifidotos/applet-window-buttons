@@ -17,6 +17,10 @@
     <entry name="selectedTheme" type="String">
       <label>user preferred theme to use with the selected plugin</label>
     </entry>
+    <entry name="showOnlyForActiveAndMaximized" type="Bool">
+      <default>false</default>
+      <label>show buttons only when the active window is maximized also</label>
+    </entry>
     <entry name="useDecorationMetrics" type="Bool">
       <default>true</default>
       <label>use the discovered decoration metrics in case there are any in order to look consistent with window titlebars</label>

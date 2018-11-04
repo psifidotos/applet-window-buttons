@@ -26,18 +26,57 @@ import org.kde.appletdecoration 0.1 as AppletDecoration
 
 Item {
     id: root
+    clip: true
 
     Layout.fillHeight: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? true : false
     Layout.fillWidth: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? false : true
 
-    Layout.minimumWidth: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? buttonsArea.width : -1
-    Layout.minimumHeight: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? -1 : buttonsArea.height
+    Layout.minimumWidth: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? minimumWidth : -1
+    Layout.minimumHeight: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? -1 : minimumHeight
     Layout.preferredHeight: Layout.minimumHeight
     Layout.preferredWidth: Layout.minimumWidth
     Layout.maximumHeight: Layout.minimumHeight
     Layout.maximumWidth: Layout.minimumWidth
 
     Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
+
+    readonly property int minimumWidth: {
+        if (plasmoid.configuration.showOnlyForActiveAndMaximized) {
+            if (plasmoid.formFactor === PlasmaCore.Types.Horizontal) {
+                if (!isActiveWindowMaximized && !plasmoid.userConfiguring && !latteInEditMode){
+                    return 0;
+                }
+            }
+        }
+
+        return plasmoid.formFactor === PlasmaCore.Types.Horizontal ? buttonsArea.width : -1;
+    }
+
+    readonly property int minimumHeight: {
+        if (plasmoid.configuration.showOnlyForActiveAndMaximized) {
+            if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
+                if (!isActiveWindowMaximized && !plasmoid.userConfiguring && !latteInEditMode){
+                    return 0;
+                }
+            }
+        }
+
+        return plasmoid.formFactor === PlasmaCore.Types.Horizontal ? buttonsArea.height : -1;
+    }
+
+    Plasmoid.status: {
+        if (plasmoid.userConfiguring || latteInEditMode) {
+            return PlasmaCore.Types.ActiveStatus;
+        }
+
+        if ((plasmoid.formFactor === PlasmaCore.Types.Horizontal && minimumWidth === 0)
+                || (plasmoid.formFactor === PlasmaCore.Types.Vertical && minimumHeight === 0)) {
+            return PlasmaCore.Types.HiddenStatus;
+        }
+
+        return PlasmaCore.Types.ActiveStatus;
+    }
+
 
     // START visual properties
     property int thickPadding: {
@@ -81,7 +120,7 @@ Item {
                                        decorations.currentPlugin : plasmoid.configuration.selectedPlugin
     property string currentTheme: plasmoid.configuration.useCurrentDecoration ?
                                       decorations.currentTheme : plasmoid.configuration.selectedTheme
-    property string currentScheme: isInLatte ? lattePalette.scheme : "kdeglobals"
+    property string currentScheme: isInLatte && lattePalette ? lattePalette.scheme : "kdeglobals"
     // END decoration properties
 
     //BEGIN Latte Dock Communicator
@@ -89,9 +128,9 @@ Item {
     property bool disableLatteSideColoring : true
     // ingoing
     property bool isInLatte: false
+    property bool latteInEditMode: false
     property bool applyLattePalette: false
     property QtObject lattePalette: null
-
     readonly property bool enforceLattePalette: isInLatte && applyLattePalette && lattePalette
     //END  Latte Dock Communicator
 
@@ -264,6 +303,7 @@ Item {
 
     Grid {
         id: buttonsArea
+
         rowSpacing: root.spacing
         columnSpacing: root.spacing
 

@@ -32,6 +32,7 @@ Item {
     property alias cfg_useCurrentDecoration: mainItem.useCurrent
     property alias cfg_selectedPlugin: mainItem.selectedPlugin
     property alias cfg_selectedTheme: mainItem.selectedTheme
+    property alias cfg_showOnlyForActiveAndMaximized: onlyOnMaximizedChk.checked
     property alias cfg_useDecorationMetrics: decorationMetricsChk.checked
     property alias cfg_spacing: spacingSpn.value
     property alias cfg_thicknessMargin: thickSpn.value
@@ -148,6 +149,21 @@ Item {
                     feedDecorations();
                     currentIndex = indexFor(mainItem.currentPlugin, mainItem.currentTheme);
                 }
+            }
+        }
+
+        GridLayout{
+            columns: 2
+
+            Label{
+                Layout.minimumWidth: centerFactor * mainItem.width
+                text: i18n("Visual behavior:")
+                horizontalAlignment: Text.AlignRight
+            }
+
+            CheckBox{
+                id: onlyOnMaximizedChk
+                text: i18n("Show only when active window is maximized")
             }
         }
 
