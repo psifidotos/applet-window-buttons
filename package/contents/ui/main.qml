@@ -31,14 +31,17 @@ Item {
     Layout.fillHeight: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? true : false
     Layout.fillWidth: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? false : true
 
-    Layout.minimumWidth: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? minimumWidth : -1
-    Layout.minimumHeight: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? -1 : minimumHeight
+    Layout.minimumWidth: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? animatedMinimumWidth : -1
+    Layout.minimumHeight: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? -1 : animatedMinimumHeight
     Layout.preferredHeight: Layout.minimumHeight
     Layout.preferredWidth: Layout.minimumWidth
     Layout.maximumHeight: Layout.minimumHeight
     Layout.maximumWidth: Layout.minimumWidth
 
     Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
+
+    property int animatedMinimumWidth: minimumWidth
+    property int animatedMinimumHeight: minimumHeight
 
     readonly property int minimumWidth: {
         if (plasmoid.configuration.showOnlyForActiveAndMaximized) {
@@ -65,12 +68,12 @@ Item {
     }
 
     Plasmoid.status: {
-        if (plasmoid.userConfiguring || latteInEditMode) {
+        /*if (plasmoid.userConfiguring || latteInEditMode) {
             return PlasmaCore.Types.ActiveStatus;
-        }
+        }*/
 
-        if ((plasmoid.formFactor === PlasmaCore.Types.Horizontal && minimumWidth === 0)
-                || (plasmoid.formFactor === PlasmaCore.Types.Vertical && minimumHeight === 0)) {
+        if ((plasmoid.formFactor === PlasmaCore.Types.Horizontal && animatedMinimumWidth === 0)
+                || (plasmoid.formFactor === PlasmaCore.Types.Vertical && animatedMinimumHeight === 0)) {
             return PlasmaCore.Types.HiddenStatus;
         }
 
@@ -133,6 +136,24 @@ Item {
     property QtObject lattePalette: null
     readonly property bool enforceLattePalette: isInLatte && applyLattePalette && lattePalette
     //END  Latte Dock Communicator
+
+    //START Behaviors
+    Behavior on animatedMinimumWidth {
+        enabled: plasmoid.configuration.slideAnimation && plasmoid.formFactor===PlasmaCore.Types.Horizontal
+        NumberAnimation {
+            duration: 250
+            easing.type: Easing.Linear
+        }
+    }
+
+    Behavior on animatedMinimumHeight {
+        enabled: plasmoid.configuration.slideAnimation && plasmoid.formFactor===PlasmaCore.Types.Vertical
+        NumberAnimation {
+            duration: 250
+            easing.type: Easing.Linear
+        }
+    }
+    //END Behaviors
 
     onCurrentPluginChanged: initializeControlButtonsModel();
 

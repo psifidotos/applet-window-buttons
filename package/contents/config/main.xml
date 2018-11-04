@@ -21,6 +21,10 @@
       <default>false</default>
       <label>show buttons only when the active window is maximized also</label>
     </entry>
+    <entry name="slideAnimation" type="Bool">
+      <default>false</default>
+      <label>slide out/in when is shown or becomes hidden</label>
+    </entry>
     <entry name="useDecorationMetrics" type="Bool">
       <default>true</default>
       <label>use the discovered decoration metrics in case there are any in order to look consistent with window titlebars</label>

@@ -33,6 +33,7 @@ Item {
     property alias cfg_selectedPlugin: mainItem.selectedPlugin
     property alias cfg_selectedTheme: mainItem.selectedTheme
     property alias cfg_showOnlyForActiveAndMaximized: onlyOnMaximizedChk.checked
+    property alias cfg_slideAnimation: slideChk.checked
     property alias cfg_useDecorationMetrics: decorationMetricsChk.checked
     property alias cfg_spacing: spacingSpn.value
     property alias cfg_thicknessMargin: thickSpn.value
@@ -164,6 +165,14 @@ Item {
             CheckBox{
                 id: onlyOnMaximizedChk
                 text: i18n("Show only when active window is maximized")
+            }
+
+            Label{
+            }
+
+            CheckBox{
+                id: slideChk
+                text: i18n("Slide animation in order to show or hide")
             }
         }
 
