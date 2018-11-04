@@ -38,7 +38,24 @@ function addButton(preparedArray, buttonType) {
                                buttonType: AppletDecoration.Types.OnAllDesktops,
                                windowOperation: AppletDecoration.Types.TogglePinToAllDesktops
                            });
+    } else if (buttonType === AppletDecoration.Types.Custom) {
+        preparedArray.push({
+                               buttonType: AppletDecoration.Types.Custom,
+                               windowOperation: -1
+                           });
     }
+}
+
+function indexOfSplitter(listModel) {
+    for (var i=0; i<listModel.count; ++i) {
+        var item = listModel.get(i);
+
+        if (item.buttonType === AppletDecoration.Types.Custom) {
+            return i;
+        }
+    }
+
+    return -1;
 }
 
 function initializeControlButtonsModel(buttons, toArray, toListModel) {

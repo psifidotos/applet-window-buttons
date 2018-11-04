@@ -17,7 +17,7 @@
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.6
+import QtQuick 2.9
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.3
 import org.kde.plasma.core 2.0 as PlasmaCore
@@ -29,7 +29,6 @@ import "../../code/tools.js" as ModelTools
 Item {
     id: listContent
 
-    property bool interactive
     property int orientation
     property double itemWidth
     property double itemHeight
@@ -44,17 +43,21 @@ Item {
 
     property var buttons
 
-    width: itemWidth * (orientation == ListView.Vertical ? 1 : controlButtonsModel.count)
-    height: itemHeight * (orientation == ListView.Horizontal ? 1 : controlButtonsModel.count)
+    width: (itemWidth+listView.spacing) * (orientation == ListView.Vertical ? 1 : controlButtonsModel.count)
+    height: (itemHeight+listView.spacing) * (orientation == ListView.Horizontal ? 1 : controlButtonsModel.count)
 
     signal modelOrderChanged()
 
     property var tasksPreparedArray: []
 
+    readonly property int margin: 2
+    readonly property double iconHeight: itemHeight - margin * 2
+
     Component.onCompleted: initializeControlButtonsModel();
 
     function initializeControlButtonsModel() {
         ModelTools.initializeControlButtonsModel(buttons,tasksPreparedArray, controlButtonsModel)
+        listView.splitterIndex = ModelTools.indexOfSplitter(controlButtonsModel);
     }
 
     Connections{
@@ -64,70 +67,160 @@ Item {
 
     ListModel {
         id: controlButtonsModel
-        onCountChanged: console.log(count);
     }
 
-   /* Rectangle{
+    /*Rectangle{
         anchors.fill: parent
         color: "transparent"
         border.color: "red"
         border.width: 1
     }*/
 
+    SystemPalette {
+        id: palette
+    }
+
     ListView {
         id: listView
         anchors.fill: parent
+        spacing: 2
         model: controlButtonsModel
         orientation: listContent.orientation
         delegate: auroraeThemeEngine.isEnabled ? auroraeButton : pluginButton
+        currentIndex: loc.initIndex
+
+        property int splitterIndex: -1
+
+
+        moveDisplaced: Transition {
+            NumberAnimation { properties: "x"; duration: 150; easing.type: Easing.Linear }
+        }
+
+        move: Transition {
+            NumberAnimation { properties: "x"; duration: 150; easing.type: Easing.Linear }
+        }
     }
 
+    MouseArea {
+        id: loc
+        anchors.fill: parent
+        pressAndHoldInterval: 350
+
+        property int initButton: -1 // Original button in model
+        property int initIndex: -1 // Original position in model
+
+        property int index: listView.indexAt(mouseX, mouseY) // Item underneath cursor
+
+        onPressAndHold: {
+            initIndex = listView.indexAt(mouseX, mouseY);
+            initButton = controlButtonsModel.get(initIndex).buttonType;
+        }
+        onReleased: {
+            initIndex = -1;
+            initButton = -1;
+        }
+
+        onPositionChanged: {
+            if (containsPress && initIndex !== -1 &&index !== -1 && index !== initIndex) {
+                controlButtonsModel.move(initIndex, index, 1);
+                initIndex = index;
+                listView.splitterIndex = ModelTools.indexOfSplitter(controlButtonsModel);
+            }
+        }
+    }
+
+    ///START Components
     Component {
         id: pluginButton
-        AppletDecoration.Button {
-            id: cButton
-            width: listContent.itemWidth
-            height: listContent.itemHeight
-
-            bridge: bridgeItem.bridge
-            settings: settingsItem
-            type: buttonType
-            isOnAllDesktops: false
-            isMaximized: false
-
-            OrderableItem {
-                anchors.fill: parent
-            //    contentItem: listView
-                listViewParent: listView.parent
-
-                onMoveItemRequested: {
-                    controlButtonsModel.move(from, to, 1);
-                    listContent.modelOrderChanged()
+        Rectangle{
+            y: listView.spacing
+            width: listContent.iconHeight + 2 * listContent.margin
+            height: listContent.iconHeight + 2 * listContent.margin
+            color: {
+                if (listView.currentIndex === index) {
+                    if (index !== listView.splitterIndex) {
+                        return palette.highlight;
+                    } else {
+                        return "#25ff0000";
+                    }
                 }
+                return "transparent";
+            }
+
+            AppletDecoration.Button {
+                id: cButton
+                anchors.centerIn: parent
+
+                opacity: listView.splitterIndex !==-1 && listView.splitterIndex<index ? 0.4 : 1
+
+                width: listContent.iconHeight
+                height: listContent.iconHeight
+
+                bridge: bridgeItem.bridge
+                settings: settingsItem
+                type: buttonType
+                isOnAllDesktops: false
+                isMaximized: false
+
+                visible: buttonType !== AppletDecoration.Types.Custom
+            }
+
+            Rectangle{
+                height: parent.height
+                width: 4
+                border.width: 1
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: palette.highlight
+                border.color: palette.highlight
+                visible: buttonType === AppletDecoration.Types.Custom
             }
         }
     }
 
     Component {
         id: auroraeButton
-        AppletDecoration.AuroraeButton {
-            anchors.fill: parent
-            isOnAllDesktops: false
-            isMaximized: false
-            buttonType: AppletDecoration.Types.Close
-            auroraeTheme: auroraeThemeEngine
-
-            OrderableItem {
-                anchors.fill: parent
-             //   contentItem: listView
-                listViewParent: listView.parent
-
-                onMoveItemRequested: {
-                    controlButtonsModel.move(from, to, 1);
-                    listContent.modelOrderChanged()
+        Rectangle{
+            y: listView.spacing
+            width: auroraeThemeEngine.buttonRatio * listContent.iconHeight + 2 * listContent.margin
+            height: listContent.iconHeight + 2 * listContent.margin
+            color: {
+                if (listView.currentIndex === index) {
+                    if (index !== listView.splitterIndex) {
+                        return palette.highlight;
+                    } else {
+                        return "#25ff0000";
+                    }
                 }
+                return "transparent";
+            }
+
+            AppletDecoration.AuroraeButton {
+                anchors.centerIn: parent
+
+                opacity: listView.splitterIndex !==-1 && listView.splitterIndex<index ? 0.4 : 1
+
+                width: auroraeThemeEngine.buttonRatio * height
+                height: listContent.iconHeight
+
+                isOnAllDesktops: false
+                isMaximized: false
+                buttonType: model.buttonType
+                auroraeTheme: auroraeThemeEngine
+
+                visible: buttonType !== AppletDecoration.Types.Custom
+            }
+
+            Rectangle{
+                height: parent.height
+                width: 4
+                border.width: 1
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: palette.highlight
+                border.color: palette.highlight
+                visible: buttonType === AppletDecoration.Types.Custom
             }
         }
     }
+    ///END Components
 }
 

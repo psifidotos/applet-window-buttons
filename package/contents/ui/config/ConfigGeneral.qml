@@ -164,9 +164,12 @@ Item {
                 id: activeButtons
                 itemWidth: 36
                 itemHeight: 36
-                buttons: [AppletDecoration.Types.Close,AppletDecoration.Types.Maximize,AppletDecoration.Types.Minimize, AppletDecoration.Types.OnAllDesktops]
+                buttons: [AppletDecoration.Types.Close,
+                    AppletDecoration.Types.Maximize,
+                    AppletDecoration.Types.Minimize,
+                    AppletDecoration.Types.OnAllDesktops,
+                    AppletDecoration.Types.Custom]
                 orientation: ListView.Horizontal
-                interactive: false
             }
         }
 

@@ -339,7 +339,7 @@ Item {
 
             isOnAllDesktops: root.isActiveWindowPinned
             isMaximized: root.isActiveWindowMaximized
-            buttonType: model.buttonType
+            buttonType: buttonType
             auroraeTheme: auroraeThemeEngine
 
             onClicked: {
