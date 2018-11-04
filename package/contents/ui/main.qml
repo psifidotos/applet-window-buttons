@@ -55,7 +55,7 @@ Item {
     // END visual properties
 
     // START window properties
-    property bool existsWindowActive: tasksRepeater.count > 0 && activeTaskItem.isActive
+    property bool existsWindowActive: activeTaskItem && tasksRepeater.count > 0 && activeTaskItem.isActive
     property bool isActiveWindowPinned: existsWindowActive && activeTaskItem.isOnAllDesktops
     property bool isActiveWindowMaximized: existsWindowActive && activeTaskItem.isMaximized
 
@@ -71,8 +71,10 @@ Item {
     // END Window properties
 
     // START decoration properties
-    property string currentPlugin: decorations.currentPlugin
-    property string currentTheme: decorations.currentTheme
+    property string currentPlugin: plasmoid.configuration.useCurrentDecoration ?
+                                       decorations.currentPlugin : plasmoid.configuration.selectedPlugin
+    property string currentTheme: plasmoid.configuration.useCurrentDecoration ?
+                                      decorations.currentTheme : plasmoid.configuration.selectedTheme
     property string currentScheme: isInLatte ? lattePalette.scheme : "kdeglobals"
     // END decoration properties
 
@@ -209,9 +211,9 @@ Item {
 
     function initializeControlButtonsModel() {
         tasksPreparedArray.length = 0;
-        addButton(tasksPreparedArray, AppletDecoration.Types.OnAllDesktops);
+       // addButton(tasksPreparedArray, AppletDecoration.Types.OnAllDesktops);
         addButton(tasksPreparedArray, AppletDecoration.Types.Minimize);
-        addButton(tasksPreparedArray, AppletDecoration.Types.Maximize);
+       // addButton(tasksPreparedArray, AppletDecoration.Types.Maximize);
         addButton(tasksPreparedArray, AppletDecoration.Types.Close);
 
         controlButtonsModel.clear()

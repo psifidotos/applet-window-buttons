@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <kcfgfile name=""/>
+
+  <group name="General">
+    <entry name="useCurrentDecoration" type="Bool">
+      <default>true</default>
+      <label>use the system current decoration at all times. The decoration is updated accordingly when needed</label>
+    </entry>
+    <entry name="selectedPlugin" type="String">
+      <default>org.kde.breeze</default>
+      <label>user preferred decoration plugin to use</label>
+    </entry>
+    <entry name="selectedTheme" type="String">
+      <label>user preferred theme to use with the selected plugin</label>
+    </entry>
+  </group>
+</kcfg>
