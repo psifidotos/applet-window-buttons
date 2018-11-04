@@ -27,11 +27,11 @@ import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.appletdecoration 0.1 as AppletDecoration
 
 Item {
-    id: mainItem
+    id: root
 
-    property alias cfg_useCurrentDecoration: mainItem.useCurrent
-    property alias cfg_selectedPlugin: mainItem.selectedPlugin
-    property alias cfg_selectedTheme: mainItem.selectedTheme
+    property alias cfg_useCurrentDecoration: root.useCurrent
+    property alias cfg_selectedPlugin: root.selectedPlugin
+    property alias cfg_selectedTheme: root.selectedTheme
     property alias cfg_showOnlyForActiveAndMaximized: onlyOnMaximizedChk.checked
     property alias cfg_slideAnimation: slideChk.checked
     property alias cfg_useDecorationMetrics: decorationMetricsChk.checked
@@ -46,29 +46,27 @@ Item {
 
     // used from the ui
     readonly property real centerFactor: 0.35
-    property string currentPlugin: mainItem.useCurrent ? decorations.currentPlugin : plasmoid.configuration.selectedPlugin
-    property string currentTheme: mainItem.useCurrent ? decorations.currentTheme : plasmoid.configuration.selectedTheme
+    property string currentPlugin: root.useCurrent ? decorations.currentPlugin : root.selectedPlugin
+    property string currentTheme: root.useCurrent ? decorations.currentTheme : root.selectedTheme
 
     ///START Decoration Items
     AppletDecoration.Bridge {
         id: bridgeItem
         plugin: currentPlugin
         theme: currentTheme
-
-        //onPluginChanged: initializeControlButtonsModel();
     }
 
     AppletDecoration.Settings {
         id: settingsItem
         bridge: bridgeItem.bridge
-        borderSizesIndex: 0 // Normal
+        borderSizesIndex: 0
     }
 
     AppletDecoration.AuroraeTheme {
         id: auroraeThemeEngine
         theme: isEnabled ? currentTheme : ""
 
-        property bool isEnabled: false
+        readonly property bool isEnabled: decorations.isAurorae(root.currentPlugin, root.currentTheme);
     }
 
     AppletDecoration.DecorationsModel {
@@ -92,14 +90,14 @@ Item {
 
         RowLayout{
             Label {
-                Layout.minimumWidth: centerFactor * mainItem.width
+                Layout.minimumWidth: centerFactor * root.width
                 text: i18n("Decoration:")
                 horizontalAlignment: Text.AlignRight
             }
             ComboBox{
                 id: decorationCmb
                 Layout.minimumWidth: 100
-                Layout.preferredWidth: 0.2 * mainItem.width
+                Layout.preferredWidth: 0.2 * root.width
                 Layout.maximumWidth: 250
 
                 model: decs
@@ -132,24 +130,22 @@ Item {
 
                 onActivated: {
                     if (index===0) {
-                        mainItem.useCurrent = true;
-                        mainItem.selectedPlugin = "";
-                        mainItem.selectedTheme = "";
-                        auroraeThemeEngine.isEnabled = decorations.isAurorae(decorations.currentPlugin, decorations.currentTheme);
+                        root.useCurrent = true;
+                        root.selectedPlugin = "";
+                        root.selectedTheme = "";
                     } else {
-                        mainItem.useCurrent = false;
+                        root.useCurrent = false;
                         var d = sortedDecorations.get(index-1);
-                        mainItem.selectedPlugin = d.plugin;
-                        mainItem.selectedTheme = d.theme;
-                        auroraeThemeEngine.isEnabled = decorations.isAurorae(d.plugin, d.theme);
+                        root.selectedPlugin = d.plugin;
+                        root.selectedTheme = d.theme;
                     }
                 }
 
                 Component.onCompleted: {
                     initDecorations();
                     feedDecorations();
-                    if (!mainItem.useCurrent) {
-                        currentIndex = indexFor(mainItem.currentPlugin, mainItem.currentTheme);
+                    if (!root.useCurrent) {
+                        currentIndex = indexFor(root.currentPlugin, root.currentTheme);
                     }
                 }
             }
@@ -159,7 +155,26 @@ Item {
             columns: 2
 
             Label{
-                Layout.minimumWidth: centerFactor * mainItem.width
+                Layout.minimumWidth: centerFactor * root.width
+                text: i18n("Buttons:")
+                horizontalAlignment: Text.AlignRight
+            }
+
+            OrderableListView{
+                id: activeButtons
+                itemWidth: 36
+                itemHeight: 36
+                buttons: [AppletDecoration.Types.Close,AppletDecoration.Types.Maximize,AppletDecoration.Types.Minimize, AppletDecoration.Types.OnAllDesktops]
+                orientation: ListView.Horizontal
+                interactive: false
+            }
+        }
+
+        GridLayout{
+            columns: 2
+
+            Label{
+                Layout.minimumWidth: centerFactor * root.width
                 text: i18n("Visual behavior:")
                 horizontalAlignment: Text.AlignRight
             }
@@ -183,7 +198,7 @@ Item {
             columns: 2
 
             Label{
-                Layout.minimumWidth: centerFactor * mainItem.width
+                Layout.minimumWidth: centerFactor * root.width
                 text: i18n("Metrics:")
                 horizontalAlignment: Text.AlignRight
             }
@@ -194,7 +209,7 @@ Item {
             }
 
             Label{
-                Layout.minimumWidth: centerFactor * mainItem.width
+                Layout.minimumWidth: centerFactor * root.width
                 text: i18n("Icons spacing:")
                 horizontalAlignment: Text.AlignRight
                 enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
@@ -209,7 +224,7 @@ Item {
             }
 
             Label{
-                Layout.minimumWidth: centerFactor * mainItem.width
+                Layout.minimumWidth: centerFactor * root.width
                 text: i18n("Thickness margin:")
                 horizontalAlignment: Text.AlignRight
                 enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
@@ -224,7 +239,7 @@ Item {
             }
 
             Label{
-                Layout.minimumWidth: centerFactor * mainItem.width
+                Layout.minimumWidth: centerFactor * root.width
                 text: i18n("Length margin:")
                 horizontalAlignment: Text.AlignRight
             }

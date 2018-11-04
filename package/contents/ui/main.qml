@@ -24,6 +24,8 @@ import org.kde.taskmanager 0.1 as TaskManager
 
 import org.kde.appletdecoration 0.1 as AppletDecoration
 
+import "../code/tools.js" as ModelTools
+
 Item {
     id: root
     clip: true
@@ -68,10 +70,6 @@ Item {
     }
 
     Plasmoid.status: {
-        /*if (plasmoid.userConfiguring || latteInEditMode) {
-            return PlasmaCore.Types.ActiveStatus;
-        }*/
-
         if ((plasmoid.formFactor === PlasmaCore.Types.Horizontal && animatedMinimumWidth === 0)
                 || (plasmoid.formFactor === PlasmaCore.Types.Vertical && animatedMinimumHeight === 0)) {
             return PlasmaCore.Types.HiddenStatus;
@@ -84,7 +82,6 @@ Item {
     // START visual properties
     property int thickPadding: {
         if (auroraeThemeEngine.isEnabled && plasmoid.configuration.useDecorationMetrics) {
-            //to fix, for some reason buttons shown smaller so I decrease the thick padding
             return plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
                         ((root.height - auroraeThemeEngine.buttonHeight) / 2) - 1 :
                         ((root.width - auroraeThemeEngine.buttonHeight) / 2) - 1
@@ -254,42 +251,10 @@ Item {
 
     ///functions
 
-    function addButton(preparedArray, buttonType) {
-        if (buttonType === AppletDecoration.Types.Close) {
-            preparedArray.push({
-                                   buttonType: AppletDecoration.Types.Close,
-                                   windowOperation: AppletDecoration.Types.ActionClose
-                               });
-        } else if (buttonType === AppletDecoration.Types.Maximize) {
-            preparedArray.push({
-                                   buttonType: AppletDecoration.Types.Maximize,
-                                   windowOperation: AppletDecoration.Types.ToggleMaximize
-                               });
-        } else if (buttonType === AppletDecoration.Types.Minimize) {
-            preparedArray.push({
-                                   buttonType: AppletDecoration.Types.Minimize,
-                                   windowOperation: AppletDecoration.Types.ToggleMinimize
-                               });
-        } else if (buttonType === AppletDecoration.Types.OnAllDesktops) {
-            preparedArray.push({
-                                   buttonType: AppletDecoration.Types.OnAllDesktops,
-                                   windowOperation: AppletDecoration.Types.TogglePinToAllDesktops
-                               });
-        }
-    }
-
     function initializeControlButtonsModel() {
-        tasksPreparedArray.length = 0;
-       // addButton(tasksPreparedArray, AppletDecoration.Types.OnAllDesktops);
-        addButton(tasksPreparedArray, AppletDecoration.Types.Minimize);
-       // addButton(tasksPreparedArray, AppletDecoration.Types.Maximize);
-        addButton(tasksPreparedArray, AppletDecoration.Types.Close);
+        var buttons = [AppletDecoration.Types.Minimize, AppletDecoration.Types.Close];
 
-        controlButtonsModel.clear()
-
-        for (var i = 0; i < tasksPreparedArray.length; ++i) {
-            controlButtonsModel.append(tasksPreparedArray[i]);
-        }
+        ModelTools.initializeControlButtonsModel(buttons, tasksPreparedArray, controlButtonsModel)
     }
 
     function performActiveWindowAction(windowOperation) {
