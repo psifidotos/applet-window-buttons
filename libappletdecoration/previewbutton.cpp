@@ -61,6 +61,11 @@ void PreviewButtonItem::setIsMaximized(bool maximized)
     }
 
     m_isMaximized = maximized;
+
+    if (m_button && m_type == KDecoration2::DecorationButtonType::Maximize) {
+        m_button->setChecked(maximized);
+    }
+
     emit isMaximizedChanged();
 }
 
@@ -76,6 +81,11 @@ void PreviewButtonItem::setIsOnAllDesktops(bool onalldesktops)
     }
 
     m_isOnAllDesktops = onalldesktops;
+
+    if (m_button && m_type == KDecoration2::DecorationButtonType::OnAllDesktops) {
+        m_button->setChecked(onalldesktops);
+    }
+
     emit isOnAllDesktopsChanged();
 }
 
@@ -111,6 +121,18 @@ void PreviewButtonItem::setScheme(QString scheme)
     }
 
     m_scheme = scheme.isEmpty() ? "kdeglobals" : scheme;
+
+    auto client = m_bridge->lastCreatedClient();
+
+    if (client) {
+        client->setColorScheme(m_scheme);
+
+        if (m_decoration) {
+            m_decoration->setSettings(m_settings->settings());
+            m_decoration->init();
+        }
+    }
+
     emit schemeChanged();
 }
 
@@ -192,7 +214,7 @@ void PreviewButtonItem::createButton()
     client->setMinimizable(true);
     client->setMaximizable(true);
     client->setActive(true);
-    client->setProvidesContextHelp(true);
+
     client->setColorScheme(m_scheme);
 
     if (m_isOnAllDesktops) {
@@ -210,8 +232,6 @@ void PreviewButtonItem::createButton()
     }
 
     m_decoration->setSettings(m_settings->settings());
-    //  m_decoration->setProperty("visualParent", QVariant::fromValue(this));
-    //  m_decoration->setProperty("AnimationsEnabled", true);
     m_decoration->init();
 
     m_button = m_bridge->createButton(m_decoration, m_type);

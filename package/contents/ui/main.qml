@@ -155,21 +155,9 @@ Item {
 
     onButtonsStrChanged: initButtons();
 
-    onIsActiveWindowPinnedChanged: {
-        if (hasDesktopsButton && !auroraeThemeEngine.isEnabled) {
-            initButtons();
-        }
-    }
-
-    onIsActiveWindowMaximizedChanged: {
-        if (hasMaximizedButton && !auroraeThemeEngine.isEnabled) {
-            initButtons();
-        }
-    }
-
     Connections{
         target: !auroraeThemeEngine.isEnabled ? root : null
-        onCurrentSchemeChanged: initButtons();
+      //  onCurrentSchemeChanged: initButtons();
         onThickPaddingChanged: initButtons();
     }
 
@@ -267,6 +255,7 @@ Item {
     }
 
     function initializeControlButtonsModel() {
+        console.log("recreating buttons");
         var buttonsList = buttonsStr.split('|');
 
         ModelTools.initializeControlButtonsModel(buttonsList, tasksPreparedArray, controlButtonsModel, true);
@@ -384,7 +373,7 @@ Item {
 
     Timer{
         id: buttonsRecreator
-        interval: 500
+        interval: 200
         onTriggered: initializeControlButtonsModel();
     }
 }
