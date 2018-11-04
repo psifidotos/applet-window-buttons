@@ -58,11 +58,17 @@ function indexOfSplitter(listModel) {
     return -1;
 }
 
-function initializeControlButtonsModel(buttons, toArray, toListModel) {
+function initializeControlButtonsModel(buttons, toArray, toListModel, stopOnSeparator) {
     toArray.length = 0;
 
     for (var i=0; i < buttons.length; ++i) {
-        addButton(toArray, buttons[i]);
+        var type = Number(buttons[i]);
+
+        if (type === AppletDecoration.Types.Custom && stopOnSeparator) {
+            break;
+        }
+
+        addButton(toArray, Number(buttons[i]));
     }
 
     toListModel.clear()

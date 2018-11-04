@@ -32,6 +32,7 @@ Item {
     property alias cfg_useCurrentDecoration: root.useCurrent
     property alias cfg_selectedPlugin: root.selectedPlugin
     property alias cfg_selectedTheme: root.selectedTheme
+    property alias cfg_buttons: root.currentButtons
     property alias cfg_showOnlyForActiveAndMaximized: onlyOnMaximizedChk.checked
     property alias cfg_slideAnimation: slideChk.checked
     property alias cfg_useDecorationMetrics: decorationMetricsChk.checked
@@ -40,9 +41,10 @@ Item {
     property alias cfg_lengthMargin: lengthSpn.value
 
     // used as bridge to communicate properly between configuration and ui
-    property bool useCurrent: true
-    property string selectedPlugin: "org.kde.breeze"
-    property string selectedTheme: ""
+    property bool useCurrent
+    property string selectedPlugin
+    property string selectedTheme
+    property string currentButtons
 
     // used from the ui
     readonly property real centerFactor: 0.35
@@ -164,11 +166,7 @@ Item {
                 id: activeButtons
                 itemWidth: 36
                 itemHeight: 36
-                buttons: [AppletDecoration.Types.Close,
-                    AppletDecoration.Types.Maximize,
-                    AppletDecoration.Types.Minimize,
-                    AppletDecoration.Types.OnAllDesktops,
-                    AppletDecoration.Types.Custom]
+                buttonsStr: root.currentButtons
                 orientation: ListView.Horizontal
             }
         }

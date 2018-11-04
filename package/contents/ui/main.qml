@@ -69,6 +69,8 @@ Item {
         return plasmoid.formFactor === PlasmaCore.Types.Horizontal ? buttonsArea.height : -1;
     }
 
+    readonly property string buttonsStr: plasmoid.configuration.buttons
+
     Plasmoid.status: {
         if ((plasmoid.formFactor === PlasmaCore.Types.Horizontal && animatedMinimumWidth === 0)
                 || (plasmoid.formFactor === PlasmaCore.Types.Vertical && animatedMinimumHeight === 0)) {
@@ -153,6 +155,7 @@ Item {
     //END Behaviors
 
     onCurrentPluginChanged: initializeControlButtonsModel();
+    onButtonsStrChanged: initializeControlButtonsModel();
 
     onIsActiveWindowPinnedChanged: {
         if (hasDesktopsButton && !auroraeThemeEngine.isEnabled) {
@@ -252,9 +255,9 @@ Item {
     ///functions
 
     function initializeControlButtonsModel() {
-        var buttons = [AppletDecoration.Types.Minimize, AppletDecoration.Types.Close];
+        var buttonsList = buttonsStr.split('|');
 
-        ModelTools.initializeControlButtonsModel(buttons, tasksPreparedArray, controlButtonsModel)
+        ModelTools.initializeControlButtonsModel(buttonsList, tasksPreparedArray, controlButtonsModel, true);
     }
 
     function performActiveWindowAction(windowOperation) {
@@ -339,7 +342,7 @@ Item {
 
             isOnAllDesktops: root.isActiveWindowPinned
             isMaximized: root.isActiveWindowMaximized
-            buttonType: buttonType
+            buttonType: model.buttonType
             auroraeTheme: auroraeThemeEngine
 
             onClicked: {

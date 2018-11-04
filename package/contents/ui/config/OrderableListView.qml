@@ -41,7 +41,7 @@ Item {
     Layout.preferredHeight: Layout.minimumHeight
     Layout.maximumHeight: Layout.maximumHeight
 
-    property var buttons
+    property string buttonsStr
 
     width: (itemWidth+listView.spacing) * (orientation == ListView.Vertical ? 1 : controlButtonsModel.count)
     height: (itemHeight+listView.spacing) * (orientation == ListView.Horizontal ? 1 : controlButtonsModel.count)
@@ -56,8 +56,23 @@ Item {
     Component.onCompleted: initializeControlButtonsModel();
 
     function initializeControlButtonsModel() {
-        ModelTools.initializeControlButtonsModel(buttons,tasksPreparedArray, controlButtonsModel)
+        var buttonsList = buttonsStr.split('|');
+
+        ModelTools.initializeControlButtonsModel(buttonsList,tasksPreparedArray, controlButtonsModel, false);
         listView.splitterIndex = ModelTools.indexOfSplitter(controlButtonsModel);
+    }
+
+    function buttonsListStr() {
+        var str = "";
+
+        for (var i=0; i<controlButtonsModel.count; ++i) {
+            str = str + String(controlButtonsModel.get(i).buttonType);
+            if (i!==controlButtonsModel.count-1) {
+                str = str+"|";
+            }
+        }
+
+        return str;
     }
 
     Connections{
@@ -125,6 +140,7 @@ Item {
                 controlButtonsModel.move(initIndex, index, 1);
                 initIndex = index;
                 listView.splitterIndex = ModelTools.indexOfSplitter(controlButtonsModel);
+                root.currentButtons = buttonsListStr();
             }
         }
     }

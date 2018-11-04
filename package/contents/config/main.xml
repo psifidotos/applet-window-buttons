@@ -17,6 +17,10 @@
     <entry name="selectedTheme" type="String">
       <label>user preferred theme to use with the selected plugin</label>
     </entry>
+    <entry name="buttons" type="String">
+      <default>5|4|3|10|2</default>
+      <label>buttons to show in applet</label>
+    </entry>
     <entry name="showOnlyForActiveAndMaximized" type="Bool">
       <default>false</default>
       <label>show buttons only when the active window is maximized also</label>
