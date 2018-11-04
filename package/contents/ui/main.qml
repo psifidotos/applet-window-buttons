@@ -123,19 +123,22 @@ Item {
                                        decorations.currentPlugin : plasmoid.configuration.selectedPlugin
     property string currentTheme: plasmoid.configuration.useCurrentDecoration ?
                                       decorations.currentTheme : plasmoid.configuration.selectedTheme
-    property string currentScheme: isInLatte && lattePalette ? lattePalette.scheme : "kdeglobals"
+    property string currentScheme: enforceLattePalette ? latteSettings.palette.scheme : "kdeglobals"
     // END decoration properties
 
     //BEGIN Latte Dock Communicator
-    // outgoing
-    property bool disableLatteSideColoring : true
-    // ingoing
-    property bool isInLatte: false
-    property bool latteInEditMode: false
-    property bool applyLattePalette: false
-    property QtObject lattePalette: null
-    readonly property bool enforceLattePalette: isInLatte && applyLattePalette && lattePalette
+    property QtObject latteSettings: null
+
+    onLatteSettingsChanged: {
+        if (latteSettings) {
+            latteSettings.disableLatteSideColoring = true;
+        }
+    }
     //END  Latte Dock Communicator
+    //BEGIN Latte based properties
+    readonly property bool enforceLattePalette: latteSettings && latteSettings.applyPalette && latteSettings.palette
+    readonly property bool latteInEditMode: latteSettings && latteSettings.inEditMode
+    //END Latte based properties
 
     //START Behaviors
     Behavior on animatedMinimumWidth {
