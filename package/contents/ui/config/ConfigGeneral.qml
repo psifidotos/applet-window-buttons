@@ -45,7 +45,7 @@ Item {
     property string selectedTheme: ""
 
     // used from the ui
-    readonly property real centerFactor: 0.4
+    readonly property real centerFactor: 0.35
     property string currentPlugin: mainItem.useCurrent ? decorations.currentPlugin : plasmoid.configuration.selectedPlugin
     property string currentTheme: mainItem.useCurrent ? decorations.currentTheme : plasmoid.configuration.selectedTheme
 
@@ -175,6 +175,7 @@ Item {
             CheckBox{
                 id: slideChk
                 text: i18n("Slide animation in order to show or hide")
+                enabled: onlyOnMaximizedChk.checked
             }
         }
 
