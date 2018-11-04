@@ -17,5 +17,21 @@
     <entry name="selectedTheme" type="String">
       <label>user preferred theme to use with the selected plugin</label>
     </entry>
+    <entry name="useDecorationMetrics" type="Bool">
+      <default>true</default>
+      <label>use the discovered decoration metrics in case there are any in order to look consistent with window titlebars</label>
+    </entry>
+    <entry name="thicknessMargin" type="Int">
+      <default>2</default>
+      <label>margin used to increase or decrease the icons size based on the context that are present</label>
+    </entry>
+    <entry name="lengthMargin" type="Int">
+      <default>2</default>
+      <label>margin used to increase or decrease the icons distance from surrounding applets</label>
+    </entry>
+    <entry name="spacing" type="Int">
+      <default>2</default>
+      <label>spacing between icons</label>
+    </entry>
   </group>
 </kcfg>

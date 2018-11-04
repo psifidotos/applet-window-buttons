@@ -32,6 +32,10 @@ Item {
     property alias cfg_useCurrentDecoration: mainItem.useCurrent
     property alias cfg_selectedPlugin: mainItem.selectedPlugin
     property alias cfg_selectedTheme: mainItem.selectedTheme
+    property alias cfg_useDecorationMetrics: decorationMetricsChk.checked
+    property alias cfg_spacing: spacingSpn.value
+    property alias cfg_thicknessMargin: thickSpn.value
+    property alias cfg_lengthMargin: lengthSpn.value
 
     // used as bridge to communicate properly between configuration and ui
     property bool useCurrent: false
@@ -39,10 +43,9 @@ Item {
     property string selectedTheme: ""
 
     // used from the ui
-    readonly property real centerFactor: 0.45
-    property string currentPlugin: useCurrent ? decorations.currentPlugin : plasmoid.configuration.selectedPlugin
-    property string currentTheme: useCurrent ? decorations.currentTheme : plasmoid.configuration.selectedThem
-
+    readonly property real centerFactor: 0.4
+    property string currentPlugin: mainItem.useCurrent ? decorations.currentPlugin : plasmoid.configuration.selectedPlugin
+    property string currentTheme: mainItem.useCurrent ? decorations.currentTheme : plasmoid.configuration.selectedTheme
 
     ///START Decoration Items
     AppletDecoration.Bridge {
@@ -63,7 +66,7 @@ Item {
         id: auroraeThemeEngine
         theme: isEnabled ? currentTheme : ""
 
-        readonly property bool isEnabled: decorations.isAurorae(currentPlugin, currentTheme);
+        property bool isEnabled: false
     }
 
     AppletDecoration.DecorationsModel {
@@ -82,7 +85,7 @@ Item {
 
     ColumnLayout {
         id:mainColumn
-        spacing: 15
+        spacing: units.largeSpacing
         Layout.fillWidth: true
 
         RowLayout{
@@ -93,17 +96,13 @@ Item {
             }
             ComboBox{
                 id: decorationCmb
-                Layout.minimumWidth: 150
-                Layout.preferredWidth: 0.25 * mainItem.width
-                Layout.maximumWidth: 300
+                Layout.minimumWidth: 100
+                Layout.preferredWidth: 0.2 * mainItem.width
+                Layout.maximumWidth: 250
 
                 model: decs
 
                 property var decs: []
-
-                function initDecorations() {
-                    decs.push("Current");
-                }
 
                 function feedDecorations() {
                     for (var i=0; i<sortedDecorations.count; ++i) {
@@ -114,24 +113,101 @@ Item {
                     decorationCmb.model = decs;
                 }
 
+                function indexFor(plugin, theme) {
+                    for (var i=0; i<sortedDecorations.count; ++i) {
+                        var d = sortedDecorations.get(i);
+                        if (d.plugin === plugin && d.theme === theme) {
+                            return i+1;
+                        }
+                    }
+
+                    return 0;
+                }
+
+                function initDecorations() {
+                    decs.push("Current");
+                }
+
                 onActivated: {
                     if (index===0) {
                         mainItem.useCurrent = true;
                         mainItem.selectedPlugin = "";
                         mainItem.selectedTheme = "";
+                        auroraeThemeEngine.isEnabled = decorations.isAurorae(decorations.currentPlugin, decorations.currentTheme);
                     } else {
                         mainItem.useCurrent = false;
                         var d = sortedDecorations.get(index-1);
                         mainItem.selectedPlugin = d.plugin;
                         mainItem.selectedTheme = d.theme;
+                        auroraeThemeEngine.isEnabled = decorations.isAurorae(d.plugin, d.theme);
                     }
                 }
 
                 Component.onCompleted: {
                     initDecorations();
                     feedDecorations();
+                    currentIndex = indexFor(mainItem.currentPlugin, mainItem.currentTheme);
                 }
             }
+        }
+
+        GridLayout{
+            columns: 2
+
+            Label{
+                Layout.minimumWidth: centerFactor * mainItem.width
+                text: i18n("Metrics:")
+                horizontalAlignment: Text.AlignRight
+            }
+
+            CheckBox{
+                id: decorationMetricsChk
+                text: i18n("Use from decoration if any are found")
+            }
+
+            Label{
+                Layout.minimumWidth: centerFactor * mainItem.width
+                text: i18n("Icons spacing:")
+                horizontalAlignment: Text.AlignRight
+                enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
+            }
+
+            SpinBox{
+                id: spacingSpn
+                minimumValue: 0
+                maximumValue: 24
+                suffix: " " + i18nc("pixels","px.")
+                enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
+            }
+
+            Label{
+                Layout.minimumWidth: centerFactor * mainItem.width
+                text: i18n("Thickness margin:")
+                horizontalAlignment: Text.AlignRight
+                enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
+            }
+
+            SpinBox{
+                id: thickSpn
+                minimumValue: 0
+                maximumValue: 24
+                suffix: " " + i18nc("pixels","px.")
+                enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
+            }
+
+            Label{
+                Layout.minimumWidth: centerFactor * mainItem.width
+                text: i18n("Length margin:")
+                horizontalAlignment: Text.AlignRight
+            }
+
+            SpinBox{
+                id: lengthSpn
+                minimumValue: 0
+                maximumValue: 24
+                suffix: " " + i18nc("pixels","px.")
+            }
+
         }
     }
 }

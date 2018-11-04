@@ -41,17 +41,23 @@ Item {
 
     // START visual properties
     property int thickPadding: {
-        if (auroraeThemeEngine.isEnabled) {
+        if (auroraeThemeEngine.isEnabled && plasmoid.configuration.useDecorationMetrics) {
             //to fix, for some reason buttons shown smaller so I decrease the thick padding
             return plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
                         ((root.height - auroraeThemeEngine.buttonHeight) / 2) - 1 :
                         ((root.width - auroraeThemeEngine.buttonHeight) / 2) - 1
         }
 
-        return 2;
+        return plasmoid.configuration.thicknessMargin;
     }
-    property int lengthPadding: 2
-    property int spacing: auroraeThemeEngine.isEnabled ? auroraeThemeEngine.buttonSpacing : 2
+    property int lengthPadding: plasmoid.configuration.lengthMargin
+    property int spacing: {
+        if (auroraeThemeEngine.isEnabled && plasmoid.configuration.useDecorationMetrics) {
+            return auroraeThemeEngine.buttonSpacing;
+        }
+
+        return plasmoid.configuration.spacing;
+    }
     // END visual properties
 
     // START window properties
@@ -90,20 +96,23 @@ Item {
     //END  Latte Dock Communicator
 
     onCurrentPluginChanged: initializeControlButtonsModel();
-    onCurrentSchemeChanged: {
-        if (!auroraeThemeEngine.isEnabled) {
-            initializeControlButtonsModel();
-        }
-    }
+
     onIsActiveWindowPinnedChanged: {
         if (hasDesktopsButton && !auroraeThemeEngine.isEnabled) {
             initializeControlButtonsModel();
         }
     }
+
     onIsActiveWindowMaximizedChanged: {
         if (hasMaximizedButton && !auroraeThemeEngine.isEnabled) {
             initializeControlButtonsModel();
         }
+    }
+
+    Connections{
+        target: !auroraeThemeEngine.isEnabled ? root : null
+        onCurrentSchemeChanged: initializeControlButtonsModel();
+        onThickPaddingChanged: initializeControlButtonsModel();
     }
 
     Component.onCompleted: initializeControlButtonsModel();
