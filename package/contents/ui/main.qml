@@ -142,7 +142,7 @@ Item {
         enabled: plasmoid.configuration.slideAnimation && plasmoid.formFactor===PlasmaCore.Types.Horizontal
         NumberAnimation {
             duration: 250
-            easing.type: Easing.Linear
+            easing.type: Easing.InCubic
         }
     }
 
@@ -150,7 +150,7 @@ Item {
         enabled: plasmoid.configuration.slideAnimation && plasmoid.formFactor===PlasmaCore.Types.Vertical
         NumberAnimation {
             duration: 250
-            easing.type: Easing.Linear
+            easing.type: Easing.InCubic
         }
     }
     //END Behaviors

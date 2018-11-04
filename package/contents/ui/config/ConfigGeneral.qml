@@ -40,7 +40,7 @@ Item {
     property alias cfg_lengthMargin: lengthSpn.value
 
     // used as bridge to communicate properly between configuration and ui
-    property bool useCurrent: false
+    property bool useCurrent: true
     property string selectedPlugin: "org.kde.breeze"
     property string selectedTheme: ""
 
@@ -148,7 +148,9 @@ Item {
                 Component.onCompleted: {
                     initDecorations();
                     feedDecorations();
-                    currentIndex = indexFor(mainItem.currentPlugin, mainItem.currentTheme);
+                    if (!mainItem.useCurrent) {
+                        currentIndex = indexFor(mainItem.currentPlugin, mainItem.currentTheme);
+                    }
                 }
             }
         }
