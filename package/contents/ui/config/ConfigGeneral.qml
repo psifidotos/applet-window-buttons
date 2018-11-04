@@ -38,7 +38,8 @@ Item {
     property alias cfg_useDecorationMetrics: decorationMetricsChk.checked
     property alias cfg_spacing: spacingSpn.value
     property alias cfg_thicknessMargin: thickSpn.value
-    property alias cfg_lengthMargin: lengthSpn.value
+    property alias cfg_lengthFirstMargin: lengthFirstSpn.value
+    property alias cfg_lengthLastMargin: lengthLastSpn.value
 
     // used as bridge to communicate properly between configuration and ui
     property bool useCurrent
@@ -241,12 +242,25 @@ Item {
 
             Label{
                 Layout.minimumWidth: centerFactor * root.width
-                text: i18n("Length margin:")
+                text: i18n("First length margin:")
                 horizontalAlignment: Text.AlignRight
             }
 
             SpinBox{
-                id: lengthSpn
+                id: lengthFirstSpn
+                minimumValue: 0
+                maximumValue: 24
+                suffix: " " + i18nc("pixels","px.")
+            }
+
+            Label{
+                Layout.minimumWidth: centerFactor * root.width
+                text: i18n("Last length margin:")
+                horizontalAlignment: Text.AlignRight
+            }
+
+            SpinBox{
+                id: lengthLastSpn
                 minimumValue: 0
                 maximumValue: 24
                 suffix: " " + i18nc("pixels","px.")

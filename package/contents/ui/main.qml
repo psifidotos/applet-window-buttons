@@ -91,7 +91,8 @@ Item {
 
         return plasmoid.configuration.thicknessMargin;
     }
-    property int lengthPadding: plasmoid.configuration.lengthMargin
+    property int lengthFirstPadding: plasmoid.configuration.lengthFirstMargin
+    property int lengthLastPadding: plasmoid.configuration.lengthLastMargin
     property int spacing: {
         if (auroraeThemeEngine.isEnabled && plasmoid.configuration.useDecorationMetrics) {
             return auroraeThemeEngine.buttonSpacing;
@@ -296,10 +297,10 @@ Item {
         rowSpacing: root.spacing
         columnSpacing: root.spacing
 
-        leftPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? lengthPadding : thickPadding
-        rightPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? lengthPadding : thickPadding
-        bottomPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : lengthPadding
-        topPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : lengthPadding
+        leftPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? lengthFirstPadding : thickPadding
+        rightPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? lengthLastPadding : thickPadding
+        bottomPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : lengthLastPadding
+        topPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : lengthFirstPadding
 
         rows: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? 1 : 0
         columns: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? 0 : 1

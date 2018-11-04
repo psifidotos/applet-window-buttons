@@ -37,9 +37,13 @@
       <default>2</default>
       <label>margin used to increase or decrease the icons size based on the context that are present</label>
     </entry>
-    <entry name="lengthMargin" type="Int">
+    <entry name="lengthFirstMargin" type="Int">
       <default>2</default>
-      <label>margin used to increase or decrease the icons distance from surrounding applets</label>
+      <label>first margin used to increase or decrease the icons distance from surrounding applets</label>
+    </entry>
+    <entry name="lengthLastMargin" type="Int">
+      <default>2</default>
+      <label>last margin used to increase or decrease the icons distance from surrounding applets</label>
     </entry>
     <entry name="spacing" type="Int">
       <default>2</default>
