@@ -25,6 +25,7 @@
 #include "previewsettings.h"
 
 #include <KDecoration2/Decoration>
+#include <KDecoration2/DecoratedClient>
 
 #include <QDebug>
 #include <QEvent>
@@ -62,8 +63,20 @@ void PreviewButtonItem::setIsMaximized(bool maximized)
 
     m_isMaximized = maximized;
 
-    if (m_button && m_type == KDecoration2::DecorationButtonType::Maximize) {
-        m_button->setChecked(maximized);
+    if (m_client && m_button && m_type == KDecoration2::DecorationButtonType::Maximize) {
+
+        if (m_isMaximized) {
+            m_client->setMaximizedVertically(true);
+            m_client->setMaximizedHorizontally(true);
+        } else {
+            m_client->setMaximizedVertically(false);
+            m_client->setMaximizedHorizontally(false);
+        }
+
+        //! update decoration
+        if (m_decoration) {
+            m_decoration->init();
+        }
     }
 
     emit isMaximizedChanged();
@@ -82,8 +95,17 @@ void PreviewButtonItem::setIsOnAllDesktops(bool onalldesktops)
 
     m_isOnAllDesktops = onalldesktops;
 
-    if (m_button && m_type == KDecoration2::DecorationButtonType::OnAllDesktops) {
-        m_button->setChecked(onalldesktops);
+    if (m_client && m_button && m_type == KDecoration2::DecorationButtonType::OnAllDesktops) {
+        if (m_isOnAllDesktops) {
+            m_client->setDesktop(-1);
+        } else {
+            m_client->setDesktop(1);
+        }
+
+        //! update decoration
+        if (m_decoration) {
+            m_decoration->init();
+        }
     }
 
     emit isOnAllDesktopsChanged();
@@ -122,13 +144,11 @@ void PreviewButtonItem::setScheme(QString scheme)
 
     m_scheme = scheme.isEmpty() ? "kdeglobals" : scheme;
 
-    auto client = m_bridge->lastCreatedClient();
+    if (m_client) {
+        m_client->setColorScheme(m_scheme);
 
-    if (client) {
-        client->setColorScheme(m_scheme);
-
+        //! update decoration
         if (m_decoration) {
-            m_decoration->setSettings(m_settings->settings());
             m_decoration->init();
         }
     }
@@ -210,38 +230,34 @@ void PreviewButtonItem::createButton()
         return;
     }
 
-    auto client = m_bridge->lastCreatedClient();
-    client->setMinimizable(true);
-    client->setMaximizable(true);
-    client->setActive(true);
+    m_client = m_bridge->lastCreatedClient();
+    m_client->setMinimizable(true);
+    m_client->setMaximizable(true);
+    m_client->setActive(true);
 
-    client->setColorScheme(m_scheme);
+    m_client->setColorScheme(m_scheme);
 
     if (m_isOnAllDesktops) {
-        client->setDesktop(-1);
+        m_client->setDesktop(-1);
     } else {
-        client->setDesktop(1);
+        m_client->setDesktop(1);
     }
 
     if (m_isMaximized) {
-        client->setMaximizedVertically(true);
-        client->setMaximizedHorizontally(true);
+        m_client->setMaximizedVertically(true);
+        m_client->setMaximizedHorizontally(true);
     } else {
-        client->setMaximizedVertically(false);
-        client->setMaximizedHorizontally(false);
+        m_client->setMaximizedVertically(false);
+        m_client->setMaximizedHorizontally(false);
     }
 
     m_decoration->setSettings(m_settings->settings());
     m_decoration->init();
 
-    m_button = m_bridge->createButton(m_decoration, m_type);
+    m_button = m_bridge->createButton(m_decoration, m_type, this);
 
     connect(this, &PreviewButtonItem::widthChanged, this, &PreviewButtonItem::syncGeometry);
     connect(this, &PreviewButtonItem::heightChanged, this, &PreviewButtonItem::syncGeometry);
-
-    connect(m_button, &KDecoration2::DecorationButton::pressedChanged, this, [&]() {
-        update();
-    });
 
     syncGeometry();
 }

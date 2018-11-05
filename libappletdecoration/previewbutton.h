@@ -33,6 +33,7 @@ namespace Decoration {
 namespace Applet {
 
 class PreviewBridge;
+class PreviewClient;
 class Settings;
 
 class PreviewButtonItem : public QQuickPaintedItem
@@ -97,6 +98,7 @@ private:
     void createButton();
     void syncGeometry();
     QPointer<Decoration::Applet::PreviewBridge> m_bridge;
+    QPointer<Decoration::Applet::PreviewClient> m_client;
     QPointer<Decoration::Applet::Settings> m_settings;
     KDecoration2::Decoration *m_decoration = nullptr;
     KDecoration2::DecorationButton *m_button = nullptr;
