@@ -49,8 +49,9 @@ PreviewButtonItem::~PreviewButtonItem()
         m_bridge->unregisterButton(this);
     }
 
-    m_client->deleteLater();
-    m_decoration->deleteLater();
+    if (m_button) {
+        m_button->deleteLater();
+    }
 }
 
 bool PreviewButtonItem::isMaximized() const

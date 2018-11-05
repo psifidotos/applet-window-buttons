@@ -100,7 +100,7 @@ private:
     QPointer<Decoration::Applet::PreviewBridge> m_bridge;
     QPointer<Decoration::Applet::PreviewClient> m_client;
     QPointer<Decoration::Applet::Settings> m_settings;
-    KDecoration2::Decoration *m_decoration = nullptr;
+    QPointer<KDecoration2::Decoration> m_decoration;
     KDecoration2::DecorationButton *m_button = nullptr;
     KDecoration2::DecorationButtonType m_type = KDecoration2::DecorationButtonType::Custom;
 
