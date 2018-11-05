@@ -100,9 +100,9 @@ Item {
             }
             ComboBox{
                 id: decorationCmb
-                Layout.minimumWidth: 100
+                Layout.minimumWidth: 180
                 Layout.preferredWidth: 0.2 * root.width
-                Layout.maximumWidth: 250
+                Layout.maximumWidth: 300
 
                 model: decs
 
