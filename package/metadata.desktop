@@ -3,7 +3,7 @@ Name=Window Buttons
 Comment=Window buttons for your panels
 
 Encoding=UTF-8
-Icon=dialog-messages
+Icon=focus-windows
 Keywords=window buttons
 Type=Service
 
