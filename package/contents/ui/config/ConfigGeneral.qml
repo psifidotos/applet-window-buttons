@@ -40,6 +40,7 @@ Item {
     property alias cfg_thicknessMargin: thickSpn.value
     property alias cfg_lengthFirstMargin: lengthFirstSpn.value
     property alias cfg_lengthLastMargin: lengthLastSpn.value
+    property alias cfg_lengthMarginsLock: lockItem.locked
 
     // used as bridge to communicate properly between configuration and ui
     property bool useCurrent
@@ -173,6 +174,7 @@ Item {
         }
 
         GridLayout{
+            id: behaviorGrid
             columns: 2
 
             Label{
@@ -196,76 +198,122 @@ Item {
             }
         }
 
-        GridLayout{
-            columns: 2
+        ColumnLayout{
+            id: visualSettings
+            //spacing: behaviorGrid
 
-            Label{
-                Layout.minimumWidth: centerFactor * root.width
-                text: i18n("Metrics:")
-                horizontalAlignment: Text.AlignRight
+            GridLayout{
+                id: visualSettingsGroup1
+                columns: 2
+
+                Label{
+                    Layout.minimumWidth: centerFactor * root.width
+                    text: i18n("Metrics:")
+                    horizontalAlignment: Text.AlignRight
+                }
+
+                CheckBox{
+                    id: decorationMetricsChk
+                    text: i18n("Use from decoration if any are found")
+                }
+
+                Label{
+                    Layout.minimumWidth: centerFactor * root.width
+                    text: i18n("Icons spacing:")
+                    horizontalAlignment: Text.AlignRight
+                    enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
+                }
+
+                SpinBox{
+                    id: spacingSpn
+                    minimumValue: 0
+                    maximumValue: 24
+                    suffix: " " + i18nc("pixels","px.")
+                    enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
+                }
+
+                Label{
+                    Layout.minimumWidth: centerFactor * root.width
+                    text: i18n("Thickness margin:")
+                    horizontalAlignment: Text.AlignRight
+                    enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
+                }
+
+                SpinBox{
+                    id: thickSpn
+                    minimumValue: 0
+                    maximumValue: 24
+                    suffix: " " + i18nc("pixels","px.")
+                    enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
+                }
             }
 
-            CheckBox{
-                id: decorationMetricsChk
-                text: i18n("Use from decoration if any are found")
-            }
+            GridLayout{
+                id: visualSettingsGroup2
 
-            Label{
-                Layout.minimumWidth: centerFactor * root.width
-                text: i18n("Icons spacing:")
-                horizontalAlignment: Text.AlignRight
-                enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
-            }
+                columns: 3
+                rows: 2
+                flow: GridLayout.TopToBottom
+                columnSpacing: visualSettingsGroup1.columnSpacing
+                rowSpacing: visualSettingsGroup1.rowSpacing
 
-            SpinBox{
-                id: spacingSpn
-                minimumValue: 0
-                maximumValue: 24
-                suffix: " " + i18nc("pixels","px.")
-                enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
-            }
+                property int lockerHeight: firstLengthLbl.height + rowSpacing/2
 
-            Label{
-                Layout.minimumWidth: centerFactor * root.width
-                text: i18n("Thickness margin:")
-                horizontalAlignment: Text.AlignRight
-                enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
-            }
+                Label{
+                    id: firstLengthLbl
+                    Layout.minimumWidth: centerFactor * root.width
+                    text: i18n("First length margin:")
+                    horizontalAlignment: Text.AlignRight
+                }
 
-            SpinBox{
-                id: thickSpn
-                minimumValue: 0
-                maximumValue: 24
-                suffix: " " + i18nc("pixels","px.")
-                enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
-            }
+                Label{
+                    Layout.minimumWidth: centerFactor * root.width
+                    text: i18n("Last length margin:")
+                    horizontalAlignment: Text.AlignRight
 
-            Label{
-                Layout.minimumWidth: centerFactor * root.width
-                text: i18n("First length margin:")
-                horizontalAlignment: Text.AlignRight
-            }
+                    enabled: !lockItem.locked
+                }
 
-            SpinBox{
-                id: lengthFirstSpn
-                minimumValue: 0
-                maximumValue: 24
-                suffix: " " + i18nc("pixels","px.")
-            }
+                SpinBox{
+                    id: lengthFirstSpn
+                    minimumValue: 0
+                    maximumValue: 24
+                    suffix: " " + i18nc("pixels","px.")
 
-            Label{
-                Layout.minimumWidth: centerFactor * root.width
-                text: i18n("Last length margin:")
-                horizontalAlignment: Text.AlignRight
-            }
+                    property int lastValue: -1
 
-            SpinBox{
-                id: lengthLastSpn
-                minimumValue: 0
-                maximumValue: 24
-                suffix: " " + i18nc("pixels","px.")
-            }
+                    onValueChanged: {
+                        if (lockItem.locked) {
+                            var step = value - lastValue > 0 ? 1 : -1;
+                            lastValue = value;
+                            lengthLastSpn.value = lengthLastSpn.value + step;
+                        }
+                    }
 
+                    Component.onCompleted: {
+                        lastValue = plasmoid.configuration.legthFirstMargin;
+                    }
+                }
+
+                SpinBox{
+                    id: lengthLastSpn
+                    minimumValue: 0
+                    maximumValue: 24
+                    suffix: " " + i18nc("pixels","px.")
+                    enabled: !lockItem.locked
+                }
+
+                LockItem{
+                    id: lockItem
+                    Layout.minimumWidth: 40
+                    Layout.maximumWidth: 40
+                    Layout.alignment: Qt.AlignTop | Qt.AlignLeft
+                    Layout.minimumHeight: visualSettingsGroup2.lockerHeight
+                    Layout.maximumHeight: Layout.minimumHeight
+                    Layout.topMargin: firstLengthLbl.height / 2
+                    Layout.rowSpan: 2
+                }
+            }
         }
     }
 }
