@@ -54,6 +54,31 @@ PreviewButtonItem::~PreviewButtonItem()
     }
 }
 
+bool PreviewButtonItem::isActive() const
+{
+    return m_isActive;
+}
+
+void PreviewButtonItem::setIsActive(bool active)
+{
+    if (m_isActive == active) {
+        return;
+    }
+
+    m_isActive = active;
+
+    if (m_client) {
+        m_client->setActive(m_isActive);
+
+        //! update decoration
+        if (m_decoration) {
+            m_decoration->init();
+        }
+    }
+
+    emit isActiveChanged();
+}
+
 bool PreviewButtonItem::isMaximized() const
 {
     return m_isMaximized;
@@ -115,6 +140,11 @@ void PreviewButtonItem::setIsOnAllDesktops(bool onalldesktops)
     emit isOnAllDesktopsChanged();
 }
 
+KDecoration2::DecorationButtonType PreviewButtonItem::type() const
+{
+    return m_type;
+}
+
 void PreviewButtonItem::setType(int type)
 {
     setType(KDecoration2::DecorationButtonType(type));
@@ -128,11 +158,6 @@ void PreviewButtonItem::setType(KDecoration2::DecorationButtonType type)
 
     m_type = type;
     emit typeChanged();
-}
-
-KDecoration2::DecorationButtonType PreviewButtonItem::type() const
-{
-    return m_type;
 }
 
 QString PreviewButtonItem::scheme() const
@@ -237,8 +262,8 @@ void PreviewButtonItem::createButton()
     m_client = m_bridge->lastCreatedClient();
     m_client->setMinimizable(true);
     m_client->setMaximizable(true);
-    m_client->setActive(true);
 
+    m_client->setActive(m_isActive);
     m_client->setColorScheme(m_scheme);
 
     if (m_isOnAllDesktops) {

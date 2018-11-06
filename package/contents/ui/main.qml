@@ -340,6 +340,7 @@ Item {
             settings: settingsItem
             scheme: root.currentScheme
             type: buttonType
+            isActive: true
             isOnAllDesktops: root.isActiveWindowPinned
             isMaximized: root.isActiveWindowMaximized
 
@@ -355,6 +356,7 @@ Item {
             width: auroraeTheme.buttonRatio * height
             height: buttonsArea.buttonHeight
 
+            isActive: true
             isOnAllDesktops: root.isActiveWindowPinned
             isMaximized: root.isActiveWindowMaximized
             buttonType: model.buttonType

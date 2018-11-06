@@ -41,6 +41,7 @@ class PreviewButtonItem : public QQuickPaintedItem
     Q_OBJECT
     Q_PROPERTY(Decoration::Applet::PreviewBridge *bridge READ bridge WRITE setBridge NOTIFY bridgeChanged)
     Q_PROPERTY(Decoration::Applet::Settings *settings READ settings WRITE setSettings NOTIFY settingsChanged)
+    Q_PROPERTY(bool isActive READ isActive WRITE setIsActive NOTIFY isActiveChanged);
     Q_PROPERTY(bool isMaximized READ isMaximized WRITE setIsMaximized NOTIFY isMaximizedChanged);
     Q_PROPERTY(bool isOnAllDesktops READ isOnAllDesktops WRITE setIsOnAllDesktops NOTIFY isOnAllDesktopsChanged);
     Q_PROPERTY(int type READ typeAsInt WRITE setType NOTIFY typeChanged)
@@ -59,6 +60,9 @@ public:
 
     KDecoration2::Decoration *decoration() const;
 
+    bool isActive() const;
+    void setIsActive(bool active);
+
     bool isMaximized() const;
     void setIsMaximized(bool maximized);
 
@@ -75,6 +79,7 @@ public:
 
 Q_SIGNALS:
     void bridgeChanged();
+    void isActiveChanged();
     void isMaximizedChanged();
     void isOnAllDesktopsChanged();
     void typeChanged();
@@ -91,7 +96,6 @@ protected:
     void hoverEnterEvent(QHoverEvent *event) override;
     void hoverLeaveEvent(QHoverEvent *event) override;
     void focusOutEvent(QFocusEvent *event) override;
-//   void hoverMoveEvent(QHoverEvent *event) override;
 
     void componentComplete() override;
 
@@ -105,6 +109,7 @@ private:
     KDecoration2::DecorationButton *m_button = nullptr;
     KDecoration2::DecorationButtonType m_type = KDecoration2::DecorationButtonType::Custom;
 
+    bool m_isActive{true};
     bool m_isMaximized{false};
     bool m_isOnAllDesktops{false};
 
