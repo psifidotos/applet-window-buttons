@@ -194,7 +194,6 @@ Item {
             CheckBox{
                 id: slideChk
                 text: i18n("Slide animation in order to show or hide")
-                enabled: onlyOnMaximizedChk.checked
             }
         }
 

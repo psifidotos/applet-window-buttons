@@ -45,12 +45,12 @@ Item {
     property int animatedMinimumWidth: minimumWidth
     property int animatedMinimumHeight: minimumHeight
 
+    readonly property bool mustHide: !existsWindowActive || (plasmoid.configuration.showOnlyForActiveAndMaximized && !isActiveWindowMaximized)
+
     readonly property int minimumWidth: {
-        if (plasmoid.configuration.showOnlyForActiveAndMaximized) {
-            if (plasmoid.formFactor === PlasmaCore.Types.Horizontal) {
-                if (!isActiveWindowMaximized && !plasmoid.userConfiguring && !latteInEditMode){
-                    return 0;
-                }
+        if (plasmoid.formFactor === PlasmaCore.Types.Horizontal) {
+            if (mustHide && !plasmoid.userConfiguring && !latteInEditMode){
+                return 0;
             }
         }
 
@@ -58,11 +58,9 @@ Item {
     }
 
     readonly property int minimumHeight: {
-        if (plasmoid.configuration.showOnlyForActiveAndMaximized) {
-            if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
-                if (!isActiveWindowMaximized && !plasmoid.userConfiguring && !latteInEditMode){
-                    return 0;
-                }
+        if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
+            if (mustHide && !plasmoid.userConfiguring && !latteInEditMode){
+                return 0;
             }
         }
 
@@ -157,7 +155,6 @@ Item {
 
     Connections{
         target: !auroraeThemeEngine.isEnabled ? root : null
-      //  onCurrentSchemeChanged: initButtons();
         onThickPaddingChanged: initButtons();
     }
 
