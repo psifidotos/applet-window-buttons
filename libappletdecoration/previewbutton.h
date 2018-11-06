@@ -90,6 +90,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
     void hoverEnterEvent(QHoverEvent *event) override;
     void hoverLeaveEvent(QHoverEvent *event) override;
+    void focusOutEvent(QFocusEvent *event) override;
 //   void hoverMoveEvent(QHoverEvent *event) override;
 
     void componentComplete() override;

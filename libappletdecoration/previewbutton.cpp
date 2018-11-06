@@ -390,6 +390,11 @@ void PreviewButtonItem::hoverLeaveEvent(QHoverEvent *event)
                   m_button->geometry().center(),
                   event->modifiers());
 
+    QCoreApplication::instance()->sendEvent(m_button, &e);
+}
+
+void PreviewButtonItem::focusOutEvent(QFocusEvent *event)
+{
     QCoreApplication::instance()->sendEvent(m_button, event);
 }
 
