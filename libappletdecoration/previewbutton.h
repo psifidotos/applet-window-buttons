@@ -122,6 +122,7 @@ private:
 
     QString m_scheme;
     QRect m_internalGeometry;
+    QRect m_fullGeometry;
 
     Padding *m_padding;
 };

@@ -309,6 +309,7 @@ void PreviewButtonItem::syncInternalGeometry()
     int iHeight = height() - m_padding->top() - m_padding->bottom();
 
     m_internalGeometry = QRect(m_padding->left(), m_padding->top(), iWidth, iHeight);
+    m_fullGeometry = QRect(0, 0, width(), height());
 
     if (!m_button) {
         return;
@@ -363,7 +364,7 @@ void PreviewButtonItem::mouseReleaseEvent(QMouseEvent *event)
         return;
     }
 
-    bool inItem {m_button->geometry().contains(event->localPos())};
+    bool inItem {m_fullGeometry.contains(event->localPos().x(), event->localPos().y())};
 
     //! this a workaround for DecorationButton::contains
     //! to accept the event as valid. For some reason
