@@ -26,6 +26,7 @@ MouseArea{
     id: button
     hoverEnabled: true
 
+    property bool isActive: true
     property bool isOnAllDesktops: false
     property bool isMaximized: false
     readonly property bool isToggledActivated: {
