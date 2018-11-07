@@ -50,6 +50,7 @@ Item {
 
     // used from the ui
     readonly property real centerFactor: 0.35
+    readonly property int minimumWidth: 220
     property string currentPlugin: root.useCurrent ? decorations.currentPlugin : root.selectedPlugin
     property string currentTheme: root.useCurrent ? decorations.currentTheme : root.selectedTheme
 
@@ -94,7 +95,7 @@ Item {
 
         RowLayout{
             Label {
-                Layout.minimumWidth: centerFactor * root.width
+                Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
                 text: i18n("Decoration:")
                 horizontalAlignment: Text.AlignRight
             }
@@ -159,7 +160,7 @@ Item {
             columns: 2
 
             Label{
-                Layout.minimumWidth: centerFactor * root.width
+                Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
                 text: i18n("Buttons:")
                 horizontalAlignment: Text.AlignRight
             }
@@ -178,7 +179,7 @@ Item {
             columns: 2
 
             Label{
-                Layout.minimumWidth: centerFactor * root.width
+                Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
                 text: i18n("Visual behavior:")
                 horizontalAlignment: Text.AlignRight
             }
@@ -199,14 +200,13 @@ Item {
 
         ColumnLayout{
             id: visualSettings
-            //spacing: behaviorGrid
 
             GridLayout{
                 id: visualSettingsGroup1
                 columns: 2
 
                 Label{
-                    Layout.minimumWidth: centerFactor * root.width
+                    Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
                     text: i18n("Metrics:")
                     horizontalAlignment: Text.AlignRight
                 }
@@ -217,7 +217,7 @@ Item {
                 }
 
                 Label{
-                    Layout.minimumWidth: centerFactor * root.width
+                    Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
                     text: i18n("Icons spacing:")
                     horizontalAlignment: Text.AlignRight
                     enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
@@ -232,7 +232,7 @@ Item {
                 }
 
                 Label{
-                    Layout.minimumWidth: centerFactor * root.width
+                    Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
                     text: i18n("Thickness margin:")
                     horizontalAlignment: Text.AlignRight
                     enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
@@ -260,13 +260,13 @@ Item {
 
                 Label{
                     id: firstLengthLbl
-                    Layout.minimumWidth: centerFactor * root.width
+                    Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
                     text: i18n("First length margin:")
                     horizontalAlignment: Text.AlignRight
                 }
 
                 Label{
-                    Layout.minimumWidth: centerFactor * root.width
+                    Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
                     text: i18n("Last length margin:")
                     horizontalAlignment: Text.AlignRight
 
