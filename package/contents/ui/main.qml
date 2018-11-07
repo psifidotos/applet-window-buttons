@@ -116,21 +116,21 @@ Item {
                                        decorations.currentPlugin : plasmoid.configuration.selectedPlugin
     property string currentTheme: plasmoid.configuration.useCurrentDecoration ?
                                       decorations.currentTheme : plasmoid.configuration.selectedTheme
-    property string currentScheme: enforceLattePalette ? latteSettings.palette.scheme : "kdeglobals"
+    property string currentScheme: enforceLattePalette ? latteBridge.palette.scheme : "kdeglobals"
     // END decoration properties
 
     //BEGIN Latte Dock Communicator
-    property QtObject latteSettings: null
+    property QtObject latteBridge: null
 
-    onLatteSettingsChanged: {
-        if (latteSettings) {
-            latteSettings.disableLatteSideColoring = true;
+    onLatteBridgeChanged: {
+        if (latteBridge) {
+            latteBridge.actions.setProperty(plasmoid.id, "disableLatteSideColoring", true);
         }
     }
     //END  Latte Dock Communicator
     //BEGIN Latte based properties
-    readonly property bool enforceLattePalette: latteSettings && latteSettings.applyPalette && latteSettings.palette
-    readonly property bool latteInEditMode: latteSettings && latteSettings.inEditMode
+    readonly property bool enforceLattePalette: latteBridge && latteBridge.applyPalette && latteBridge.palette
+    readonly property bool latteInEditMode: latteBridge && latteBridge.inEditMode
     //END Latte based properties
 
     //START Behaviors
