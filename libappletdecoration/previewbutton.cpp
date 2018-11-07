@@ -20,6 +20,7 @@
  */
 #include "previewbutton.h"
 
+#include "padding.h"
 #include "previewbridge.h"
 #include "previewclient.h"
 #include "previewsettings.h"
@@ -36,11 +37,20 @@ namespace Applet {
 
 PreviewButtonItem::PreviewButtonItem(QQuickItem *parent)
     : QQuickPaintedItem(parent),
-      m_scheme("kdeglobals")
+      m_scheme("kdeglobals"),
+      m_padding(new Padding(this))
 {
     setAcceptHoverEvents(true);
     setFiltersChildMouseEvents(true);
     setAcceptedMouseButtons(Qt::MouseButtons(Qt::LeftButton));
+
+    connect(this, &PreviewButtonItem::widthChanged, this, &PreviewButtonItem::syncInternalGeometry);
+    connect(this, &PreviewButtonItem::heightChanged, this, &PreviewButtonItem::syncInternalGeometry);
+
+    connect(m_padding, &Padding::leftChanged, this, &PreviewButtonItem::syncInternalGeometry);
+    connect(m_padding, &Padding::rightChanged, this, &PreviewButtonItem::syncInternalGeometry);
+    connect(m_padding, &Padding::topChanged, this, &PreviewButtonItem::syncInternalGeometry);
+    connect(m_padding, &Padding::bottomChanged, this, &PreviewButtonItem::syncInternalGeometry);
 }
 
 PreviewButtonItem::~PreviewButtonItem()
@@ -143,6 +153,11 @@ void PreviewButtonItem::setIsOnAllDesktops(bool onalldesktops)
 KDecoration2::DecorationButtonType PreviewButtonItem::type() const
 {
     return m_type;
+}
+
+Padding *PreviewButtonItem::padding() const
+{
+    return m_padding;
 }
 
 void PreviewButtonItem::setType(int type)
@@ -285,19 +300,23 @@ void PreviewButtonItem::createButton()
 
     m_button = m_bridge->createButton(m_decoration, m_type, this);
 
-    connect(this, &PreviewButtonItem::widthChanged, this, &PreviewButtonItem::syncGeometry);
-    connect(this, &PreviewButtonItem::heightChanged, this, &PreviewButtonItem::syncGeometry);
-
-    syncGeometry();
+    syncInternalGeometry();
 }
 
-void PreviewButtonItem::syncGeometry()
+void PreviewButtonItem::syncInternalGeometry()
 {
+    int iWidth = width() - m_padding->left() - m_padding->right();
+    int iHeight = height() - m_padding->top() - m_padding->bottom();
+
+    m_internalGeometry = QRect(m_padding->left(), m_padding->top(), iWidth, iHeight);
+
     if (!m_button) {
         return;
     }
 
-    m_button->setGeometry(QRect(0, 0, width(), height()));
+    m_button->setGeometry(m_internalGeometry);
+
+    update();
 }
 
 void PreviewButtonItem::paint(QPainter *painter)
@@ -306,7 +325,7 @@ void PreviewButtonItem::paint(QPainter *painter)
         return;
     }
 
-    m_button->paint(painter, QRect(0, 0, width(), height()));
+    m_button->paint(painter, m_internalGeometry);
 }
 
 void PreviewButtonItem::mouseDoubleClickEvent(QMouseEvent *event)

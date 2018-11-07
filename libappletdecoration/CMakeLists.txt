@@ -16,6 +16,7 @@ set(appletdecoration_SRCS
     decorationsmodel.cpp
     decorationpalette.cpp
     buttonsmodel.cpp
+    padding.cpp
     previewbutton.cpp
     previewbridge.cpp
     previewclient.cpp

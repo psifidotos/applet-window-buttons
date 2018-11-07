@@ -38,11 +38,11 @@
       <label>margin used to increase or decrease the icons size based on the context that are present</label>
     </entry>
     <entry name="lengthFirstMargin" type="Int">
-      <default>2</default>
+      <default>0</default>
       <label>first margin used to increase or decrease the icons distance from surrounding applets</label>
     </entry>
     <entry name="lengthLastMargin" type="Int">
-      <default>2</default>
+      <default>0</default>
       <label>last margin used to increase or decrease the icons distance from surrounding applets</label>
     </entry>
     <entry name="lengthMarginsLock" type="Bool">
@@ -50,7 +50,7 @@
       <label>used only by the settings window in order to remember the user choice concerning the locker</label>
     </entry>
     <entry name="spacing" type="Int">
-      <default>2</default>
+      <default>4</default>
       <label>spacing between icons</label>
     </entry>
   </group>

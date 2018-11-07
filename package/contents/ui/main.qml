@@ -64,7 +64,7 @@ Item {
             }
         }
 
-        return plasmoid.formFactor === PlasmaCore.Types.Horizontal ? buttonsArea.height : -1;
+        return plasmoid.formFactor === PlasmaCore.Types.Horizontal ? -1 : buttonsArea.height
     }
 
     readonly property string buttonsStr: plasmoid.configuration.buttons
@@ -84,13 +84,19 @@ Item {
         if (auroraeThemeEngine.isEnabled && plasmoid.configuration.useDecorationMetrics) {
             return plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
                         ((root.height - auroraeThemeEngine.buttonHeight) / 2) - 1 :
-                        ((root.width - auroraeThemeEngine.buttonHeight) / 2) - 1
+                        ((root.width - auroraeThemeEngine.buttonHeight) / 2) - 1;
         }
 
         return plasmoid.configuration.thicknessMargin;
     }
-    property int lengthFirstPadding: plasmoid.configuration.lengthFirstMargin
-    property int lengthLastPadding: plasmoid.configuration.lengthLastMargin
+
+    property int lengthFirstMargin: plasmoid.configuration.lengthFirstMargin
+    property int lengthLastMargin: plasmoid.configuration.lengthLastMargin
+
+    property int lengthFirstPadding: Math.min(lengthFirstMargin, lengthMidPadding)
+    property int lengthMidPadding: spacing / 2
+    property int lengthLastPadding: Math.min(lengthLastMargin, lengthMidPadding)
+
     property int spacing: {
         if (auroraeThemeEngine.isEnabled && plasmoid.configuration.useDecorationMetrics) {
             return auroraeThemeEngine.buttonSpacing;
@@ -307,20 +313,20 @@ Item {
     Grid {
         id: buttonsArea
 
-        rowSpacing: root.spacing
-        columnSpacing: root.spacing
+        rowSpacing: 0
+        columnSpacing: 0
 
-        leftPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? lengthFirstPadding : thickPadding
-        rightPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? lengthLastPadding : thickPadding
-        bottomPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : lengthLastPadding
-        topPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : lengthFirstPadding
+        leftPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? lengthFirstMargin : 0
+        rightPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? lengthLastMargin : 0
+        bottomPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? 0 : lengthLastMargin
+        topPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? 0 : lengthFirstMargin
 
         rows: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? 1 : 0
         columns: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? 0 : 1
 
-        readonly property int buttonHeight: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
-                                                root.height - 2 * thickPadding :
-                                                root.width - 2 * thickPadding
+        readonly property int buttonThickness: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
+                                                   root.height - 2 * thickPadding :
+                                                   root.width - 2 * thickPadding
 
         Repeater {
             id: buttonsRepeater
@@ -333,8 +339,14 @@ Item {
         id: pluginButton
         AppletDecoration.Button {
             id: cButton
-            width: height
-            height: buttonsArea.buttonHeight
+            width: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
+                       Math.max(height, buttonsArea.buttonThickness + padding.left + padding.right) :
+                       buttonsArea.buttonThickness + 2 * thickPadding
+
+            height: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
+                        buttonsArea.buttonThickness + 2 * thickPadding :
+                        Math.max(width, buttonsArea.buttonThickness + padding.top + padding.bottom)
+
 
             bridge: bridgeItem.bridge
             settings: settingsItem
@@ -344,17 +356,52 @@ Item {
             isOnAllDesktops: root.isActiveWindowPinned
             isMaximized: root.isActiveWindowMaximized
 
+            padding{
+                left: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? lengthMidPadding : thickPadding
+                right: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? lengthMidPadding : thickPadding
+                top: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : lengthMidPadding
+                bottom: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : lengthMidPadding
+            }
+
             onClicked: {
                 root.performActiveWindowAction(windowOperation);
             }
+
+           /* Rectangle{
+                anchors.fill: parent
+                color: "transparent"
+                border.width: 1
+                border.color: "red"
+            }
+
+            Rectangle{
+                x: cButton.padding.left
+                y: cButton.padding.top
+                width: cButton.width - cButton.padding.left - cButton.padding.right
+                height: cButton.height - cButton.padding.top - cButton.padding.bottom
+
+                color: "transparent"
+                border.width: 1
+                border.color: "blue"
+            } */
         }
     }
 
     Component {
         id: auroraeButton
         AppletDecoration.AuroraeButton {
-            width: auroraeTheme.buttonRatio * height
-            height: buttonsArea.buttonHeight
+            id: aButton
+            width: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
+                       Math.max(height, auroraeTheme.buttonRatio * height + leftPadding + rightPadding) :
+                       buttonsArea.buttonThickness + 2 * thickPadding
+            height: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
+                        buttonsArea.buttonThickness + 2 * thickPadding :
+                        Math.max(width, auroraeTheme.buttonRatio * width + topPadding + bottomPadding)
+
+            leftPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? lengthMidPadding : thickPadding
+            rightPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? lengthMidPadding : thickPadding
+            topPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : lengthMidPadding
+            bottomPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : lengthMidPadding
 
             isActive: true
             isOnAllDesktops: root.isActiveWindowPinned
@@ -365,6 +412,24 @@ Item {
             onClicked: {
                 root.performActiveWindowAction(windowOperation);
             }
+
+          /*  Rectangle{
+                anchors.fill: parent
+                color: "transparent"
+                border.width: 1
+                border.color: "red"
+            }
+
+            Rectangle{
+                x: aButton.leftPadding
+                y: aButton.topPadding
+                width: aButton.width - aButton.leftPadding - aButton.rightPadding
+                height: aButton.height - aButton.topPadding - aButton.bottomPadding
+
+                color: "transparent"
+                border.width: 1
+                border.color: "blue"
+            } */
         }
     }
 

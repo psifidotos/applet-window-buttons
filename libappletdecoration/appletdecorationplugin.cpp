@@ -24,6 +24,7 @@
 #include "auroraetheme.h"
 #include "buttonsmodel.h"
 #include "decorationsmodel.h"
+#include "padding.h"
 #include "previewbridge.h"
 #include "previewclient.h"
 #include "previewbutton.h"
@@ -53,6 +54,8 @@ void AppletDecorationPlugin::registerTypes(const char *uri)
     qmlRegisterType<Decoration::Applet::Settings>(uri, 0, 1, "Settings");
     qmlRegisterType<Decoration::Applet::PreviewButtonItem>(uri, 0, 1, "Button");
     qmlRegisterType<Decoration::Applet::DecorationsModel>(uri, 0, 1, "DecorationsModel");
+
+    qmlRegisterType<Decoration::Applet::Padding>();
     qmlRegisterType<Decoration::Applet::PreviewClient>();
     qmlRegisterType<Decoration::Applet::PreviewBridge>();
     qmlRegisterType<KDecoration2::Decoration>();

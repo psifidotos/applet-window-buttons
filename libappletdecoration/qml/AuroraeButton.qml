@@ -33,8 +33,13 @@ MouseArea{
         return (isOnAllDesktops && buttonType === AppletDecoration.Types.OnAllDesktops);
     }
 
+    property int topPadding: 0
+    property int bottomPadding: 0
+    property int leftPadding: 0
+    property int rightPadding: 0
     property int buttonType: AppletDecoration.Types.Close
     property int duration: auroraeTheme ? auroraeTheme.duration : 0
+
     property QtObject auroraeTheme: null
 
     property string buttonImagePath: auroraeTheme ? auroraeTheme.themePath + '/' + iconName + '.' + auroraeTheme.themeType : ""
@@ -63,13 +68,27 @@ MouseArea{
     }
 
     // normal icon
-    PlasmaCore.SvgItem {
+    Item {
         id: svgNormalItem
         anchors.fill: parent
-        svg: buttonSvg
-        elementId: svgNormalElementId
+        anchors.topMargin: topPadding
+        anchors.bottomMargin: bottomPadding
+        anchors.leftMargin: leftPadding
+        anchors.rightMargin: rightPadding
 
         opacity: !containsMouse && !containsPress && !isToggledActivated ? 1 : 0
+
+        PlasmaCore.SvgItem {
+            anchors.centerIn: parent
+            width: auroraeTheme.buttonRatio * height
+            height: minimumSide
+
+            property int minimumSide: Math.min(parent.width,parent.height)
+
+            svg: buttonSvg
+            elementId: svgNormalElementId
+        }
+
 
         Behavior on opacity {
             NumberAnimation {
@@ -83,9 +102,21 @@ MouseArea{
     PlasmaCore.SvgItem {
         id: svgHoveredItem
         anchors.fill: parent
-        svg: buttonSvg
-        elementId: svgHoveredElementId
+        anchors.topMargin: topPadding
+        anchors.bottomMargin: bottomPadding
+        anchors.leftMargin: leftPadding
+        anchors.rightMargin: rightPadding
 
         opacity: Math.abs(svgNormalItem.opacity - 1)
+
+        PlasmaCore.SvgItem {
+            anchors.centerIn: parent
+            width: auroraeTheme.buttonRatio * height
+            height: minimumSide
+
+            property int minimumSide: Math.min(parent.width,parent.height)
+            svg: buttonSvg
+            elementId: svgHoveredElementId
+        }
     }
 }

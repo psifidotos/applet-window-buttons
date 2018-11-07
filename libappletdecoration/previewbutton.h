@@ -21,6 +21,7 @@
 #ifndef KDECORATIONS_PREVIEW_BUTTON_ITEM_H
 #define KDECORATIONS_PREVIEW_BUTTON_ITEM_H
 
+#include <QMargins>
 #include <QQuickPaintedItem>
 #include <QPointer>
 #include <KDecoration2/DecorationButton>
@@ -32,6 +33,7 @@ class Decoration;
 namespace Decoration {
 namespace Applet {
 
+class Padding;
 class PreviewBridge;
 class PreviewClient;
 class Settings;
@@ -46,6 +48,7 @@ class PreviewButtonItem : public QQuickPaintedItem
     Q_PROPERTY(bool isOnAllDesktops READ isOnAllDesktops WRITE setIsOnAllDesktops NOTIFY isOnAllDesktopsChanged);
     Q_PROPERTY(int type READ typeAsInt WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(QString scheme READ scheme WRITE setScheme NOTIFY schemeChanged)
+    Q_PROPERTY(Decoration::Applet::Padding *padding READ padding NOTIFY paddingChanged)
 
 public:
     explicit PreviewButtonItem(QQuickItem *parent = nullptr);
@@ -77,14 +80,17 @@ public:
     QString scheme() const;
     void setScheme(QString scheme);
 
+    Padding *padding() const;
+
 Q_SIGNALS:
     void bridgeChanged();
     void isActiveChanged();
     void isMaximizedChanged();
     void isOnAllDesktopsChanged();
-    void typeChanged();
+    void paddingChanged();
     void schemeChanged();
     void settingsChanged();
+    void typeChanged();
 
     void clicked();
 
@@ -101,7 +107,8 @@ protected:
 
 private:
     void createButton();
-    void syncGeometry();
+    void syncInternalGeometry();
+
     QPointer<Decoration::Applet::PreviewBridge> m_bridge;
     QPointer<Decoration::Applet::PreviewClient> m_client;
     QPointer<Decoration::Applet::Settings> m_settings;
@@ -114,6 +121,9 @@ private:
     bool m_isOnAllDesktops{false};
 
     QString m_scheme;
+    QRect m_internalGeometry;
+
+    Padding *m_padding;
 };
 
 } // namespace Applet
