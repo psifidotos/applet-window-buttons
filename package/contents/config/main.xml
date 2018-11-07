@@ -53,5 +53,9 @@
       <default>4</default>
       <label>spacing between icons</label>
     </entry>
+    <entry name="formFactor" type="Int">
+      <default>2</default>
+      <label>it is used in order to inform settings window about the plasmoid form factor. 2=Horizontal and 3=Vertical</label>
+    </entry>
   </group>
 </kcfg>

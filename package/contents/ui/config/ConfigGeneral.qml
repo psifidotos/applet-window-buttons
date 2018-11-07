@@ -261,13 +261,15 @@ Item {
                 Label{
                     id: firstLengthLbl
                     Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
-                    text: i18n("First length margin:")
+                    text: plasmoid.configuration.formFactor===PlasmaCore.Types.Horizontal ?
+                              i18n("Left margin:") : i18n("Top margin:")
                     horizontalAlignment: Text.AlignRight
                 }
 
                 Label{
                     Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
-                    text: i18n("Last length margin:")
+                    text: plasmoid.configuration.formFactor===PlasmaCore.Types.Horizontal ?
+                              i18n("Right margin:") : i18n("Bottom margin:")
                     horizontalAlignment: Text.AlignRight
 
                     enabled: !lockItem.locked

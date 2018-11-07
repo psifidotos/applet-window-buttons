@@ -41,6 +41,7 @@ Item {
     Layout.maximumWidth: Layout.minimumWidth
 
     Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
+    Plasmoid.onFormFactorChanged: plasmoid.configuration.formFactor = plasmoid.formFactor;
 
     property int animatedMinimumWidth: minimumWidth
     property int animatedMinimumHeight: minimumHeight
