@@ -23,7 +23,6 @@
 
 #include "previewbutton.h"
 #include "previewclient.h"
-#include "previewitem.h"
 #include "previewsettings.h"
 
 #include <KDecoration2/DecoratedClient>
@@ -68,14 +67,6 @@ std::unique_ptr<KDecoration2::DecoratedClientPrivate> PreviewBridge::createClien
 void PreviewBridge::update(KDecoration2::Decoration *decoration, const QRect &geometry)
 {
     Q_UNUSED(geometry)
-    /*auto it = std::find_if(m_previewItems.constBegin(), m_previewItems.constEnd(), [decoration](PreviewItem * item) {
-        return item->decoration() == decoration;
-    });
-
-    if (it != m_previewItems.constEnd()) {
-        (*it)->update();
-    }*/
-
     auto it = std::find_if(m_previewButtons.constBegin(), m_previewButtons.constEnd(), [decoration](PreviewButtonItem * item) {
         return item->decoration() == decoration;
     });
@@ -90,16 +81,6 @@ std::unique_ptr<KDecoration2::DecorationSettingsPrivate> PreviewBridge::settings
     auto ptr = std::unique_ptr<PreviewSettings>(new PreviewSettings(parent));
     m_lastCreatedSettings = ptr.get();
     return std::move(ptr);
-}
-
-void PreviewBridge::registerPreviewItem(PreviewItem *item)
-{
-    m_previewItems.append(item);
-}
-
-void PreviewBridge::unregisterPreviewItem(PreviewItem *item)
-{
-    m_previewItems.removeAll(item);
 }
 
 void PreviewBridge::registerButton(PreviewButtonItem *button)

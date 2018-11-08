@@ -12,15 +12,14 @@ include(KDECompilerSettings)
 
 set(appletdecoration_SRCS
     appletdecorationplugin.cpp
+    buttonsmodel.cpp
     auroraetheme.cpp
     decorationsmodel.cpp
     decorationpalette.cpp
-    buttonsmodel.cpp
     padding.cpp
     previewbutton.cpp
     previewbridge.cpp
     previewclient.cpp
-    previewitem.cpp
     previewsettings.cpp
     types.cpp
 )

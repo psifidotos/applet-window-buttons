@@ -34,7 +34,6 @@ namespace Applet {
 
 class PreviewButtonItem;
 class PreviewClient;
-class PreviewItem;
 class PreviewSettings;
 
 class PreviewBridge : public KDecoration2::DecorationBridge
@@ -57,9 +56,6 @@ public:
     PreviewSettings *lastCreatedSettings() {
         return m_lastCreatedSettings;
     }
-
-    void registerPreviewItem(PreviewItem *item);
-    void unregisterPreviewItem(PreviewItem *item);
 
     void registerButton(PreviewButtonItem *button);
     void unregisterButton(PreviewButtonItem *button);
@@ -86,7 +82,6 @@ private:
     void setValid(bool valid);
     PreviewClient *m_lastCreatedClient;
     PreviewSettings *m_lastCreatedSettings;
-    QList<PreviewItem *> m_previewItems;
     QList<PreviewButtonItem *> m_previewButtons;
     QString m_plugin;
     QString m_theme;
