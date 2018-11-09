@@ -42,7 +42,7 @@ Item{
 
         Rectangle{
             id: subRectTop
-            Layout.minimumWidth: button.width/2
+            Layout.minimumWidth: button.width/2 + Layout.minimumHeight/2
             Layout.minimumHeight: 3
             Layout.maximumWidth: Layout.minimumWidth
             Layout.maximumHeight: Layout.minimumHeight
