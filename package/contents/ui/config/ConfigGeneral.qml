@@ -110,60 +110,12 @@ Item {
                 text: i18n("Decoration:")
                 horizontalAlignment: Text.AlignRight
             }
-            ComboBox{
+
+            DecorationsComboBox{
                 id: decorationCmb
                 Layout.minimumWidth: 180
                 Layout.preferredWidth: 0.2 * root.width
                 Layout.maximumWidth: 300
-
-                model: decs
-
-                property var decs: []
-
-                function feedDecorations() {
-                    for (var i=0; i<sortedDecorations.count; ++i) {
-                        var d = sortedDecorations.get(i);
-                        decs.push(d.display);
-                    }
-
-                    decorationCmb.model = decs;
-                }
-
-                function indexFor(plugin, theme) {
-                    for (var i=0; i<sortedDecorations.count; ++i) {
-                        var d = sortedDecorations.get(i);
-                        if (d.plugin === plugin && d.theme === theme) {
-                            return i+1;
-                        }
-                    }
-
-                    return 0;
-                }
-
-                function initDecorations() {
-                    decs.push("Current");
-                }
-
-                onActivated: {
-                    if (index===0) {
-                        root.useCurrent = true;
-                        root.selectedPlugin = "";
-                        root.selectedTheme = "";
-                    } else {
-                        root.useCurrent = false;
-                        var d = sortedDecorations.get(index-1);
-                        root.selectedPlugin = d.plugin;
-                        root.selectedTheme = d.theme;
-                    }
-                }
-
-                Component.onCompleted: {
-                    initDecorations();
-                    feedDecorations();
-                    if (!root.useCurrent) {
-                        currentIndex = indexFor(root.currentPlugin, root.currentTheme);
-                    }
-                }
             }
         }
 

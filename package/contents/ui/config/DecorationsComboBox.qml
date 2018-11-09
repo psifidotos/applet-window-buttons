@@ -25,6 +25,9 @@ import QtQuick.Layouts 1.0
 Controls24.ComboBox{
     id: combobox
 
+    model: decs
+    property var decs: []
+
     Connections{
         target: popup
         onClosed: root.forceActiveFocus();
@@ -37,7 +40,7 @@ Controls24.ComboBox{
 
         onClicked: {
             combobox.currentIndex = index;
-            selectedScheme = model.file;
+            activateItem(index);
             root.forceActiveFocus();
         }
 
@@ -57,40 +60,60 @@ Controls24.ComboBox{
 
             readonly property color selectedColor: Qt.rgba(palette.highlight.r, palette.highlight.g, palette.highlight.b, 0.5);
 
-            RowLayout{
-                id: delegateRow
-                height: parent.height
-
-                Item{
-                    Layout.leftMargin: 2
-                    width: 1.25 * label.height
-                    height: label.height
-
-                    Rectangle{
-                        width: height
-                        height: 0.75 * label.height
-                        color: backgroundColor
-                        border.width: 1
-                        border.color: containsMouse  || (combobox.currentIndex === index) ? palette.highlightedText : palette.text
-
-                        Rectangle{
-                            anchors.horizontalCenter: parent.right
-                            anchors.verticalCenter: parent.bottom
-                            width: parent.width
-                            height: parent.height
-                            color: textColor
-                            border.width: parent.border.width
-                            border.color: parent.border.color
-                        }
-                    }
-                }
-
-                Label{
-                    id: label
-                    text:display
-                    color: containsMouse ? palette.highlightedText : palette.text
-                }
+            Label{
+                id: label
+                anchors.left: parent.left
+                anchors.leftMargin: units.smallSpacing
+                anchors.verticalCenter: parent.verticalCenter
+                text: decs[index];
+                color: containsMouse ? palette.highlightedText : palette.text
             }
+        }
+    }
+
+
+    function activateItem(itemIndex) {
+        if (itemIndex===0) {
+            root.useCurrent = true;
+            root.selectedPlugin = "";
+            root.selectedTheme = "";
+        } else {
+            root.useCurrent = false;
+            var d = sortedDecorations.get(itemIndex-1);
+            root.selectedPlugin = d.plugin;
+            root.selectedTheme = d.theme;
+        }
+    }
+
+    function feedDecorations() {
+        for (var i=0; i<sortedDecorations.count; ++i) {
+            var d = sortedDecorations.get(i);
+            decs.push(d.display);
+        }
+
+        decorationCmb.model = decs;
+    }
+
+    function indexFor(plugin, theme) {
+        for (var i=0; i<sortedDecorations.count; ++i) {
+            var d = sortedDecorations.get(i);
+            if (d.plugin === plugin && d.theme === theme) {
+                return i+1;
+            }
+        }
+
+        return 0;
+    }
+
+    function initDecorations() {
+        decs.push("Current");
+    }
+
+    Component.onCompleted: {
+        initDecorations();
+        feedDecorations();
+        if (!root.useCurrent) {
+            currentIndex = indexFor(root.currentPlugin, root.currentTheme);
         }
     }
 }
