@@ -2,6 +2,8 @@
  * Copyright 2014  Martin Gräßlin <mgraesslin@kde.org>
  *           2018  Michail Vourlakos <mvourlakos@gmail.org>
  *
+ *  This file is part of the libappletdecoration library
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of

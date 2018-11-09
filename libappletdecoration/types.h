@@ -1,8 +1,7 @@
 /*
 *  Copyright 2018  Michail Vourlakos <mvourlakos@gmail.com>
 *
-*
-*  This file is part of Latte-Dock
+*  This file is part of the libappletdecoration library
 *
 *  Latte-Dock is free software; you can redistribute it and/or
 *  modify it under the terms of the GNU General Public License as
