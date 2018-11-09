@@ -21,6 +21,7 @@ set(appletdecoration_SRCS
     previewbridge.cpp
     previewclient.cpp
     previewsettings.cpp
+    schemecolors.cpp
     types.cpp
 )
 
