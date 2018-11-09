@@ -31,6 +31,7 @@
 #include <KDecoration2/Decoration>
 
 #include <KCModule>
+#include <KDirWatch>
 #include <KPluginLoader>
 #include <KPluginFactory>
 #include <KPluginTrader>
@@ -41,12 +42,14 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QStandardPaths>
 #include <QVBoxLayout>
 
 namespace Decoration {
 namespace Applet {
 
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration2");
+static const QString s_breezerc = QStringLiteral("breezerc");
 
 PreviewBridge::PreviewBridge(QObject *parent)
     : KDecoration2::DecorationBridge(parent)
@@ -55,6 +58,14 @@ PreviewBridge::PreviewBridge(QObject *parent)
     , m_valid(false)
 {
     connect(this, &PreviewBridge::pluginChanged, this, &PreviewBridge::createFactory);
+
+    const auto breezeRc = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) +
+                          QLatin1Char('/') + s_breezerc;
+
+    KDirWatch::self()->addFile(breezeRc);
+
+    connect(KDirWatch::self(), &KDirWatch::dirty, this, &PreviewBridge::settingsFileChanged);
+    connect(KDirWatch::self(), &KDirWatch::created, this, &PreviewBridge::settingsFileChanged);
 }
 
 PreviewBridge::~PreviewBridge() = default;
@@ -150,6 +161,7 @@ void PreviewBridge::createFactory()
     m_factory = loader.factory();
     qDebug() << "Factory: " << !m_factory.isNull();
     setValid(!m_factory.isNull());
+    reconfigure();
 }
 
 bool PreviewBridge::isValid() const
@@ -190,6 +202,23 @@ KDecoration2::DecorationButton *PreviewBridge::createButton(KDecoration2::Decora
 
     return m_factory->create<KDecoration2::DecorationButton>(QStringLiteral("button"), parent, QVariantList({QVariant::fromValue(type), QVariant::fromValue(decoration)}));
 }
+
+void PreviewBridge::settingsFileChanged(const QString &filename)
+{
+    if (!filename.endsWith(s_breezerc)) {
+        return;
+    }
+
+    reconfigure();
+}
+
+void PreviewBridge::reconfigure()
+{
+    if (m_lastCreatedSettings) {
+        emit m_lastCreatedSettings->decorationSettings()->reconfigured();
+    }
+}
+
 
 void PreviewBridge::configure()
 {

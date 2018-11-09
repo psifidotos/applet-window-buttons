@@ -74,11 +74,15 @@ public:
 
 public Q_SLOTS:
     void configure();
+    void reconfigure();
 
 Q_SIGNALS:
     void pluginChanged();
     void themeChanged();
     void validChanged();
+
+private slots:
+    void settingsFileChanged(const QString &filename);
 
 private:
     void createFactory();
