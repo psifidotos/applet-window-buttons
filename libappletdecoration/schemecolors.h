@@ -24,7 +24,8 @@
 #include <QObject>
 #include <QColor>
 
-namespace Latte {
+namespace Decoration {
+namespace Applet {
 
 class SchemeColors: public QObject
 {
@@ -105,6 +106,7 @@ private:
     QColor m_buttonFocusColor;
 };
 
+}
 }
 
 #endif

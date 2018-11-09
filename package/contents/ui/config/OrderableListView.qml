@@ -177,6 +177,7 @@ Item {
                 type: buttonType
                 isOnAllDesktops: false
                 isMaximized: false
+                scheme: selectedScheme
 
                 visible: buttonType !== AppletDecoration.Types.Custom
             }

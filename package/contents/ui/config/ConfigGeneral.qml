@@ -19,6 +19,7 @@
 
 import QtQuick 2.0
 import QtQuick.Controls 1.0
+import QtQuick.Controls 2.4 as Controls24
 import QtQuick.Layouts 1.0
 
 import org.kde.plasma.core 2.0 as PlasmaCore
@@ -31,6 +32,7 @@ Item {
 
     property alias cfg_useCurrentDecoration: root.useCurrent
     property alias cfg_selectedPlugin: root.selectedPlugin
+    property alias cfg_selectedScheme: root.selectedScheme
     property alias cfg_selectedTheme: root.selectedTheme
     property alias cfg_buttons: root.currentButtons
     property alias cfg_showOnlyForActiveAndMaximized: onlyOnMaximizedChk.checked
@@ -45,6 +47,7 @@ Item {
     // used as bridge to communicate properly between configuration and ui
     property bool useCurrent
     property string selectedPlugin
+    property string selectedScheme
     property string selectedTheme
     property string currentButtons
 
@@ -76,6 +79,14 @@ Item {
 
     AppletDecoration.DecorationsModel {
         id: decorations
+    }
+
+    AppletDecoration.ColorsModel {
+        id: colorsModel
+    }
+
+    SystemPalette {
+        id: palette
     }
 
     // sort decorations based on display name
@@ -152,6 +163,29 @@ Item {
                     if (!root.useCurrent) {
                         currentIndex = indexFor(root.currentPlugin, root.currentTheme);
                     }
+                }
+            }
+        }
+
+        RowLayout{
+            visible: !auroraeThemeEngine.isEnabled
+
+            Label {
+                Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
+                text: i18n("Colors:")
+                horizontalAlignment: Text.AlignRight
+            }
+
+            ColorsComboBox{
+                Layout.minimumWidth: 250
+                Layout.preferredWidth: 0.3 * root.width
+                Layout.maximumWidth: 380
+
+                model: colorsModel
+                textRole: "display"
+
+                Component.onCompleted: {
+                    currentIndex = colorsModel.indexOf(plasmoid.configuration.selectedScheme);
                 }
             }
         }
@@ -292,7 +326,7 @@ Item {
                     }
 
                     Component.onCompleted: {
-                        lastValue = plasmoid.configuration.legthFirstMargin;
+                        lastValue = plasmoid.configuration.lengthFirstMargin;
                     }
                 }
 

@@ -28,7 +28,8 @@
 #include <KDirWatch>
 #include <KSharedConfig>
 
-namespace Latte {
+namespace Decoration {
+namespace Applet {
 
 SchemeColors::SchemeColors(QObject *parent, QString scheme, bool plasmaTheme) :
     QObject(parent),
@@ -55,7 +56,6 @@ SchemeColors::SchemeColors(QObject *parent, QString scheme, bool plasmaTheme) :
 
 SchemeColors::~SchemeColors()
 {
-///
 }
 
 QColor SchemeColors::backgroundColor() const
@@ -240,4 +240,5 @@ void SchemeColors::updateScheme()
     emit colorsChanged();
 }
 
+}
 }

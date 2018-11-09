@@ -26,6 +26,8 @@
 namespace Decoration {
 namespace Applet {
 
+class SchemeColors;
+
 class SchemesModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -38,6 +40,16 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QHash< int, QByteArray > roleNames() const override;
 
+    Q_INVOKABLE int indexOf(QString file);
+
+private slots:
+    void initSchemes();
+
+private:
+    void insertSchemeInList(QString file);
+
+private:
+    QList<Decoration::Applet::SchemeColors *> m_schemes;
 };
 
 }

@@ -123,7 +123,8 @@ Item {
                                        decorations.currentPlugin : plasmoid.configuration.selectedPlugin
     property string currentTheme: plasmoid.configuration.useCurrentDecoration ?
                                       decorations.currentTheme : plasmoid.configuration.selectedTheme
-    property string currentScheme: enforceLattePalette ? latteBridge.palette.scheme : "kdeglobals"
+    property string currentScheme: enforceLattePalette && plasmoid.configuration.selectedScheme === "kdeglobals"
+                                   ? latteBridge.palette.scheme : plasmoid.configuration.selectedScheme
     // END decoration properties
 
     //BEGIN Latte Dock Communicator
