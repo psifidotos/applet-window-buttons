@@ -134,7 +134,8 @@ Item {
     // END decoration properties
 
     //BEGIN Latte Dock Communicator
-    property QtObject latteBridge: null
+    property bool isInLatte: false  // deprecated Latte v0.8 API
+    property QtObject latteBridge: null // current Latte v0.9 API
 
     onLatteBridgeChanged: {
         if (latteBridge) {
@@ -478,10 +479,10 @@ Item {
         id: containmentIdentifierTimer
         interval: 5000
         onTriggered: {
-            if (!latteBridge) {
-                plasmoid.configuration.containmentType = AppletDecoration.Types.Plasma;
-            } else {
+            if (latteBridge || isInLatte) {
                 plasmoid.configuration.containmentType = AppletDecoration.Types.Latte;
+            } else {
+                plasmoid.configuration.containmentType = AppletDecoration.Types.Plasma;
             }
         }
     }
