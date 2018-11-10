@@ -27,6 +27,7 @@
 #include "previewbutton.h"
 #include "previewsettings.h"
 #include "schemesmodel.h"
+#include "windowsystem.h"
 
 #include "types.h"
 
@@ -50,6 +51,7 @@ void AppletDecorationPlugin::registerTypes(const char *uri)
     qmlRegisterType<Decoration::Applet::PreviewButtonItem>(uri, 0, 1, "Button");
     qmlRegisterType<Decoration::Applet::DecorationsModel>(uri, 0, 1, "DecorationsModel");
     qmlRegisterType<Decoration::Applet::SchemesModel>(uri, 0, 1, "ColorsModel");
+    qmlRegisterType<Decoration::Applet::WindowSystem>(uri, 0, 1, "WindowSystem");
 
     qmlRegisterType<Decoration::Applet::Padding>();
     qmlRegisterType<Decoration::Applet::PreviewClient>();

@@ -24,6 +24,7 @@ set(appletdecoration_SRCS
     schemecolors.cpp
     schemesmodel.cpp
     types.cpp
+    windowsystem.cpp
 )
 
 add_library(appletdecorationplugin SHARED ${appletdecoration_SRCS})

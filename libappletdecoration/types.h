@@ -72,6 +72,14 @@ public:
     };
     Q_ENUM(ButtonSize)
 
+    enum ContainmentType
+    {
+        Loading = 0,
+        Plasma,
+        Latte
+    };
+    Q_ENUM(ContainmentType)
+
 };
 
 }

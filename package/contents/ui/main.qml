@@ -46,7 +46,9 @@ Item {
     property int animatedMinimumWidth: minimumWidth
     property int animatedMinimumHeight: minimumHeight
 
+    readonly property bool disabledMaximizedBorders: plasmoid.configuration.disabledMaximizedBorders
     readonly property bool mustHide: !existsWindowActive || (plasmoid.configuration.showOnlyForActiveAndMaximized && !isActiveWindowMaximized)
+    readonly property int containmentType: plasmoid.configuration.containmentType
 
     readonly property int minimumWidth: {
         if (plasmoid.formFactor === PlasmaCore.Types.Horizontal) {
@@ -132,6 +134,7 @@ Item {
 
     onLatteBridgeChanged: {
         if (latteBridge) {
+            plasmoid.configuration.containmentType = AppletDecoration.Types.Latte;
             latteBridge.actions.setProperty(plasmoid.id, "disableLatteSideColoring", true);
         }
     }
@@ -161,6 +164,18 @@ Item {
 
     onButtonsStrChanged: initButtons();
 
+    onContainmentTypeChanged: {
+        if (containmentType === AppletDecoration.Types.Plasma) {
+            windowSystem.setDisabledMaximizedBorders(disabledMaximizedBorders);
+        }
+    }
+
+    onDisabledMaximizedBordersChanged: {
+        if (containmentType === AppletDecoration.Types.Plasma) {
+            windowSystem.setDisabledMaximizedBorders(disabledMaximizedBorders);
+        }
+    }
+
     Connections{
         target: !auroraeThemeEngine.isEnabled ? root : null
         onThickPaddingChanged: initButtons();
@@ -176,7 +191,10 @@ Item {
         onCountChanged: discoverButtons();
     }
 
-    Component.onCompleted: initButtons();
+    Component.onCompleted: {
+        initButtons();
+        containmentIdentifierTimer.start();
+    }
 
     property var tasksPreparedArray: []
 
@@ -250,6 +268,10 @@ Item {
         theme: isEnabled ? currentTheme : ""
 
         readonly property bool isEnabled: decorations.isAurorae(currentPlugin, currentTheme);
+    }
+
+    AppletDecoration.WindowSystem {
+        id: windowSystem
     }
 
     ///functions
@@ -369,7 +391,7 @@ Item {
                 root.performActiveWindowAction(windowOperation);
             }
 
-           /* Rectangle{
+            /* Rectangle{
                 anchors.fill: parent
                 color: "transparent"
                 border.width: 1
@@ -415,7 +437,7 @@ Item {
                 root.performActiveWindowAction(windowOperation);
             }
 
-          /*  Rectangle{
+            /*  Rectangle{
                 anchors.fill: parent
                 color: "transparent"
                 border.width: 1
@@ -434,12 +456,29 @@ Item {
             } */
         }
     }
-
     ///END Visual Items
 
+    //! this timer is used in order to not call too many times the recreation
+    //! of buttons with no reason.
     Timer{
         id: buttonsRecreator
         interval: 200
         onTriggered: initializeControlButtonsModel();
+    }
+
+    //! this timer is used in order to identify in which containment the applet is in
+    //! it should be called only the first time an applet is created and loaded because
+    //! afterwards the applet has no way to move between different processes such
+    //! as Plasma and Latte
+    Timer{
+        id: containmentIdentifierTimer
+        interval: 8000
+        onTriggered: {
+            if (!latteBridge) {
+                plasmoid.configuration.containmentType = AppletDecoration.Types.Plasma;
+            } else {
+                plasmoid.configuration.containmentType = AppletDecoration.Types.Latte;
+            }
+        }
     }
 }

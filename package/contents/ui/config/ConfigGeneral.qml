@@ -37,6 +37,7 @@ Item {
     property alias cfg_buttons: root.currentButtons
     property alias cfg_showOnlyForActiveAndMaximized: onlyOnMaximizedChk.checked
     property alias cfg_slideAnimation: slideChk.checked
+    property alias cfg_disabledMaximizedBorders: disableMaximizedBordersChk.checked
     property alias cfg_useDecorationMetrics: decorationMetricsChk.checked
     property alias cfg_spacing: spacingSpn.value
     property alias cfg_thicknessMargin: thickSpn.value
@@ -181,6 +182,23 @@ Item {
             CheckBox{
                 id: slideChk
                 text: i18n("Slide animation in order to show or hide")
+            }
+        }
+
+        GridLayout{
+            id: environmentBehaviorGrid
+            columns: 2
+            visible: plasmoid.configuration.containmentType === AppletDecoration.Types.Plasma
+
+            Label{
+                Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
+                text: i18n("Environment :")
+                horizontalAlignment: Text.AlignRight
+            }
+
+            CheckBox{
+                id: disableMaximizedBordersChk
+                text: i18n("Disable borders for maximized windows")
             }
         }
 
