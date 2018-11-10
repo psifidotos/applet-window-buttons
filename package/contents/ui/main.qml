@@ -73,9 +73,11 @@ Item {
     readonly property string buttonsStr: plasmoid.configuration.buttons
 
     Plasmoid.status: {
-        if ((plasmoid.formFactor === PlasmaCore.Types.Horizontal && animatedMinimumWidth === 0)
-                || (plasmoid.formFactor === PlasmaCore.Types.Vertical && animatedMinimumHeight === 0)) {
-            return PlasmaCore.Types.HiddenStatus;
+        if (mustHide) {
+            if ((plasmoid.formFactor === PlasmaCore.Types.Horizontal && animatedMinimumWidth === 0)
+                    || (plasmoid.formFactor === PlasmaCore.Types.Vertical && animatedMinimumHeight === 0)) {
+                return PlasmaCore.Types.HiddenStatus;
+            }
         }
 
         return PlasmaCore.Types.ActiveStatus;
@@ -110,7 +112,9 @@ Item {
     // END visual properties
 
     // START window properties
-    property bool existsWindowActive: activeTaskItem && tasksRepeater.count > 0 && activeTaskItem.isActive
+
+    //! make sure that on startup it will always be shown
+    property bool existsWindowActive: (activeTaskItem && tasksRepeater.count > 0 && activeTaskItem.isActive) || containmentIdentifierTimer.running
     property bool isActiveWindowPinned: existsWindowActive && activeTaskItem.isOnAllDesktops
     property bool isActiveWindowMaximized: existsWindowActive && activeTaskItem.isMaximized
 
@@ -472,7 +476,7 @@ Item {
     //! as Plasma and Latte
     Timer{
         id: containmentIdentifierTimer
-        interval: 8000
+        interval: 5000
         onTriggered: {
             if (!latteBridge) {
                 plasmoid.configuration.containmentType = AppletDecoration.Types.Plasma;
