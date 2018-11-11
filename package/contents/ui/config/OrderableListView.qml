@@ -1,7 +1,7 @@
 /*
-*  Copyright 2018  Michail Vourlakos <mvourlakos@gmail.com>
+*  Copyright 2018 Michail Vourlakos <mvourlakos@gmail.com>
 *
-*  This file is part of Latte-Dock
+*  This file is part of applet-window-buttons
 *
 *  Latte-Dock is free software; you can redistribute it and/or
 *  modify it under the terms of the GNU General Public License as
@@ -16,7 +16,6 @@
 *  You should have received a copy of the GNU General Public License
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 import QtQuick 2.9
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.3
