@@ -46,6 +46,9 @@ This is a Plasma 5 applet that shows window buttons in your panels. This plasmoi
 
 **KF5 elements**: CoreAddons Declarative Plasma PlasmaQuick
 
+These can be installed on Debian based distros via:
+
+    sudo apt install qtbase5-dev qtdeclarative5-dev libkf5plasma-dev libkf5declarative-dev libkdecorations2-dev 
 
 # Install
 
