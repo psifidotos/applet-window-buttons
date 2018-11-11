@@ -35,7 +35,7 @@ Item {
     property alias cfg_selectedScheme: root.selectedScheme
     property alias cfg_selectedTheme: root.selectedTheme
     property alias cfg_buttons: root.currentButtons
-    property alias cfg_showOnlyForActiveAndMaximized: onlyOnMaximizedChk.checked
+    property alias cfg_visibility: root.visibility
     property alias cfg_slideAnimation: slideChk.checked
     property alias cfg_disabledMaximizedBorders: disableMaximizedBordersChk.checked
     property alias cfg_useDecorationMetrics: decorationMetricsChk.checked
@@ -47,6 +47,7 @@ Item {
 
     // used as bridge to communicate properly between configuration and ui
     property bool useCurrent
+    property int visibility
     property string selectedPlugin
     property string selectedScheme
     property string selectedTheme
@@ -162,21 +163,61 @@ Item {
         }
 
         GridLayout{
-            id: behaviorGrid
             columns: 2
+            rows: 3
+            flow: GridLayout.TopToBottom
 
             Label{
                 Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
-                text: i18n("Visual behavior:")
+                Layout.rowSpan: 3
+                Layout.alignment: Qt.AlignTop | Qt.AlignRight
+                text: i18n("Show:")
                 horizontalAlignment: Text.AlignRight
             }
 
-            CheckBox{
-                id: onlyOnMaximizedChk
-                text: i18n("Show only when active window is maximized")
-            }
+            ExclusiveGroup { id: visibilityGroup }
 
+            RadioButton{
+                id: alwaysVisibleBtn
+                text: i18n("Always visible")
+                checked: root.visibility === AppletDecoration.Types.AlwaysVisible
+                exclusiveGroup: visibilityGroup
+                onCheckedChanged: {
+                    if (checked) {
+                        root.visibility = AppletDecoration.Types.AlwaysVisible;
+                    }
+                }
+            }
+            RadioButton{
+                id: activeWindowBtn
+                text: i18n("Active window is present")
+                checked: root.visibility === AppletDecoration.Types.ActiveWindow
+                exclusiveGroup: visibilityGroup
+                onCheckedChanged: {
+                    if (checked) {
+                        root.visibility = AppletDecoration.Types.ActiveWindow;
+                    }
+                }
+            }
+            RadioButton{
+                id: activeMaximizedBtn
+                text: i18n("Active window is maximized")
+                checked: root.visibility === AppletDecoration.Types.ActiveMaximizedWindow
+                exclusiveGroup: visibilityGroup
+                onCheckedChanged: {
+                    if (checked) {
+                        root.visibility = AppletDecoration.Types.ActiveMaximizedWindow;
+                    }
+                }
+            }
+        }
+
+
+        GridLayout{
             Label{
+                Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
+                text: i18n("Animations:")
+                horizontalAlignment: Text.AlignRight
             }
 
             CheckBox{

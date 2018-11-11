@@ -47,8 +47,18 @@ Item {
     property int animatedMinimumHeight: minimumHeight
 
     readonly property bool disabledMaximizedBorders: plasmoid.configuration.disabledMaximizedBorders
-    readonly property bool mustHide: !existsWindowActive || (plasmoid.configuration.showOnlyForActiveAndMaximized && !isActiveWindowMaximized)
+    readonly property bool mustHide: {
+        if (visibility === AppletDecoration.Types.ActiveWindow && !existsWindowActive) {
+            return true;
+        }
+        if (visibility === AppletDecoration.Types.ActiveMaximizedWindow && !isActiveWindowMaximized) {
+            return true;
+        }
+
+        return false;
+    }
     readonly property int containmentType: plasmoid.configuration.containmentType
+    readonly property int visibility: plasmoid.configuration.visibility
 
     readonly property int minimumWidth: {
         if (plasmoid.formFactor === PlasmaCore.Types.Horizontal) {
@@ -381,7 +391,13 @@ Item {
             settings: settingsItem
             scheme: root.currentScheme
             type: buttonType
-            isActive: true
+            isActive: {
+                if (root.visibility === AppletDecoration.Types.AlwaysVisible && !root.existsWindowActive){
+                    return false;
+                }
+
+                return true;
+            }
             isOnAllDesktops: root.isActiveWindowPinned
             isMaximized: root.isActiveWindowMaximized
 

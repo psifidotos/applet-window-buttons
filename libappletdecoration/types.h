@@ -72,6 +72,14 @@ public:
     };
     Q_ENUM(ButtonSize)
 
+    enum Visibility
+    {
+        AlwaysVisible = 0,
+        ActiveWindow,
+        ActiveMaximizedWindow
+    };
+    Q_ENUM(Visibility)
+
     enum ContainmentType
     {
         Loading = 0,
