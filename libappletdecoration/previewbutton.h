@@ -46,6 +46,7 @@ class PreviewButtonItem : public QQuickPaintedItem
     Q_OBJECT
     Q_PROPERTY(Decoration::Applet::PreviewBridge *bridge READ bridge WRITE setBridge NOTIFY bridgeChanged)
     Q_PROPERTY(Decoration::Applet::Settings *settings READ settings WRITE setSettings NOTIFY settingsChanged)
+
     Q_PROPERTY(bool isActive READ isActive WRITE setIsActive NOTIFY isActiveChanged);
     Q_PROPERTY(bool isMaximized READ isMaximized WRITE setIsMaximized NOTIFY isMaximizedChanged);
     Q_PROPERTY(bool isOnAllDesktops READ isOnAllDesktops WRITE setIsOnAllDesktops NOTIFY isOnAllDesktopsChanged);

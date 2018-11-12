@@ -313,8 +313,8 @@ void PreviewButtonItem::syncInternalGeometry()
 
     int minSize = qMin(iWidth, iHeight);
 
-    int x = (width() / 2) - (minSize / 2);
-    int y = (height() / 2) - (minSize / 2);
+    int x = m_padding->left() + ((iWidth / 2) - (minSize / 2));
+    int y = m_padding->top() + ((iHeight / 2) - (minSize / 2));
 
     m_internalGeometry = QRect(x, y, minSize, minSize);
     m_fullGeometry = QRect(0, 0, width(), height());
