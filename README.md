@@ -39,8 +39,8 @@ This is a Plasma 5 applet that shows window buttons in your panels. This plasmoi
 
 - Qt >= 5.9
 - KF5 >= 5.38
-- Plasma >= 5.12
-- KDecoration2 >= 5.12
+- Plasma >= 5.13
+- KDecoration2 >= 5.13
 
 **Qt elements**: Gui Qml Quick
 
