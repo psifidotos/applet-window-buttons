@@ -53,7 +53,7 @@ Item {
     property string currentButtons
 
     // used from the ui
-    readonly property real centerFactor: 0.35
+    readonly property real centerFactor: 0.3
     readonly property int minimumWidth: 220
     property string currentPlugin: root.useCurrent ? decorations.currentPlugin : root.selectedPlugin
     property string currentTheme: root.useCurrent ? decorations.currentTheme : root.selectedTheme
