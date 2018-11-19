@@ -100,8 +100,6 @@ public:
     bool hasApplicationMenu() const override;
     bool isApplicationMenuActive() const override;
 
-    void requestShowToolTip(const QString &text) override;
-    void requestHideToolTip() override;
     void requestClose() override;
     void requestContextHelp() override;
     void requestToggleMaximization(Qt::MouseButtons buttons) override;

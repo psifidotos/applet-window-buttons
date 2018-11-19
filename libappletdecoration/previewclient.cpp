@@ -383,16 +383,6 @@ void PreviewClient::setBordersTopEdge(bool enabled)
     emit bordersTopEdgeChanged(enabled);
 }
 
-void PreviewClient::requestShowToolTip(const QString &text)
-{
-    qDebug() << "tooltip show requested with text:" << text;
-}
-
-void PreviewClient::requestHideToolTip()
-{
-    qDebug() << "tooltip hide requested";
-}
-
 void PreviewClient::requestClose()
 {
     emit closeRequested();
