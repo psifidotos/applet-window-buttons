@@ -44,7 +44,7 @@ This is a Plasma 5 applet that shows window buttons in your panels. This plasmoi
 
 **Qt elements**: Gui Qml Quick
 
-**KF5 elements**: CoreAddons Declarative Plasma PlasmaQuick
+**KF5 elements**: CoreAddons Declarative Plasma PlasmaQuick extra-cmake-modules
 
 
 # Install
