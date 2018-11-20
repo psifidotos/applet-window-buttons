@@ -35,6 +35,7 @@ Item {
     property alias cfg_selectedTheme: root.selectedTheme
     property alias cfg_buttons: root.currentButtons
     property alias cfg_visibility: root.visibility
+    property alias cfg_filterByScreen: byScreenChk.checked
     property alias cfg_slideAnimation: slideChk.checked
     property alias cfg_disabledMaximizedBorders: disableMaximizedBordersChk.checked
     property alias cfg_useDecorationMetrics: decorationMetricsChk.checked
@@ -211,6 +212,18 @@ Item {
             }
         }
 
+        GridLayout{
+            Label{
+                Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
+                text: i18n("Filters:")
+                horizontalAlignment: Text.AlignRight
+            }
+
+            CheckBox{
+                id: byScreenChk
+                text: i18n("Show only windows from current screen")
+            }
+        }
 
         GridLayout{
             Label{

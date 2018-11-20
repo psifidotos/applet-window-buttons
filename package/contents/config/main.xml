@@ -34,6 +34,10 @@
       <label>when the applet will be visible</label>
       <default>0</default>
     </entry>
+    <entry name="filterByScreen" type="Bool">
+      <default>true</default>
+      <label>if false active window can be on any screen</label>
+    </entry>    
     <entry name="slideAnimation" type="Bool">
       <default>false</default>
       <label>slide out/in when is shown or becomes hidden</label>
