@@ -49,7 +49,6 @@ Item {
     property int animatedMinimumWidth: minimumWidth
     property int animatedMinimumHeight: minimumHeight
 
-    readonly property bool disabledMaximizedBorders: plasmoid.configuration.disabledMaximizedBorders
     readonly property bool mustHide: {
         if (visibility === AppletDecoration.Types.ActiveWindow && !existsWindowActive) {
             return true;
@@ -61,6 +60,7 @@ Item {
         return false;
     }
     readonly property int containmentType: plasmoid.configuration.containmentType
+    readonly property int disabledMaximizedBorders: plasmoid.configuration.disabledMaximizedBorders
     readonly property int visibility: plasmoid.configuration.visibility
 
     readonly property int minimumWidth: {
@@ -148,7 +148,6 @@ Item {
     // END decoration properties
 
     //BEGIN Latte Dock Communicator
-    property bool isInLatte: false  // deprecated Latte v0.8 API
     property QtObject latteBridge: null // current Latte v0.9 API
 
     onLatteBridgeChanged: {
@@ -184,13 +183,13 @@ Item {
     onButtonsStrChanged: initButtons();
 
     onContainmentTypeChanged: {
-        if (containmentType === AppletDecoration.Types.Plasma) {
+        if (containmentType === AppletDecoration.Types.Plasma && disabledMaximizedBorders !== 1) { /*SystemDecision*/
             windowSystem.setDisabledMaximizedBorders(disabledMaximizedBorders);
         }
     }
 
     onDisabledMaximizedBordersChanged: {
-        if (containmentType === AppletDecoration.Types.Plasma) {
+        if (containmentType === AppletDecoration.Types.Plasma && disabledMaximizedBorders !== 1) { /*SystemDecision*/
             windowSystem.setDisabledMaximizedBorders(disabledMaximizedBorders);
         }
     }
@@ -530,7 +529,7 @@ Item {
         id: containmentIdentifierTimer
         interval: 5000
         onTriggered: {
-            if (latteBridge || isInLatte) {
+            if (latteBridge) {
                 plasmoid.configuration.containmentType = AppletDecoration.Types.Latte;
             } else {
                 plasmoid.configuration.containmentType = AppletDecoration.Types.Plasma;

@@ -37,7 +37,7 @@ Item {
     property alias cfg_visibility: root.visibility
     property alias cfg_filterByScreen: byScreenChk.checked
     property alias cfg_slideAnimation: slideChk.checked
-    property alias cfg_disabledMaximizedBorders: disableMaximizedBordersChk.checked
+    property alias cfg_disabledMaximizedBorders: root.disabledBorders
     property alias cfg_useDecorationMetrics: decorationMetricsChk.checked
     property alias cfg_spacing: spacingSpn.value
     property alias cfg_thicknessMargin: thickSpn.value
@@ -48,6 +48,7 @@ Item {
     // used as bridge to communicate properly between configuration and ui
     property bool useCurrent
     property int visibility
+    property int disabledBorders
     property string selectedPlugin
     property string selectedScheme
     property string selectedTheme
@@ -252,6 +253,27 @@ Item {
             CheckBox{
                 id: disableMaximizedBordersChk
                 text: i18n("Disable borders for maximized windows")
+                partiallyCheckedEnabled: true
+
+                onCheckedStateChanged: {
+                    if (checkedState === Qt.Unchecked) {
+                        root.disabledBorders = 0; /*ShowBorders*/
+                    } else if (checkedState === Qt.PartiallyChecked) {
+                        root.disabledBorders = 1; /*SystemDecision*/
+                    } else if (checkedState === Qt.Checked) {
+                        root.disabledBorders = 2; /*NoBorders*/
+                    }
+                }
+
+                Component.onCompleted: {
+                    if (root.disabledBorders === 0) {
+                        checkedState = Qt.Unchecked;
+                    } else if (root.disabledBorders === 1) {
+                        checkedState = Qt.PartiallyChecked;
+                    } else if (root.disabledBorders === 2) {
+                        checkedState = Qt.Checked;
+                    }
+                }
             }
         }
 
