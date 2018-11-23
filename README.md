@@ -18,22 +18,9 @@ This is a Plasma 5 applet that shows window buttons in your panels. This plasmoi
 </p>
 
 <p align="center">
-<img src="https://i.imgur.com/x3Fac7Y.png" width="580"><br/>
+<img src="https://i.imgur.com/6DXMGvW.png" width="580"><br/>
 <i>Settings window</i>
 </p>
-
-# Features
-
-- Current mode, in order to automatically update button appearance according to plasma current window decoration
-- Choose the decoration theme you would like to use for the buttons
-- Support Minimize/Maximize/Close/OnAllDesktops buttons
-- Support icon-based Aurorae themes such as **.svg** and **.svgz** 
-- Identify system's available decorations automatically
-- Option to show buttons only when there is an active-maximized window in the current screen
-- Slide out/in animation for showing/hiding buttons
-- Reorder buttons according to user preference
-- Various appearance settings in order to adjust margins. This way you can also change the button size
-- Automatically discover Aurorae theme settings in order to make buttons look identical to window buttons
 
 # Requires
 

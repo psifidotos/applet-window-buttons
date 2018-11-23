@@ -34,6 +34,10 @@
       <label>when the applet will be visible</label>
       <default>0</default>
     </entry>
+    <entry name="filterByScreen" type="Bool">
+      <default>true</default>
+      <label>if false active window can be on any screen</label>
+    </entry>
     <entry name="slideAnimation" type="Bool">
       <default>false</default>
       <label>slide out/in when is shown or becomes hidden</label>
@@ -66,9 +70,14 @@
       <default>2</default>
       <label>it is used in order to inform settings window about the plasmoid form factor. 2=Horizontal and 3=Vertical</label>
     </entry>
-    <entry name="disabledMaximizedBorders" type="Bool">
-      <default>false</default>
-      <label>used only when the plasmoid is in a plasma panel in order to enable/disable windows borders</label>
+    <entry name="disabledMaximizedBorders" type="Enum">
+        <choices>
+            <choice name="ShowBorders"/>
+            <choice name="SystemDecision"/>
+            <choice name="NoBorders"/>
+        </choices>
+      <default>1</default>
+      <label>used only when the plasmoid is in a plasma panel in order to show/system decide/hide windows borders</label>
     </entry>
     <entry name="containmentType" type="Enum">
       <choices>
