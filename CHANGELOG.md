@@ -1,4 +1,4 @@
-#**CHANGELOG**#
+### CHANGELOG
 
 #### Version 0.2
 
