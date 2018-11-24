@@ -453,11 +453,12 @@ Item {
         AppletDecoration.AuroraeButton {
             id: aButton
             width: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
-                       Math.max(height, auroraeTheme.buttonRatio * height + leftPadding + rightPadding) :
+                       auroraeTheme.buttonRatio*buttonsArea.buttonThickness + leftPadding + rightPadding :
                        buttonsArea.buttonThickness + 2 * thickPadding
+
             height: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
                         buttonsArea.buttonThickness + 2 * thickPadding :
-                        Math.max(width, auroraeTheme.buttonRatio * width + topPadding + bottomPadding)
+                        buttonsArea.buttonThickness + topPadding + bottomPadding
 
             readonly property int firstPadding: {
                 if (index === 0) {
