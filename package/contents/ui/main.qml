@@ -158,7 +158,8 @@ Item {
     }
     //END  Latte Dock Communicator
     //BEGIN Latte based properties
-    readonly property bool enforceLattePalette: latteBridge && latteBridge.applyPalette && latteBridge.palette
+    readonly property bool enforceLattePalette: (latteBridge && latteBridge.applyPalette && latteBridge.palette)
+                                                || (latteBridge && latteBridge.inEditMode)
     readonly property bool latteInEditMode: latteBridge && latteBridge.inEditMode
     //END Latte based properties
 
