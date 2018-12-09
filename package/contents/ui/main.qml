@@ -158,8 +158,10 @@ Item {
     }
     //END  Latte Dock Communicator
     //BEGIN Latte based properties
-    readonly property bool enforceLattePalette: (latteBridge && latteBridge.applyPalette && latteBridge.palette)
-                                                || (latteBridge && latteBridge.inEditMode)
+    //!   This applet is a special case and thus the latteBridge.applyPalette is not used.
+    //!   the applet relys totally to Latte to paint itself correctly at all cases,
+    //!   even when Latte informs the applets that need to use the default plasma theme.
+    readonly property bool enforceLattePalette: latteBridge && latteBridge.palette
     readonly property bool latteInEditMode: latteBridge && latteBridge.inEditMode
     //END Latte based properties
 
