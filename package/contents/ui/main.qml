@@ -390,9 +390,11 @@ Item {
             scheme: root.currentScheme
             type: buttonType
             isActive: {
-                if (root.visibility === AppletDecoration.Types.AlwaysVisible && !root.existsWindowActive){
-                    return false;
-                }
+                //!   FIXME: Disabled because it shows an error from c++ theme when its value is changed
+                //!   and breaks in some cases the buttons coloring through the schemeFile
+                //if (root.visibility === AppletDecoration.Types.AlwaysVisible && !root.existsWindowActive){
+                //    return false;
+                //}
 
                 return true;
             }
