@@ -158,7 +158,10 @@ Item {
     }
     //END  Latte Dock Communicator
     //BEGIN Latte based properties
-    readonly property bool enforceLattePalette: latteBridge && latteBridge.applyPalette && latteBridge.palette
+    //!   This applet is a special case and thus the latteBridge.applyPalette is not used.
+    //!   the applet relys totally to Latte to paint itself correctly at all cases,
+    //!   even when Latte informs the applets that need to use the default plasma theme.
+    readonly property bool enforceLattePalette: latteBridge && latteBridge.palette
     readonly property bool latteInEditMode: latteBridge && latteBridge.inEditMode
     //END Latte based properties
 
@@ -390,9 +393,11 @@ Item {
             scheme: root.currentScheme
             type: buttonType
             isActive: {
-                if (root.visibility === AppletDecoration.Types.AlwaysVisible && !root.existsWindowActive){
-                    return false;
-                }
+                //!   FIXME: Disabled because it shows an error from c++ theme when its value is changed
+                //!   and breaks in some cases the buttons coloring through the schemeFile
+                //if (root.visibility === AppletDecoration.Types.AlwaysVisible && !root.existsWindowActive){
+                //    return false;
+                //}
 
                 return true;
             }
@@ -453,11 +458,12 @@ Item {
         AppletDecoration.AuroraeButton {
             id: aButton
             width: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
-                       Math.max(height, auroraeTheme.buttonRatio * height + leftPadding + rightPadding) :
+                       auroraeTheme.buttonRatio*buttonsArea.buttonThickness + leftPadding + rightPadding :
                        buttonsArea.buttonThickness + 2 * thickPadding
+
             height: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
                         buttonsArea.buttonThickness + 2 * thickPadding :
-                        Math.max(width, auroraeTheme.buttonRatio * width + topPadding + bottomPadding)
+                        buttonsArea.buttonThickness + topPadding + bottomPadding
 
             readonly property int firstPadding: {
                 if (index === 0) {

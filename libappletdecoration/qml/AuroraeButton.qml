@@ -81,14 +81,16 @@ MouseArea{
         opacity: !containsMouse && !containsPress && !isToggledActivated ? 1 : 0
 
         PlasmaCore.SvgItem {
-            anchors.centerIn: parent
+            x: (parent.width / 2) - (width / 2)
+            y: (parent.height / 2 ) - (height / 2)
+
             width: auroraeTheme.buttonRatio * height
             height: minimumSide
 
-            property int minimumSide: Math.min(parent.width,parent.height)
-
             svg: buttonSvg
             elementId: svgNormalElementId
+
+            readonly property int minimumSide: Math.min(parent.width,parent.height)
         }
 
 
@@ -112,13 +114,16 @@ MouseArea{
         opacity: Math.abs(svgNormalItem.opacity - 1)
 
         PlasmaCore.SvgItem {
-            anchors.centerIn: parent
+            x: (parent.width / 2) - (width / 2)
+            y: (parent.height / 2 ) - (height / 2)
+
             width: auroraeTheme.buttonRatio * height
             height: minimumSide
 
-            property int minimumSide: Math.min(parent.width,parent.height)
             svg: buttonSvg
             elementId: svgHoveredElementId
+
+            readonly property int minimumSide: Math.min(parent.width,parent.height)
         }
     }
 }
