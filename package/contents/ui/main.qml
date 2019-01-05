@@ -129,8 +129,8 @@ Item {
     //! make sure that on startup it will always be shown
     readonly property bool existsWindowActive: (activeTaskItem && tasksRepeater.count > 0 && activeTaskItem.isActive)
                                                || containmentIdentifierTimer.running
-    readonly property bool isActiveWindowPinned: existsWindowActive && activeTaskItem.isOnAllDesktops
-    readonly property bool isActiveWindowMaximized: existsWindowActive && activeTaskItem.isMaximized
+    readonly property bool isActiveWindowPinned: activeTaskItem && existsWindowActive && activeTaskItem.isOnAllDesktops
+    readonly property bool isActiveWindowMaximized: activeTaskItem && existsWindowActive && activeTaskItem.isMaximized
 
     property bool hasDesktopsButton: false
     property bool hasMaximizedButton: false
