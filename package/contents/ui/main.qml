@@ -153,7 +153,7 @@ Item {
     onLatteBridgeChanged: {
         if (latteBridge) {
             plasmoid.configuration.containmentType = AppletDecoration.Types.Latte;
-            latteBridge.actions.setProperty(plasmoid.id, "disableLatteSideColoring", true);
+            latteBridge.actions.setProperty(plasmoid.id, "latteSideColoringEnabled", false);
         }
     }
     //END  Latte Dock Communicator
