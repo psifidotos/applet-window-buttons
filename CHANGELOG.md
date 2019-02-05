@@ -1,5 +1,10 @@
 ### CHANGELOG
 
+#### Version 0.3
+
+* support new Latte coloring and Communicator mechanism
+* fix spacing issues with Aurorae themes
+
 #### Version 0.2
 
 * Choose Colors to apply a color palette to your window buttons
