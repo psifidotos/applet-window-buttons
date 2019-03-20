@@ -56,7 +56,8 @@ public:
         ActionClose = 0,
         ToggleMinimize,
         ToggleMaximize,
-        TogglePinToAllDesktops
+        TogglePinToAllDesktops,
+        ToggleKeepAbove
     };
     Q_ENUM(Actions)
 

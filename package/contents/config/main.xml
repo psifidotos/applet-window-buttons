@@ -22,7 +22,7 @@
       <label>user preferred theme to use with the selected plugin</label>
     </entry>
     <entry name="buttons" type="String">
-      <default>5|4|3|10|2</default>
+      <default>5|4|3|10|2|9</default>
       <label>buttons to show in applet</label>
     </entry>
     <entry name="visibility" type="Enum">
