@@ -5,6 +5,9 @@
 # Ignore hidden files
 .directory
 
+# Ignore patches
+*.patch~
+
 # build directory
 build/
 

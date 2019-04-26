@@ -505,7 +505,7 @@ Item {
             isActive: true
             isOnAllDesktops: root.isActiveWindowPinned
             isMaximized: root.isActiveWindowMaximized
-            //isKeepAbove: root.isKeepAbove
+            isKeepAbove: root.isActiveWindowKeepAbove
             buttonType: model.buttonType
             auroraeTheme: auroraeThemeEngine
 
