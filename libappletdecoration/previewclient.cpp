@@ -383,6 +383,8 @@ void PreviewClient::setBordersTopEdge(bool enabled)
     emit bordersTopEdgeChanged(enabled);
 }
 
+
+#if KDECORATION2_VERSION_MINOR >= 13
 void PreviewClient::requestShowToolTip(const QString &text)
 {
     qDebug() << "tooltip show requested with text:" << text;
@@ -392,6 +394,8 @@ void PreviewClient::requestHideToolTip()
 {
     qDebug() << "tooltip hide requested";
 }
+#endif
+
 
 void PreviewClient::requestClose()
 {
