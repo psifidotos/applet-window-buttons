@@ -49,6 +49,8 @@ Item {
     property int animatedMinimumWidth: minimumWidth
     property int animatedMinimumHeight: minimumHeight
 
+    readonly property bool plasma515: AppletDecoration.Environment.plasmaDesktopVersion >= AppletDecoration.Environment.makeVersion(5,15,0)
+
     readonly property bool mustHide: {
         if (visibility === AppletDecoration.Types.ActiveWindow && !existsWindowActive) {
             return true;

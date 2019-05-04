@@ -26,6 +26,8 @@
 
 #include "decorationpalette.h"
 
+#include <config-decoration.h>
+
 #include <KDecoration2/Private/DecoratedClientPrivate>
 #include <QObject>
 #include <QPalette>
@@ -100,8 +102,11 @@ public:
     bool hasApplicationMenu() const override;
     bool isApplicationMenuActive() const override;
 
+#if KDECORATION2_VERSION_MINOR >= 13
     void requestShowToolTip(const QString &text) override;
     void requestHideToolTip() override;
+#endif
+
     void requestClose() override;
     void requestContextHelp() override;
     void requestToggleMaximization(Qt::MouseButtons buttons) override;

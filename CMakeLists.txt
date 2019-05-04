@@ -23,5 +23,12 @@ include(CheckIncludeFiles)
 include(KDECMakeSettings)
 include(KDEInstallDirs)
 
+set(KDECORATION2_VERSION_MINOR ${KDecoration2_VERSION_MINOR})
+
+message(STATUS "KDECORATION2 VERSION MINOR : ${KDECORATION2_VERSION_MINOR}")
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libappletdecoration/config-decoration.h.cmake
+               ${CMAKE_CURRENT_BINARY_DIR}/libappletdecoration/config-decoration.h)
+
 add_subdirectory(libappletdecoration)
 plasma_install_package(package org.kde.windowbuttons)

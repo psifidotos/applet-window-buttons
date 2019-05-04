@@ -16,6 +16,7 @@ set(appletdecoration_SRCS
     auroraetheme.cpp
     decorationsmodel.cpp
     decorationpalette.cpp
+    environment.cpp
     padding.cpp
     previewbutton.cpp
     previewbridge.cpp

@@ -21,6 +21,7 @@
 
 #include "auroraetheme.h"
 #include "decorationsmodel.h"
+#include "environment.h"
 #include "padding.h"
 #include "previewbridge.h"
 #include "previewclient.h"
@@ -42,7 +43,6 @@ namespace Applet {
 void AppletDecorationPlugin::registerTypes(const char *uri)
 {
     Q_ASSERT(uri == QLatin1String("org.kde.appletsdecoration"));
-
     qmlRegisterUncreatableType<Decoration::Applet::Types>(uri, 0, 1, "Types", "Applet decoration types");
 
     qmlRegisterType<Decoration::Applet::AuroraeTheme>(uri, 0, 1, "AuroraeTheme");
@@ -57,6 +57,8 @@ void AppletDecorationPlugin::registerTypes(const char *uri)
     qmlRegisterType<Decoration::Applet::PreviewClient>();
     qmlRegisterType<Decoration::Applet::PreviewBridge>();
     qmlRegisterType<KDecoration2::Decoration>();
+
+    qmlRegisterSingletonType<Decoration::Applet::Environment>(uri, 0, 1, "Environment", &Decoration::Applet::Environment::instance);
 }
 
 }
