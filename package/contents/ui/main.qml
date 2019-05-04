@@ -361,7 +361,11 @@ Item {
     }
 
     function togglePinToAllDesktops() {
-        tasksModel.requestVirtualDesktops(tasksModel.activeTask, 0);
+        if (root.plasma515) {
+            tasksModel.requestVirtualDesktops(tasksModel.activeTask, 0);
+        } else {
+            tasksModel.requestVirtualDesktop(tasksModel.activeTask, 0);
+        }
     }
     
     function toggleKeepAbove(){
