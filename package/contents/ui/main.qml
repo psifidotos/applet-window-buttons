@@ -217,6 +217,11 @@ Item {
     }
 
     Component.onCompleted: {
+        if (plasmoid.configuration.buttons.indexOf("9") === -1) {
+            //add new supported buttons if they dont exist in the configuration
+            plasmoid.configuration.buttons = plasmoid.configuration.buttons.concat("|9");
+        }
+
         initButtons();
         containmentIdentifierTimer.start();
     }
