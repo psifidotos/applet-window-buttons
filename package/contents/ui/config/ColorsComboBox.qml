@@ -38,7 +38,7 @@ Controls22.ComboBox{
         onClicked: {
             combobox.currentIndex = index;
             selectedScheme = model.file;
-            root.forceActiveFocus();
+            combobox.popup.close();
         }
 
         Rectangle{
