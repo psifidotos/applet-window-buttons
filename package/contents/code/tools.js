@@ -43,6 +43,11 @@ function addButton(preparedArray, buttonType) {
                                buttonType: AppletDecoration.Types.Custom,
                                windowOperation: -1
                            });
+    } else if (buttonType === AppletDecoration.Types.KeepAbove){
+        preparedArray.push({
+                                buttonType: AppletDecoration.Types.KeepAbove,
+                                windowOperation: AppletDecoration.Types.ToggleKeepAbove
+                            });
     }
 }
 

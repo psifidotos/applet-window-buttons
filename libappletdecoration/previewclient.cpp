@@ -78,7 +78,7 @@ PreviewClient::PreviewClient(KDecoration2::DecoratedClient *c, KDecoration2::Dec
     connect(this, &PreviewClient::shadeableChanged,             c, &KDecoration2::DecoratedClient::shadeableChanged);
     connect(this, &PreviewClient::shadedChanged,                c, &KDecoration2::DecoratedClient::shadedChanged);
     connect(this, &PreviewClient::providesContextHelpChanged,   c, &KDecoration2::DecoratedClient::providesContextHelpChanged);
-    connect(this, &PreviewClient::onAllDesktopsChanged,         c, &KDecoration2::DecoratedClient::onAllDesktopsChanged);
+//    connect(this, &PreviewClient::onAllDesktopsChanged,         c, &KDecoration2::DecoratedClient::onAllDesktopsChanged);
     connect(this, &PreviewClient::widthChanged,                 c, &KDecoration2::DecoratedClient::widthChanged);
     connect(this, &PreviewClient::heightChanged,                c, &KDecoration2::DecoratedClient::heightChanged);
     connect(this, &PreviewClient::iconChanged,                  c, &KDecoration2::DecoratedClient::iconChanged);
@@ -101,7 +101,7 @@ PreviewClient::PreviewClient(KDecoration2::DecoratedClient *c, KDecoration2::Dec
     }
            );
     connect(this, &PreviewClient::desktopChanged, this,
-    [this]() {
+    [this](int) {
         emit onAllDesktopsChanged(isOnAllDesktops());
     }
            );
@@ -467,7 +467,6 @@ void PreviewClient::requestToggleShade()
         if (m_##variable == variable) { \
             return; \
         } \
-        qDebug() << "Setting " << #variable << ":" << variable;\
         m_##variable = variable; \
         emit variable##Changed(m_##variable); \
     }

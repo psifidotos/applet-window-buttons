@@ -50,6 +50,7 @@ class PreviewButtonItem : public QQuickPaintedItem
     Q_PROPERTY(bool isActive READ isActive WRITE setIsActive NOTIFY isActiveChanged);
     Q_PROPERTY(bool isMaximized READ isMaximized WRITE setIsMaximized NOTIFY isMaximizedChanged);
     Q_PROPERTY(bool isOnAllDesktops READ isOnAllDesktops WRITE setIsOnAllDesktops NOTIFY isOnAllDesktopsChanged);
+    Q_PROPERTY(bool isKeepAbove READ isKeepAbove WRITE setIsKeepAbove NOTIFY isKeepAboveChanged);
     Q_PROPERTY(int type READ typeAsInt WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(QString scheme READ scheme WRITE setScheme NOTIFY schemeChanged)
     Q_PROPERTY(Decoration::Applet::Padding *padding READ padding NOTIFY paddingChanged)
@@ -75,6 +76,9 @@ public:
 
     bool isOnAllDesktops() const;
     void setIsOnAllDesktops(bool onalldesktops);
+    
+    bool isKeepAbove() const;
+    void setIsKeepAbove(bool keepabove);
 
     KDecoration2::DecorationButtonType type() const;
     int typeAsInt() const;
@@ -91,6 +95,7 @@ Q_SIGNALS:
     void isActiveChanged();
     void isMaximizedChanged();
     void isOnAllDesktopsChanged();
+    void isKeepAboveChanged();
     void paddingChanged();
     void schemeChanged();
     void settingsChanged();
@@ -123,6 +128,7 @@ private:
     bool m_isActive{true};
     bool m_isMaximized{false};
     bool m_isOnAllDesktops{false};
+    bool m_isKeepAbove{false};
 
     QString m_scheme;
     QRect m_internalGeometry;

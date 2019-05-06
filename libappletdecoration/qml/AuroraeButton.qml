@@ -30,10 +30,14 @@ MouseArea{
 
     property bool isActive: true
     property bool isOnAllDesktops: false
+    property bool isKeepAbove: false
     property bool isMaximized: false
     readonly property bool isToggledActivated: {
-        return (isOnAllDesktops && buttonType === AppletDecoration.Types.OnAllDesktops);
+        return ((isOnAllDesktops && buttonType === AppletDecoration.Types.OnAllDesktops) || 
+                      (isKeepAbove && buttonType === AppletDecoration.Types.KeepAbove)
+        );
     }
+    
 
     property int topPadding: 0
     property int bottomPadding: 0
@@ -52,6 +56,7 @@ MouseArea{
         case AppletDecoration.Types.Minimize: return "minimize";
         case AppletDecoration.Types.Maximize: return "maximize";
         case AppletDecoration.Types.OnAllDesktops: return "alldesktops";
+        case AppletDecoration.Types.KeepAbove: return "keepabove"
         default: return "close";
         }
     }

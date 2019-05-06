@@ -153,6 +153,32 @@ void PreviewButtonItem::setIsOnAllDesktops(bool onalldesktops)
     emit isOnAllDesktopsChanged();
 }
 
+bool PreviewButtonItem::isKeepAbove() const
+{
+    return m_isKeepAbove;
+}
+
+void PreviewButtonItem::setIsKeepAbove(bool keepabove)
+{
+    if (m_isKeepAbove == keepabove){
+        return;
+    }
+    
+    m_isKeepAbove = keepabove;
+    
+    if (m_client && m_button && m_type == KDecoration2::DecorationButtonType::KeepAbove) {
+        if (m_isKeepAbove){
+            m_client->setKeepAbove(true);
+        } else {
+            m_client->setKeepAbove(false);
+        }
+        if (m_decoration) {
+            m_decoration->init();
+        }
+    }    
+    emit isKeepAboveChanged();
+}
+
 KDecoration2::DecorationButtonType PreviewButtonItem::type() const
 {
     return m_type;

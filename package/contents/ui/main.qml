@@ -133,9 +133,11 @@ Item {
                                                || containmentIdentifierTimer.running
     readonly property bool isActiveWindowPinned: activeTaskItem && existsWindowActive && activeTaskItem.isOnAllDesktops
     readonly property bool isActiveWindowMaximized: activeTaskItem && existsWindowActive && activeTaskItem.isMaximized
+    readonly property bool isActiveWindowKeepAbove: activeTaskItem && existsWindowActive && activeTaskItem.isKeepAbove
 
     property bool hasDesktopsButton: false
     property bool hasMaximizedButton: false
+    property bool hasKeepAboveButton: false
 
     property Item activeTaskItem
     // END Window properties
@@ -259,6 +261,7 @@ Item {
                 readonly property bool isMaximized: IsMaximized === true ? true : false
                 readonly property bool isActive: IsActive === true ? true : false
                 readonly property bool isOnAllDesktops: IsOnAllVirtualDesktops === true ? true : false
+                readonly property bool isKeepAbove: IsKeepAbove === true ? true : false
 
                 onIsActiveChanged: {
                     if (isActive) {
@@ -314,17 +317,21 @@ Item {
     function discoverButtons() {
         var hasMax = false;
         var hasPin = false;
+        var hasKeepAbove = false;
 
         for (var i=0; i<tasksPreparedArray.length; ++i) {
             if (tasksPreparedArray[i].buttonType === AppletDecoration.Types.Maximize) {
                 hasMax = true;
             } else if (tasksPreparedArray[i].buttonType === AppletDecoration.Types.OnAllDesktops) {
                 hasPin = true;
+            } else if (tasksPreparedArray[i].buttonType === AppletDecoration.Types.KeepAbove) {
+                hasKeepAbove = true;
             }
         }
 
         hasMaximizedButton = hasMax;
         hasDesktopsButton = hasPin;
+        hasKeepAboveButton = hasKeepAbove;
     }
 
     function performActiveWindowAction(windowOperation) {
@@ -336,6 +343,8 @@ Item {
             toggleMinimized();
         } else if (windowOperation === AppletDecoration.Types.TogglePinToAllDesktops) {
             togglePinToAllDesktops();
+        } else if (windowOperation === AppletDecoration.Types.ToggleKeepAbove){
+            toggleKeepAbove();
         }
     }
 
@@ -352,7 +361,15 @@ Item {
     }
 
     function togglePinToAllDesktops() {
-        tasksModel.requestVirtualDesktop(tasksModel.activeTask, 0);
+        if (root.plasma515) {
+            tasksModel.requestVirtualDesktops(tasksModel.activeTask, 0);
+        } else {
+            tasksModel.requestVirtualDesktop(tasksModel.activeTask, 0);
+        }
+    }
+    
+    function toggleKeepAbove(){
+        tasksModel.requestToggleKeepAbove(tasksModel.activeTask);
     }
 
     ///START Visual Items
@@ -405,6 +422,7 @@ Item {
             }
             isOnAllDesktops: root.isActiveWindowPinned
             isMaximized: root.isActiveWindowMaximized
+            isKeepAbove: root.isActiveWindowKeepAbove
 
             readonly property int firstPadding: {
                 if (index === 0) {
@@ -493,6 +511,7 @@ Item {
             isActive: true
             isOnAllDesktops: root.isActiveWindowPinned
             isMaximized: root.isActiveWindowMaximized
+            isKeepAbove: root.isActiveWindowKeepAbove
             buttonType: model.buttonType
             auroraeTheme: auroraeThemeEngine
 
