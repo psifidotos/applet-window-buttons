@@ -1,5 +1,10 @@
 ### CHANGELOG
 
+#### Version 0.4
+* add new KeepAbove button support (community contribution)
+* merge different versions into a single one. One version for all Plasma versions >= 5.12
+* close ComboBoxes after clicking
+
 #### Version 0.3
 
 * support new Latte coloring and Communicator mechanism
