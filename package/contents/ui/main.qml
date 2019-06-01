@@ -18,12 +18,10 @@
 */
 
 import QtQuick 2.7
-import QtQml.Models 2.2
 import QtQuick.Layouts 1.1
 
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.taskmanager 0.1 as TaskManager
 
 import org.kde.appletdecoration 0.1 as AppletDecoration
 
@@ -129,7 +127,7 @@ Item {
     // START window properties
 
     //! make sure that on startup it will always be shown
-    readonly property bool existsWindowActive: (activeTaskItem && tasksRepeater.count > 0 && activeTaskItem.isActive)
+    readonly property bool existsWindowActive: (windowInfoLoader.item && windowInfoLoader.item.existsWindowActive)
                                                || containmentIdentifierTimer.running
     readonly property bool isActiveWindowPinned: activeTaskItem && existsWindowActive && activeTaskItem.isOnAllDesktops
     readonly property bool isActiveWindowMaximized: activeTaskItem && existsWindowActive && activeTaskItem.isMaximized
@@ -139,7 +137,7 @@ Item {
     property bool hasMaximizedButton: false
     property bool hasKeepAboveButton: false
 
-    property Item activeTaskItem
+    readonly property Item activeTaskItem: windowInfoLoader.item.activeTaskItem
     // END Window properties
 
     // START decoration properties
@@ -232,50 +230,24 @@ Item {
         id: controlButtonsModel
     }
 
-    // To get current activity name
-    TaskManager.ActivityInfo {
-        id: activityInfo
-    }
+    //!
+    Loader {
+        id: windowInfoLoader
+        sourceComponent: latteBridge && latteBridge.windowsTracker && latteBridge.windowsTracker.lastActiveWindow ?
+                             latteTrackerComponent : plasmaTasksModel
 
-    // To get virtual desktop name
-    TaskManager.VirtualDesktopInfo {
-        id: virtualDesktopInfo
-    }
+        Component{
+            id: latteTrackerComponent
+            LatteWindowsTracker{}
+        }
 
-    TaskManager.TasksModel {
-        id: tasksModel
-        sortMode: TaskManager.TasksModel.SortVirtualDesktop
-        groupMode: TaskManager.TasksModel.GroupDisabled
-        screenGeometry: plasmoid.screenGeometry
-        activity: activityInfo.currentActivity
-        virtualDesktop: virtualDesktopInfo.currentDesktop
-
-        filterByScreen: plasmoid.configuration.filterByScreen
-        filterByVirtualDesktop: true
-        filterByActivity: true
-    }
-
-    Repeater{
-        id: tasksRepeater
-        model:DelegateModel {
-            model: tasksModel
-            delegate: Item{
-                id: task
-                readonly property string title: display
-                readonly property bool isMinimized: IsMinimized === true ? true : false
-                readonly property bool isMaximized: IsMaximized === true ? true : false
-                readonly property bool isActive: IsActive === true ? true : false
-                readonly property bool isOnAllDesktops: IsOnAllVirtualDesktops === true ? true : false
-                readonly property bool isKeepAbove: IsKeepAbove === true ? true : false
-
-                onIsActiveChanged: {
-                    if (isActive) {
-                        root.activeTaskItem = task;
-                    }
-                }
-            }
+        Component{
+            id: plasmaTasksModel
+            PlasmaTasksModel{}
         }
     }
+    //!
+
 
     ///Decoration Items
     AppletDecoration.Bridge {
@@ -341,40 +313,16 @@ Item {
 
     function performActiveWindowAction(windowOperation) {
         if (windowOperation === AppletDecoration.Types.ActionClose) {
-            toggleClose();
+             windowInfoLoader.item.toggleClose();
         } else if (windowOperation === AppletDecoration.Types.ToggleMaximize) {
-            toggleMaximized();
+            windowInfoLoader.item.toggleMaximized();
         } else if (windowOperation === AppletDecoration.Types.ToggleMinimize) {
-            toggleMinimized();
+            windowInfoLoader.item.toggleMinimized();
         } else if (windowOperation === AppletDecoration.Types.TogglePinToAllDesktops) {
-            togglePinToAllDesktops();
+            windowInfoLoader.item.togglePinToAllDesktops();
         } else if (windowOperation === AppletDecoration.Types.ToggleKeepAbove){
-            toggleKeepAbove();
+            windowInfoLoader.item.toggleKeepAbove();
         }
-    }
-
-    function toggleMaximized() {
-        tasksModel.requestToggleMaximized(tasksModel.activeTask);
-    }
-
-    function toggleMinimized() {
-        tasksModel.requestToggleMinimized(tasksModel.activeTask);
-    }
-
-    function toggleClose() {
-        tasksModel.requestClose(tasksModel.activeTask);
-    }
-
-    function togglePinToAllDesktops() {
-        if (root.plasma515) {
-            tasksModel.requestVirtualDesktops(tasksModel.activeTask, 0);
-        } else {
-            tasksModel.requestVirtualDesktop(tasksModel.activeTask, 0);
-        }
-    }
-    
-    function toggleKeepAbove(){
-        tasksModel.requestToggleKeepAbove(tasksModel.activeTask);
     }
 
     ///START Visual Items
