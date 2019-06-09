@@ -43,7 +43,7 @@ Item {
     }
 
     function toggleClose() {
-        lselectedTracker.lastActiveWindow.requestClose();
+        selectedTracker.lastActiveWindow.requestClose();
     }
 
     function togglePinToAllDesktops() {
