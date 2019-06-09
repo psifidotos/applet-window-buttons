@@ -21,35 +21,37 @@ import QtQuick 2.7
 
 Item {
     id: latteWindowsTracker
-    readonly property bool existsWindowActive:  latteBridge.windowsTracker.existsWindowActive
+    readonly property bool existsWindowActive: selectedTracker.lastActiveWindow.isValid && !activeTaskItem.isMinimized
+
+    readonly property QtObject selectedTracker: plasmoid.configuration.filterByScreen ? latteBridge.windowsTracker.currentScreen : latteBridge.windowsTracker.allScreens
 
     readonly property Item activeTaskItem: Item {
-        readonly property string title: latteBridge.windowsTracker.lastActiveWindow.display
-        readonly property bool isMinimized: latteBridge.windowsTracker.lastActiveWindow.isMinimized
-        readonly property bool isMaximized: latteBridge.windowsTracker.lastActiveWindow.isMaximized
-        readonly property bool isActive: latteBridge.windowsTracker.lastActiveWindow.isActive
-        readonly property bool isOnAllDesktops: latteBridge.windowsTracker.lastActiveWindow.isOnAllDesktops
-        readonly property bool isKeepAbove: latteBridge.windowsTracker.lastActiveWindow.isKeepAbove
+        readonly property string title: selectedTracker.lastActiveWindow.display
+        readonly property bool isMinimized: selectedTracker.lastActiveWindow.isMinimized
+        readonly property bool isMaximized: selectedTracker.lastActiveWindow.isMaximized
+        readonly property bool isActive: selectedTracker.lastActiveWindow.isActive
+        readonly property bool isOnAllDesktops: selectedTracker.lastActiveWindow.isOnAllDesktops
+        readonly property bool isKeepAbove: selectedTracker.lastActiveWindow.isKeepAbove
     }
 
     function toggleMaximized() {
-        latteBridge.windowsTracker.lastActiveWindow.requestToggleMaximized();
+        selectedTracker.lastActiveWindow.requestToggleMaximized();
     }
 
     function toggleMinimized() {
-        latteBridge.windowsTracker.lastActiveWindow.requestToggleMinimized();
+        selectedTracker.lastActiveWindow.requestToggleMinimized();
     }
 
     function toggleClose() {
-        latteBridge.windowsTracker.lastActiveWindow.requestClose();
+        lselectedTracker.lastActiveWindow.requestClose();
     }
 
     function togglePinToAllDesktops() {
-        latteBridge.windowsTracker.lastActiveWindow.requestToggleIsOnAllDesktops();
+        selectedTracker.lastActiveWindow.requestToggleIsOnAllDesktops();
     }
 
     function toggleKeepAbove(){
-        latteBridge.windowsTracker.lastActiveWindow.requestToggleKeepAbove();
+        selectedTracker.lastActiveWindow.requestToggleKeepAbove();
     }
 }
 
