@@ -20,6 +20,7 @@
 #ifndef AURORAETHEME_H
 #define AURORAETHEME_H
 
+#include <QColor>
 #include <QObject>
 
 #include "types.h"
@@ -42,6 +43,8 @@ class AuroraeTheme: public QObject
 
     Q_PROPERTY(float buttonRatio READ buttonRatio NOTIFY settingsChanged)
 
+    Q_PROPERTY(QColor titleBackgroundColor READ titleBackgroundColor NOTIFY settingsChanged)
+
 public:
     explicit AuroraeTheme(QObject *parent = nullptr);
     ~AuroraeTheme() override;;
@@ -60,11 +63,14 @@ public:
 
     float buttonRatio() const;
 
+    QColor titleBackgroundColor() const;
+
 signals:
     void settingsChanged();
     void themeChanged();
 
 private slots:
+    void parseThemeImages();
     void auroraeRCChanged(const QString &filename);
 
 private:
@@ -83,6 +89,8 @@ private:
     QString m_themeName;
     QString m_themePath;
     QString m_themeType;
+
+    QColor m_titleBackgroundColor;
 };
 
 }

@@ -84,6 +84,15 @@ QHash< int, QByteArray > SchemesModel::roleNames() const
     return roles;
 }
 
+QColor SchemesModel::backgroundOf(const int &index) const
+{
+    if (index>=0 && index<m_schemes.count()) {
+        return m_schemes[index]->backgroundColor();
+    }
+
+    return QColor("transparent");
+}
+
 void SchemesModel::initSchemes()
 {
     qDeleteAll(m_schemes);

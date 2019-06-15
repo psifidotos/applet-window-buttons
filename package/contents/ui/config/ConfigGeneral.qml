@@ -132,6 +132,7 @@ Item {
             }
 
             ColorsComboBox{
+                id:colorsCmbBox
                 Layout.minimumWidth: 250
                 Layout.preferredWidth: 0.3 * root.width
                 Layout.maximumWidth: 380
@@ -160,6 +161,9 @@ Item {
                 itemHeight: 36
                 buttonsStr: root.currentButtons
                 orientation: ListView.Horizontal
+                color: !auroraeThemeEngine.isEnabled ? schemesBackgroundColor : auroraeThemeEngine.titleBackgroundColor
+
+                readonly property color schemesBackgroundColor: colorsModel.backgroundOf(colorsCmbBox.currentIndex)
             }
         }
 

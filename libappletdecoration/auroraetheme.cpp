@@ -19,14 +19,16 @@
 
 #include "auroraetheme.h"
 
+#include <QDebug>
 #include <QDir>
 #include <QFileInfo>
+#include <QRgb>
 
 #include <KConfigGroup>
+#include <KDirWatch>
 #include <KSharedConfig>
 
-#include <QDebug>
-#include <KDirWatch>
+#include <Plasma/Svg>
 
 namespace Decoration {
 namespace Applet {
@@ -113,6 +115,11 @@ QString AuroraeTheme::themeType() const
     return m_themeType;
 }
 
+QColor AuroraeTheme::titleBackgroundColor() const
+{
+    return m_titleBackgroundColor;
+}
+
 void AuroraeTheme::auroraeRCChanged(const QString &filename)
 {
     if (!filename.endsWith(s_auroraerc)) {
@@ -182,7 +189,42 @@ void AuroraeTheme::loadSettings()
     m_buttonHeight = layoutGroup.readEntry("ButtonHeight", 24);
     m_buttonSpacing = layoutGroup.readEntry("ButtonSpacing", 2);
 
+    parseThemeImages();
+
     emit settingsChanged();
+}
+
+void AuroraeTheme::parseThemeImages()
+{
+    QString origBackgroundFilePath = m_themePath + "/decoration."+m_themeType;
+
+    if (!QFileInfo(origBackgroundFilePath).exists()) {
+        qDebug() << "Aurorare decoration file was not found for theme: " << m_themeName;
+        return;
+    }
+
+    Plasma::Svg *svg = new Plasma::Svg(this);
+    svg->setImagePath(origBackgroundFilePath);
+    svg->resize(50,50);
+    QImage img = svg->image(QSize(50,50), "decoration-top");
+
+    int maxOpacity = -1;
+
+    for (int y=49; y>=0; --y) {
+        QRgb *line = (QRgb *)img.scanLine(y);
+        for (int x=0; x<50; ++x) {
+            QRgb pix = line[x];
+            int opacity = qAlpha(pix);
+
+            //! the equality returns better results for more aurorae themes
+            if (maxOpacity<=opacity) {
+                maxOpacity = opacity;
+                m_titleBackgroundColor = QColor(qRed(pix), qGreen(pix), qBlue(pix));
+            }
+        }
+    }
+
+    svg->deleteLater();
 }
 
 }

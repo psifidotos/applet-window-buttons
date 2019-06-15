@@ -41,6 +41,7 @@ public:
     QHash< int, QByteArray > roleNames() const override;
 
     Q_INVOKABLE int indexOf(QString file);
+    Q_INVOKABLE QColor backgroundOf(const int &index) const;
 
 private slots:
     void initSchemes();

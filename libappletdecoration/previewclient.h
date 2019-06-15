@@ -118,7 +118,7 @@ public:
     void requestShowApplicationMenu(const QRect &rect, int actionId) override;
     void requestToggleOnAllDesktops() override;
 
-    void showApplicationMenu(int actionId);
+    void showApplicationMenu(int actionId) override;
 
     void setCaption(const QString &caption);
     void setActive(bool active);

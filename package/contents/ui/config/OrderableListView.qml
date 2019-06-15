@@ -25,8 +25,10 @@ import org.kde.appletdecoration 0.1 as AppletDecoration
 
 import "../../code/tools.js" as ModelTools
 
-Item {
+Rectangle {
     id: listContent
+    radius: 4
+    anchors.margins: margin
 
     property int orientation
     property double itemWidth
@@ -42,7 +44,8 @@ Item {
 
     property string buttonsStr
 
-    width: (itemWidth+listView.spacing) * (orientation == ListView.Vertical ? 1 : controlButtonsModel.count)
+
+    width: (itemWidth+listView.spacing) * (orientation == ListView.Vertical ? 1 : controlButtonsModel.count) + 2 * margin
     height: (itemHeight+listView.spacing) * (orientation == ListView.Horizontal ? 1 : controlButtonsModel.count)
 
     signal modelOrderChanged()
@@ -97,6 +100,7 @@ Item {
     ListView {
         id: listView
         anchors.fill: parent
+        anchors.leftMargin: parent.margin
         spacing: 2
         model: controlButtonsModel
         orientation: listContent.orientation
@@ -182,7 +186,7 @@ Item {
             }
 
             Rectangle{
-                height: parent.height
+                height: parent.height - listContent.margin
                 width: 4
                 border.width: 1
                 anchors.horizontalCenter: parent.horizontalCenter
