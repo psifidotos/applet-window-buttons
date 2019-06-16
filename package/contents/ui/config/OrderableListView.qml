@@ -123,6 +123,7 @@ Rectangle {
         id: loc
         anchors.fill: parent
         pressAndHoldInterval: 200
+        cursorShape: Qt.DragMoveCursor
 
         property int initButton: -1 // Original button in model
         property int initIndex: -1 // Original position in model
