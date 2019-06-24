@@ -12,8 +12,9 @@ include(KDECompilerSettings)
 
 set(appletdecoration_SRCS
     appletdecorationplugin.cpp
-    buttonsmodel.cpp
     auroraetheme.cpp
+    buttonsmodel.cpp
+    commontools.cpp
     decorationsmodel.cpp
     decorationpalette.cpp
     environment.cpp

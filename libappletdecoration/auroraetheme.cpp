@@ -19,6 +19,8 @@
 
 #include "auroraetheme.h"
 
+#include "commontools.h"
+
 #include <QDebug>
 #include <QDir>
 #include <QFileInfo>
@@ -133,18 +135,7 @@ void AuroraeTheme::updateAurorae(const QString &themeName)
 {
     const QString separator("__");
     const QString name = themeName.section(separator, -1, -1);
-    QString path;
-
-    QString localThemePath = QDir::homePath() + "/.local/share/aurorae/themes/" + name;
-    QString globalThemePath = "/usr/share/aurorae/themes/" + name;
-
-    if (QDir(localThemePath).exists()) {
-        path = localThemePath;
-    } else if (QDir(globalThemePath).exists()) {
-        path = globalThemePath;
-    } else {
-        path = "";
-    }
+    QString path = AppletDecoration::standardPath("aurorae/themes/"+name);
 
     if (QFileInfo(path + "/close.svg").exists()) {
         m_themeType = "svg";

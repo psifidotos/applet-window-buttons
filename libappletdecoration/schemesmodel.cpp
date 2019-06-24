@@ -20,6 +20,7 @@
 
 #include "schemesmodel.h"
 
+#include "commontools.h"
 #include "schemecolors.h"
 
 #include <QDebug>
@@ -101,23 +102,20 @@ void SchemesModel::initSchemes()
     QString currentSchemePath = SchemeColors::possibleSchemeFile("kdeglobals");
     insertSchemeInList(currentSchemePath);
 
-    QString userPath = QDir::homePath() + "/.local/share/color-schemes";
-    QDir directory(userPath);
-    QStringList localSchemes = directory.entryList(QStringList() << "*.colors" << "*.COLORS", QDir::Files);
+    QStringList standardPaths = AppletDecoration::standardPathsFor("color-schemes");
 
-    foreach (QString filename, localSchemes) {
-        QString fullPath = userPath + "/" + filename;
-        insertSchemeInList(fullPath);
-    }
+    QStringList registeredSchemes;
 
-    QString globalPath = "/usr/share/color-schemes";
-    directory.setPath(globalPath);
-    QStringList globalSchemes = directory.entryList(QStringList() << "*.colors" << "*.COLORS", QDir::Files);
+    for(auto path : standardPaths) {
+        QDir directory(path);
+        QStringList tempSchemes = directory.entryList(QStringList() << "*.colors" << "*.COLORS", QDir::Files);
 
-    foreach (QString filename, globalSchemes) {
-        if (!localSchemes.contains(filename)) {
-            QString fullPath = globalPath + "/" + filename;
-            insertSchemeInList(fullPath);
+        foreach (QString filename, tempSchemes) {
+            if (!registeredSchemes.contains(filename)) {
+                QString fullPath = path + "/" + filename;
+                insertSchemeInList(fullPath);
+                registeredSchemes << filename;
+            }
         }
     }
 }
