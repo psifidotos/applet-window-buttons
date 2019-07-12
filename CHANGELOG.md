@@ -1,5 +1,11 @@
 ### CHANGELOG
 
+#### Version 0.5.0
+
+* provide a relevant background for window buttons in configuration window to fix contrast issues
+* support new Latte v0.9 Communicator API
+* support new Latte v0.9 Windows Tracking interface when in Latte dock/panel
+
 #### Version 0.4
 
 * add new KeepAbove button support (community contribution)
