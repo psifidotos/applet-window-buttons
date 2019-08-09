@@ -42,7 +42,7 @@ namespace Applet {
 
 void AppletDecorationPlugin::registerTypes(const char *uri)
 {
-    Q_ASSERT(uri == QLatin1String("org.kde.appletsdecoration"));
+    Q_ASSERT(uri == QLatin1String("org.kde.appletdecoration"));
     qmlRegisterUncreatableType<Decoration::Applet::Types>(uri, 0, 1, "Types", "Applet decoration types");
 
     qmlRegisterType<Decoration::Applet::AuroraeTheme>(uri, 0, 1, "AuroraeTheme");
