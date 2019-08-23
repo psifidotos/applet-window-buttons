@@ -470,7 +470,15 @@ Item {
             topPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : firstPadding
             bottomPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : lastPadding
 
-            isActive: true
+            isActive: {
+                //!   FIXME-TEST PERIOD: Disabled because it shows an error from c++ theme when its value is changed
+                //!   and breaks in some cases the buttons coloring through the schemeFile
+                if (plasmoid.configuration.inactiveStateEnabled && !root.existsWindowActive){
+                    return false;
+                }
+
+                return true;
+            }
             isOnAllDesktops: root.isActiveWindowPinned
             isMaximized: root.isActiveWindowMaximized
             isKeepAbove: root.isActiveWindowKeepAbove

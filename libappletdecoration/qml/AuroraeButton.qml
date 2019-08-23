@@ -62,7 +62,7 @@ MouseArea{
     }
 
     property string svgNormalElementId:{
-        return "active-center";
+        return isActive ? "active-center" : "inactive-center";
     }
 
     property string svgHoveredElementId:{
