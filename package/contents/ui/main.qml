@@ -101,6 +101,8 @@ Item {
 
 
     // START visual properties
+    property bool inactiveStateEnabled: root.latteInEditMode || plasmoid.userConfiguring ? false : plasmoid.configuration.inactiveStateEnabled
+
     property int thickPadding: {
         if (auroraeThemeEngine.isEnabled && plasmoid.configuration.useDecorationMetrics) {
             return plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
@@ -172,6 +174,7 @@ Item {
     //!   even when Latte informs the applets that need to use the default plasma theme.
     readonly property bool enforceLattePalette: latteBridge && latteBridge.palette
     readonly property bool latteInEditMode: latteBridge && latteBridge.inEditMode
+
     //END Latte based properties
 
     //START Behaviors
@@ -376,7 +379,7 @@ Item {
             isActive: {
                 //!   FIXME-TEST PERIOD: Disabled because it shows an error from c++ theme when its value is changed
                 //!   and breaks in some cases the buttons coloring through the schemeFile
-                if (plasmoid.configuration.inactiveStateEnabled && !root.existsWindowActive){
+                if (root.inactiveStateEnabled && !root.existsWindowActive){
                     return false;
                 }
 
@@ -473,7 +476,7 @@ Item {
             isActive: {
                 //!   FIXME-TEST PERIOD: Disabled because it shows an error from c++ theme when its value is changed
                 //!   and breaks in some cases the buttons coloring through the schemeFile
-                if (plasmoid.configuration.inactiveStateEnabled && !root.existsWindowActive){
+                if (root.inactiveStateEnabled && !root.existsWindowActive){
                     return false;
                 }
 
