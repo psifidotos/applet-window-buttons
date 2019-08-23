@@ -72,6 +72,7 @@ private slots:
 
 private:
     bool decorationExists(const QString &plugin, const QString &theme);
+    bool pluginExists(const QString &plugin);
 
 private:
     struct Data

@@ -278,7 +278,13 @@ void DecorationsModel::loadCurrents()
     const QString plugin = config.readEntry("library", s_defaultPlugin);
     const QString theme = config.readEntry("theme", s_defaultTheme);
 
-    bool exists{decorationExists(plugin, theme)};
+    bool exists{false};
+    bool isAur{isAurorae(plugin,theme)};
+
+    if ((!isAur && pluginExists(plugin))
+            || (isAur && decorationExists(plugin, theme))) {
+        exists = true;
+    }
 
     setCurrentPlugin(exists ? plugin : s_defaultPlugin);
     setCurrentTheme(exists ? theme : s_defaultTheme);
@@ -312,6 +318,20 @@ bool DecorationsModel::decorationExists(const QString &plugin, const QString &th
     auto it = std::find_if(m_plugins.cbegin(), m_plugins.cend(),
     [plugin, theme](const Data & d) {
         return d.pluginName == plugin && d.themeName == theme;
+    });
+
+    if (it == m_plugins.cend()) {
+        return false;
+    }
+
+    return true;
+}
+
+bool DecorationsModel::pluginExists(const QString &plugin)
+{
+    auto it = std::find_if(m_plugins.cbegin(), m_plugins.cend(),
+    [plugin](const Data & d) {
+        return d.pluginName == plugin;
     });
 
     if (it == m_plugins.cend()) {
