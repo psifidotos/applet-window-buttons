@@ -21,12 +21,12 @@ import QtQuick 2.7
 
 Item {
     id: latteWindowsTracker
-    readonly property bool existsWindowActive: selectedTracker.lastActiveWindow.isValid && !activeTaskItem.isMinimized && activeTaskItem.isActive
-    readonly property bool existsWindowShown: selectedTracker.lastActiveWindow.isValid && !activeTaskItem.isMinimized
+    readonly property bool existsWindowActive: selectedTracker.lastActiveWindow.isValid && !lastActiveTaskItem.isMinimized && lastActiveTaskItem.isActive
+    readonly property bool existsWindowShown: selectedTracker.lastActiveWindow.isValid && !lastActiveTaskItem.isMinimized
 
     readonly property QtObject selectedTracker: plasmoid.configuration.filterByScreen ? latteBridge.windowsTracker.currentScreen : latteBridge.windowsTracker.allScreens
 
-    readonly property Item activeTaskItem: Item {
+    readonly property Item lastActiveTaskItem: Item {
         readonly property string title: selectedTracker.lastActiveWindow.display
         readonly property bool isMinimized: selectedTracker.lastActiveWindow.isMinimized
         readonly property bool isMaximized: selectedTracker.lastActiveWindow.isMaximized

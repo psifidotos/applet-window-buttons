@@ -27,10 +27,10 @@ import org.kde.taskmanager 0.1 as TaskManager
 Item {
     id: plasmaTasksItem
 
-    readonly property bool existsWindowActive: activeTaskItem && tasksRepeater.count > 0 && activeTaskItem.isActive
-    readonly property bool existsWindowShown: activeTaskItem && tasksRepeater.count > 0 && !activeTaskItem.isMinimized
+    readonly property bool existsWindowActive: lastActiveTaskItem && tasksRepeater.count > 0 && lastActiveTaskItem.isActive
+    readonly property bool existsWindowShown: lastActiveTaskItem && tasksRepeater.count > 0 && !lastActiveTaskItem.isMinimized
 
-    property Item activeTaskItem: null
+    property Item lastActiveTaskItem: null
 
     // To get current activity name
     TaskManager.ActivityInfo {
@@ -70,40 +70,74 @@ Item {
 
                 onIsActiveChanged: {
                     if (isActive) {
-                        plasmaTasksItem.activeTaskItem = task;
+                        plasmaTasksItem.lastActiveTaskItem = task;
                     }
                 }
 
                 Component.onDestruction: {
-                    if (plasmaTasksItem.activeTaskItem === task) {
-                        plasmaTasksItem.activeTaskItem = null;
+                    if (plasmaTasksItem.lastActiveTaskItem === task) {
+                        plasmaTasksItem.lastActiveTaskItem = null;
                     }
+                }
+
+                function modelIndex(){
+                    return tasksModel.makeModelIndex(index);
+                }
+
+                function toggleMaximized() {
+                    tasksModel.requestToggleMaximized(modelIndex());
+                }
+
+                function toggleMinimized() {
+                    tasksModel.requestToggleMinimized(modelIndex());
+                }
+
+                function toggleClose() {
+                    tasksModel.requestClose(modelIndex());
+                }
+
+                function togglePinToAllDesktops() {
+                    if (root.plasma515) {
+                        tasksModel.requestVirtualDesktops(modelIndex(), 0);
+                    } else {
+                        tasksModel.requestVirtualDesktop(modelIndex(), 0);
+                    }
+                }
+
+                function toggleKeepAbove(){
+                    tasksModel.requestToggleKeepAbove(modelIndex());
                 }
             }
         }
     }
 
     function toggleMaximized() {
-        tasksModel.requestToggleMaximized(tasksModel.activeTask);
+        if (lastActiveTaskItem) {
+            lastActiveTaskItem.toggleMaximized();
+        }
     }
 
     function toggleMinimized() {
-        tasksModel.requestToggleMinimized(tasksModel.activeTask);
+        if (lastActiveTaskItem) {
+            lastActiveTaskItem.toggleMinimized();
+        }
     }
 
     function toggleClose() {
-        tasksModel.requestClose(tasksModel.activeTask);
+        if (lastActiveTaskItem) {
+            lastActiveTaskItem.toggleClose();
+        }
     }
 
     function togglePinToAllDesktops() {
-        if (root.plasma515) {
-            tasksModel.requestVirtualDesktops(tasksModel.activeTask, 0);
-        } else {
-            tasksModel.requestVirtualDesktop(tasksModel.activeTask, 0);
+        if (lastActiveTaskItem) {
+            lastActiveTaskItem.togglePinToAllDesktops();
         }
     }
 
     function toggleKeepAbove(){
-        tasksModel.requestToggleKeepAbove(tasksModel.activeTask);
+        if (lastActiveTaskItem) {
+            lastActiveTaskItem.toggleKeepAbove();
+        }
     }
 }

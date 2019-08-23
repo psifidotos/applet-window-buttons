@@ -53,7 +53,7 @@ Item {
         if (visibility === AppletDecoration.Types.ActiveWindow && !existsWindowActive) {
             return true;
         }
-        if (visibility === AppletDecoration.Types.ActiveMaximizedWindow && !isActiveWindowMaximized) {
+        if (visibility === AppletDecoration.Types.ActiveMaximizedWindow && !isLastActiveWindowMaximized) {
             return true;
         }
         if (visibility === AppletDecoration.Types.ShownWindowExists && !existsWindowShown) {
@@ -135,15 +135,15 @@ Item {
     readonly property bool existsWindowShown: (windowInfoLoader.item && windowInfoLoader.item.existsWindowShown)
                                                || containmentIdentifierTimer.running
 
-    readonly property bool isActiveWindowPinned: activeTaskItem && !mustHide && activeTaskItem.isOnAllDesktops
-    readonly property bool isActiveWindowMaximized: activeTaskItem && !mustHide && activeTaskItem.isMaximized
-    readonly property bool isActiveWindowKeepAbove: activeTaskItem && !mustHide && activeTaskItem.isKeepAbove
+    readonly property bool isLastActiveWindowPinned: lastActiveTaskItem && lastActiveTaskItem.isOnAllDesktops
+    readonly property bool isLastActiveWindowMaximized: lastActiveTaskItem && lastActiveTaskItem.isMaximized
+    readonly property bool isLastActiveWindowKeepAbove: lastActiveTaskItem && lastActiveTaskItem.isKeepAbove
 
     property bool hasDesktopsButton: false
     property bool hasMaximizedButton: false
     property bool hasKeepAboveButton: false
 
-    readonly property Item activeTaskItem: windowInfoLoader.item.activeTaskItem
+    readonly property Item lastActiveTaskItem: windowInfoLoader.item.lastActiveTaskItem
     // END Window properties
 
     // START decoration properties
@@ -382,9 +382,9 @@ Item {
 
                 return true;
             }
-            isOnAllDesktops: root.isActiveWindowPinned
-            isMaximized: root.isActiveWindowMaximized
-            isKeepAbove: root.isActiveWindowKeepAbove
+            isOnAllDesktops: root.isLastActiveWindowPinned
+            isMaximized: root.isLastActiveWindowMaximized
+            isKeepAbove: root.isLastActiveWindowKeepAbove
 
             readonly property int firstPadding: {
                 if (index === 0) {
@@ -479,9 +479,9 @@ Item {
 
                 return true;
             }
-            isOnAllDesktops: root.isActiveWindowPinned
-            isMaximized: root.isActiveWindowMaximized
-            isKeepAbove: root.isActiveWindowKeepAbove
+            isOnAllDesktops: root.isLastActiveWindowPinned
+            isMaximized: root.isLastActiveWindowMaximized
+            isKeepAbove: root.isLastActiveWindowKeepAbove
             buttonType: model.buttonType
             auroraeTheme: auroraeThemeEngine
 
