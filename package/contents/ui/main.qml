@@ -53,7 +53,7 @@ Item {
         if (visibility === AppletDecoration.Types.ActiveWindow && !existsWindowActive) {
             return true;
         }
-        if (visibility === AppletDecoration.Types.ActiveMaximizedWindow && !isLastActiveWindowMaximized) {
+        if (visibility === AppletDecoration.Types.ActiveMaximizedWindow && (!isLastActiveWindowMaximized || !existsWindowActive)) {
             return true;
         }
         if (visibility === AppletDecoration.Types.ShownWindowExists && !existsWindowShown) {
