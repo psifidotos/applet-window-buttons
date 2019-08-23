@@ -27,7 +27,9 @@ import org.kde.taskmanager 0.1 as TaskManager
 Item {
     id: plasmaTasksItem
 
-    readonly property bool existsWindowActive: root.activeTaskItem && tasksRepeater.count > 0 && activeTaskItem.isActive
+    readonly property bool existsWindowActive: activeTaskItem && tasksRepeater.count > 0 && activeTaskItem.isActive
+    readonly property bool existsWindowShown: activeTaskItem && tasksRepeater.count > 0 && !activeTaskItem.isMinimized
+
     property Item activeTaskItem: null
 
     // To get current activity name
@@ -69,6 +71,12 @@ Item {
                 onIsActiveChanged: {
                     if (isActive) {
                         plasmaTasksItem.activeTaskItem = task;
+                    }
+                }
+
+                Component.onDestruction: {
+                    if (plasmaTasksItem.activeTaskItem === task) {
+                        plasmaTasksItem.activeTaskItem = null;
                     }
                 }
             }

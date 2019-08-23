@@ -77,7 +77,8 @@ public:
     {
         AlwaysVisible = 0,
         ActiveWindow,
-        ActiveMaximizedWindow
+        ActiveMaximizedWindow,
+        ShownWindowExists
     };
     Q_ENUM(Visibility)
 

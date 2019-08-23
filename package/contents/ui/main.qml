@@ -56,6 +56,9 @@ Item {
         if (visibility === AppletDecoration.Types.ActiveMaximizedWindow && !isActiveWindowMaximized) {
             return true;
         }
+        if (visibility === AppletDecoration.Types.ShownWindowExists && !existsWindowShown) {
+            return true;
+        }
 
         return false;
     }
@@ -129,9 +132,12 @@ Item {
     //! make sure that on startup it will always be shown
     readonly property bool existsWindowActive: (windowInfoLoader.item && windowInfoLoader.item.existsWindowActive)
                                                || containmentIdentifierTimer.running
-    readonly property bool isActiveWindowPinned: activeTaskItem && existsWindowActive && activeTaskItem.isOnAllDesktops
-    readonly property bool isActiveWindowMaximized: activeTaskItem && existsWindowActive && activeTaskItem.isMaximized
-    readonly property bool isActiveWindowKeepAbove: activeTaskItem && existsWindowActive && activeTaskItem.isKeepAbove
+    readonly property bool existsWindowShown: (windowInfoLoader.item && windowInfoLoader.item.existsWindowShown)
+                                               || containmentIdentifierTimer.running
+
+    readonly property bool isActiveWindowPinned: activeTaskItem && !mustHide && activeTaskItem.isOnAllDesktops
+    readonly property bool isActiveWindowMaximized: activeTaskItem && !mustHide && activeTaskItem.isMaximized
+    readonly property bool isActiveWindowKeepAbove: activeTaskItem && !mustHide && activeTaskItem.isKeepAbove
 
     property bool hasDesktopsButton: false
     property bool hasMaximizedButton: false

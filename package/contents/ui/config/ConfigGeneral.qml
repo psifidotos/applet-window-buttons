@@ -169,12 +169,12 @@ Item {
 
         GridLayout{
             columns: 2
-            rows: 3
+            rows: 4
             flow: GridLayout.TopToBottom
 
             Label{
                 Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
-                Layout.rowSpan: 3
+                Layout.rowSpan: 4
                 Layout.alignment: Qt.AlignTop | Qt.AlignRight
                 text: i18n("Show:")
                 horizontalAlignment: Text.AlignRight
@@ -212,6 +212,17 @@ Item {
                 onCheckedChanged: {
                     if (checked) {
                         root.visibility = AppletDecoration.Types.ActiveMaximizedWindow;
+                    }
+                }
+            }
+            RadioButton{
+                id: shownWindowBtn
+                text: i18n("At least one window is shown")
+                checked: root.visibility === AppletDecoration.Types.ShownWindowExists
+                exclusiveGroup: visibilityGroup
+                onCheckedChanged: {
+                    if (checked) {
+                        root.visibility = AppletDecoration.Types.ShownWindowExists;
                     }
                 }
             }
