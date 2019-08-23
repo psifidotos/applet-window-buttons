@@ -36,6 +36,7 @@ Item {
     property alias cfg_buttons: root.currentButtons
     property alias cfg_visibility: root.visibility
     property alias cfg_filterByScreen: byScreenChk.checked
+    property alias cfg_inactiveStateEnabled: inactiveChk.checked
     property alias cfg_slideAnimation: slideChk.checked
     property alias cfg_disabledMaximizedBorders: root.disabledBorders
     property alias cfg_useDecorationMetrics: decorationMetricsChk.checked
@@ -242,10 +243,22 @@ Item {
         }
 
         GridLayout{
+            columns: 2
+            rows: 2
+            flow: GridLayout.TopToBottom
+
             Label{
                 Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
-                text: i18n("Animations:")
+                Layout.alignment: Qt.AlignTop | Qt.AlignRight
+                Layout.rowSpan: 2
+
+                text: i18n("Appearance:")
                 horizontalAlignment: Text.AlignRight
+            }
+
+            CheckBox{
+                id: inactiveChk
+                text: i18n("Draw buttons inactive state when needed")
             }
 
             CheckBox{
