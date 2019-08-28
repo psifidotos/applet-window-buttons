@@ -18,7 +18,7 @@ This is a Plasma 5 applet that shows window buttons in your panels. This plasmoi
 </p>
 
 <p align="center">
-<img src="https://i.imgur.com/yleReE7.png" width="580"><br/>
+<img src="https://i.imgur.com/xsiKK7J.png" width="580"><br/>
 <i>Settings window</i>
 </p>
 
