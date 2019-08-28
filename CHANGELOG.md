@@ -1,5 +1,14 @@
 ### CHANGELOG
 
+#### Version 0.6.0
+
+* new visibility mode: At least one window is shown
+* option to draw buttons in inactive state (for both c++ and aurorae decorations)
+* fix the current buttons decoration discovery, the user can now change between different decorations and the buttons style is updated runtime
+* hide when the last maximized window is closed and the visibility mode is ActiveMaximized
+* fix multi-screens behavior for Latte panels
+* fix typo that broke builds at some systems
+
 #### Version 0.5.0
 
 * provide a relevant background for window buttons in configuration window to fix contrast issues
