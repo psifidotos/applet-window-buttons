@@ -110,7 +110,12 @@ Item {
                         ((root.width - auroraeThemeEngine.buttonHeight) / 2) - 1;
         }
 
-        return plasmoid.configuration.thicknessMargin;
+
+        if (plasmoid.formFactor === PlasmaCore.Types.Horizontal) {
+            return root.height - (root.height * (plasmoid.configuration.buttonSizePercentage/100))
+        } else {
+            return root.width - (root.width * (plasmoid.configuration.buttonSizePercentage/100))
+        }
     }
 
     property int lengthFirstMargin: plasmoid.configuration.lengthFirstMargin

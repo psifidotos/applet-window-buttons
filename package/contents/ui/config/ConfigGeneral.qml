@@ -34,6 +34,7 @@ Item {
     property alias cfg_selectedScheme: root.selectedScheme
     property alias cfg_selectedTheme: root.selectedTheme
     property alias cfg_buttons: root.currentButtons
+    property alias cfg_buttonSizePercentage: buttonSizeSpn.value
     property alias cfg_visibility: root.visibility
     property alias cfg_filterByScreen: byScreenChk.checked
     property alias cfg_inactiveStateEnabled: inactiveChk.checked
@@ -41,7 +42,6 @@ Item {
     property alias cfg_disabledMaximizedBorders: root.disabledBorders
     property alias cfg_useDecorationMetrics: decorationMetricsChk.checked
     property alias cfg_spacing: spacingSpn.value
-    property alias cfg_thicknessMargin: thickSpn.value
     property alias cfg_lengthFirstMargin: lengthFirstSpn.value
     property alias cfg_lengthLastMargin: lengthLastSpn.value
     property alias cfg_lengthMarginsLock: lockItem.locked
@@ -316,37 +316,39 @@ Item {
                     Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
                     text: i18n("Metrics:")
                     horizontalAlignment: Text.AlignRight
+                    visible: auroraeThemeEngine.isEnabled
                 }
 
                 CheckBox{
                     id: decorationMetricsChk
                     text: i18n("Use from decoration if any are found")
+                    visible: auroraeThemeEngine.isEnabled
+                }
+
+                Label {
+                    Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
+                    text: i18n("Size:")
+                    horizontalAlignment: Text.AlignRight
+                    enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
+                }
+
+                SpinBox{
+                    id: buttonSizeSpn
+                    minimumValue: 40
+                    maximumValue: 100
+                    suffix: " %"
+                    enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
                 }
 
                 Label{
                     Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
-                    text: i18n("Icons spacing:")
+                    text: i18n("Spacing:")
                     horizontalAlignment: Text.AlignRight
                     enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
                 }
 
                 SpinBox{
                     id: spacingSpn
-                    minimumValue: 0
-                    maximumValue: 24
-                    suffix: " " + i18nc("pixels","px.")
-                    enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
-                }
-
-                Label{
-                    Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
-                    text: i18n("Thickness margin:")
-                    horizontalAlignment: Text.AlignRight
-                    enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
-                }
-
-                SpinBox{
-                    id: thickSpn
                     minimumValue: 0
                     maximumValue: 24
                     suffix: " " + i18nc("pixels","px.")
