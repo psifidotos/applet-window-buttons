@@ -34,6 +34,11 @@ Rectangle {
     property double itemWidth
     property double itemHeight
 
+    property int buttonSize: 100
+    property int buttonsFirstMargin: 0
+    property int buttonsLastMargin: 0
+    property int buttonsSpacing: 0
+
     Layout.minimumWidth: width
     Layout.preferredWidth: Layout.minimumWidth
     Layout.maximumWidth: Layout.maximumWidth
@@ -45,17 +50,23 @@ Rectangle {
     property string buttonsStr
 
 
-    width: (itemWidth+listView.spacing) * (orientation == ListView.Vertical ? 1 : controlButtonsModel.count) + 2 * margin
-    height: (itemHeight+listView.spacing) * (orientation == ListView.Horizontal ? 1 : controlButtonsModel.count)
+    width: listView.childrenRect.width + 2 * margin//(itemWidth+listView.spacing) * (orientation == ListView.Vertical ? 1 : controlButtonsModel.count) + 2 * margin
+    height: listView.childrenRect.height + 2 * margin //(itemHeight+listView.spacing) * (orientation == ListView.Horizontal ? 1 : controlButtonsModel.count)
 
     signal modelOrderChanged()
 
     property var tasksPreparedArray: []
 
-    readonly property int margin: 2
-    readonly property double iconHeight: itemHeight - margin * 2
+    readonly property int margin: 0
+    readonly property double iconHeight: itemHeight*(buttonSize/100) - margin * 2
 
-    Component.onCompleted: initializeControlButtonsModel();
+    Component.onCompleted: initButtons();
+
+    function initButtons() {
+        if (!buttonsRecreator.running){
+            buttonsRecreator.start();
+        }
+    }
 
     function initializeControlButtonsModel() {
         var buttonsList = buttonsStr.split('|');
@@ -79,8 +90,10 @@ Rectangle {
 
     Connections{
         target: root
-        onCurrentPluginChanged: listContent.initializeControlButtonsModel();
+        onCurrentPluginChanged: listContent.initButtons();
     }
+
+    onButtonSizeChanged: listContent.initButtons();
 
     ListModel {
         id: controlButtonsModel
@@ -99,9 +112,9 @@ Rectangle {
 
     ListView {
         id: listView
-        anchors.fill: parent
-        anchors.leftMargin: parent.margin
-        spacing: 2
+        width: childrenRect.width
+        height: itemHeight
+
         model: controlButtonsModel
         orientation: listContent.orientation
         delegate: auroraeThemeEngine.isEnabled ? auroraeButton : pluginButton
@@ -153,8 +166,13 @@ Rectangle {
     Component {
         id: pluginButton
         Rectangle{
-            y: listView.spacing
-            width: listContent.iconHeight + 2 * listContent.margin
+            readonly property bool isVisibleButton: index >= 0 && index < listView.splitterIndex
+            readonly property bool isFirstVisibleButton: index === 0 && listView.splitterIndex > 0
+            readonly property bool isLastVisibleButton: index>=0 && index===listView.splitterIndex-1
+            readonly property bool isButtonSplitter: index>=0 && index===listView.splitterIndex
+
+            y: (itemHeight - iconHeight) / 2
+            width: isButtonSplitter ? 6 : listContent.iconHeight + leftMargin + rightMargin
             height: listContent.iconHeight + 2 * listContent.margin
             color: {
                 if (listView.currentIndex === index) {
@@ -167,9 +185,30 @@ Rectangle {
                 return "transparent";
             }
 
+            readonly property int leftMargin: {
+                if (isFirstVisibleButton) {
+                    return buttonsFirstMargin;
+                } else if (isVisibleButton) {
+                    return buttonsSpacing;
+                }
+
+                return listContent.margin;
+            }
+
+            readonly property int rightMargin: {
+                if (isLastVisibleButton) {
+                    return buttonsLastMargin;
+                }
+
+                return listContent.margin;
+            }
+
+
             AppletDecoration.Button {
                 id: cButton
-                anchors.centerIn: parent
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.leftMargin: parent.leftMargin
 
                 opacity: listView.splitterIndex !==-1 && listView.splitterIndex<index ? 0.4 : 1
 
@@ -190,7 +229,7 @@ Rectangle {
                 height: parent.height - listContent.margin
                 width: 4
                 border.width: 1
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.left: parent.left
                 color: palette.highlight
                 border.color: palette.highlight
                 visible: buttonType === AppletDecoration.Types.Custom
@@ -201,8 +240,13 @@ Rectangle {
     Component {
         id: auroraeButton
         Rectangle{
-            y: listView.spacing
-            width: auroraeThemeEngine.buttonRatio * listContent.iconHeight + 2 * listContent.margin
+            readonly property bool isVisibleButton: index >= 0 && index < listView.splitterIndex
+            readonly property bool isFirstVisibleButton: index === 0 && listView.splitterIndex > 0
+            readonly property bool isLastVisibleButton: index>=0 && index===listView.splitterIndex-1
+            readonly property bool isButtonSplitter: index>=0 && index===listView.splitterIndex
+
+            y: (itemHeight - iconHeight) / 2
+            width: isButtonSplitter ? 6 : auroraeThemeEngine.buttonRatio * listContent.iconHeight + leftMargin + rightMargin
             height: listContent.iconHeight + 2 * listContent.margin
             color: {
                 if (listView.currentIndex === index) {
@@ -215,8 +259,28 @@ Rectangle {
                 return "transparent";
             }
 
+            readonly property int leftMargin: {
+                if (isFirstVisibleButton) {
+                    return buttonsFirstMargin;
+                } else if (isVisibleButton) {
+                    return buttonsSpacing;
+                }
+
+                return listContent.margin;
+            }
+
+            readonly property int rightMargin: {
+                if (isLastVisibleButton) {
+                    return buttonsLastMargin;
+                }
+
+                return listContent.margin;
+            }
+
             AppletDecoration.AuroraeButton {
-                anchors.centerIn: parent
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.leftMargin: parent.leftMargin
 
                 opacity: listView.splitterIndex !==-1 && listView.splitterIndex<index ? 0.4 : 1
 
@@ -232,10 +296,10 @@ Rectangle {
             }
 
             Rectangle{
+                anchors.left: parent.left
                 height: parent.height
                 width: 4
                 border.width: 1
-                anchors.horizontalCenter: parent.horizontalCenter
                 color: palette.highlight
                 border.color: palette.highlight
                 visible: buttonType === AppletDecoration.Types.Custom
@@ -243,5 +307,13 @@ Rectangle {
         }
     }
     ///END Components
+
+    //! this timer is used in order to not call too many times the recreation
+    //! of buttons with no reason.
+    Timer{
+        id: buttonsRecreator
+        interval: 200
+        onTriggered: initializeControlButtonsModel();
+    }
 }
 

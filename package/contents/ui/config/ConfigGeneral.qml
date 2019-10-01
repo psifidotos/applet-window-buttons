@@ -158,11 +158,16 @@ Item {
 
             OrderableListView{
                 id: activeButtons
-                itemWidth: 36
-                itemHeight: 36
+                itemWidth: 38
+                itemHeight: 38
                 buttonsStr: root.currentButtons
                 orientation: ListView.Horizontal
                 color: !auroraeThemeEngine.isEnabled ? schemesBackgroundColor : auroraeThemeEngine.titleBackgroundColor
+
+                buttonSize: buttonSizeSpn.value
+                buttonsFirstMargin: lengthFirstSpn.value
+                buttonsLastMargin: lengthLastSpn.value
+                buttonsSpacing: spacingSpn.value
 
                 readonly property color schemesBackgroundColor: colorsModel.backgroundOf(colorsCmbBox.currentIndex)
             }
