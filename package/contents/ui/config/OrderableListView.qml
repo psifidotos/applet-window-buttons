@@ -117,18 +117,17 @@ Rectangle {
 
         model: controlButtonsModel
         orientation: listContent.orientation
-        delegate: auroraeThemeEngine.isEnabled ? auroraeButton : pluginButton
+        delegate: auroraeThemeEngine.isEnabled ? auroraeButtonComponent : pluginButtonComponent
         currentIndex: loc.initIndex
 
         property int splitterIndex: -1
-
 
         moveDisplaced: Transition {
             NumberAnimation { properties: "x"; duration: 150; easing.type: Easing.Linear }
         }
 
         move: Transition {
-            NumberAnimation { properties: "x"; duration: 150; easing.type: Easing.Linear }
+            NumberAnimation { properties: "x"; duration: 75; easing.type: Easing.Linear }
         }
     }
 
@@ -143,6 +142,8 @@ Rectangle {
 
         property int index: listView.indexAt(mouseX, mouseY) // Item underneath cursor
 
+        readonly property bool buttonIsDragged: initButton!==-1 || initIndex !==-1
+
         onPressAndHold: {
             initIndex = listView.indexAt(mouseX, mouseY);
             initButton = controlButtonsModel.get(initIndex).buttonType;
@@ -156,23 +157,25 @@ Rectangle {
             if (containsPress && initIndex !== -1 &&index !== -1 && index !== initIndex) {
                 controlButtonsModel.move(initIndex, index, 1);
                 initIndex = index;
-                listView.splitterIndex = ModelTools.indexOfSplitter(controlButtonsModel);
                 root.currentButtons = buttonsListStr();
+                listView.splitterIndex = ModelTools.indexOfSplitter(controlButtonsModel);
             }
         }
     }
 
     ///START Components
     Component {
-        id: pluginButton
+        id: pluginButtonComponent
         Rectangle{
+            id: decorationButton
             readonly property bool isVisibleButton: index >= 0 && index < listView.splitterIndex
             readonly property bool isFirstVisibleButton: index === 0 && listView.splitterIndex > 0
             readonly property bool isLastVisibleButton: index>=0 && index===listView.splitterIndex-1
             readonly property bool isButtonSplitter: index>=0 && index===listView.splitterIndex
 
             y: (itemHeight - iconHeight) / 2
-            width: isButtonSplitter ? 6 : listContent.iconHeight + leftMargin + rightMargin
+            width: isButtonSplitter && !loc.buttonIsDragged ? Math.min(listContent.iconHeight/2, 6 + buttonsLastMargin) :
+                                                              listContent.iconHeight + leftMargin + rightMargin
             height: listContent.iconHeight + 2 * listContent.margin
             color: {
                 if (listView.currentIndex === index) {
@@ -185,22 +188,55 @@ Rectangle {
                 return "transparent";
             }
 
-            readonly property int leftMargin: {
-                if (isFirstVisibleButton) {
-                    return buttonsFirstMargin;
-                } else if (isVisibleButton) {
-                    return buttonsSpacing;
-                }
+            property int leftMargin: 0
+            property int rightMargin: 0
 
-                return listContent.margin;
+            Behavior on leftMargin {
+                NumberAnimation {
+                    duration: 50
+                    easing.type: Easing.Linear
+                }
             }
 
-            readonly property int rightMargin: {
-                if (isLastVisibleButton) {
-                    return buttonsLastMargin;
+            Behavior on rightMargin {
+                NumberAnimation {
+                    duration: 50
+                    easing.type: Easing.Linear
                 }
+            }
 
-                return listContent.margin;
+            Binding {
+                target: decorationButton
+                property: "leftMargin"
+                value: {
+                    if (loc.buttonIsDragged) {
+                        return buttonsSpacing / 2;
+                    }
+
+                    if (isFirstVisibleButton) {
+                        return buttonsFirstMargin;
+                    } else if (isVisibleButton) {
+                        return buttonsSpacing;
+                    }
+
+                    return listContent.margin;
+                }
+            }
+
+            Binding {
+                target: decorationButton
+                property: "rightMargin"
+                value: {
+                    if (loc.buttonIsDragged) {
+                        return buttonsSpacing / 2;
+                    }
+
+                    if (isLastVisibleButton) {
+                        return buttonsLastMargin;
+                    }
+
+                    return listContent.margin;
+                }
             }
 
 
@@ -233,20 +269,23 @@ Rectangle {
                 color: palette.highlight
                 border.color: palette.highlight
                 visible: buttonType === AppletDecoration.Types.Custom
+                opacity: 0.75
             }
         }
     }
 
     Component {
-        id: auroraeButton
+        id: auroraeButtonComponent
         Rectangle{
+            id: auroraeButton
             readonly property bool isVisibleButton: index >= 0 && index < listView.splitterIndex
             readonly property bool isFirstVisibleButton: index === 0 && listView.splitterIndex > 0
             readonly property bool isLastVisibleButton: index>=0 && index===listView.splitterIndex-1
             readonly property bool isButtonSplitter: index>=0 && index===listView.splitterIndex
 
             y: (itemHeight - iconHeight) / 2
-            width: isButtonSplitter ? 6 : auroraeThemeEngine.buttonRatio * listContent.iconHeight + leftMargin + rightMargin
+            width: isButtonSplitter && !loc.buttonIsDragged ? Math.min(listContent.iconHeight/2, 6 + buttonsLastMargin) :
+                                                              auroraeThemeEngine.buttonRatio * listContent.iconHeight + leftMargin + rightMargin
             height: listContent.iconHeight + 2 * listContent.margin
             color: {
                 if (listView.currentIndex === index) {
@@ -259,22 +298,55 @@ Rectangle {
                 return "transparent";
             }
 
-            readonly property int leftMargin: {
-                if (isFirstVisibleButton) {
-                    return buttonsFirstMargin;
-                } else if (isVisibleButton) {
-                    return buttonsSpacing;
-                }
+            property int leftMargin: 0
+            property int rightMargin: 0
 
-                return listContent.margin;
+            Behavior on leftMargin {
+                NumberAnimation {
+                    duration: 50
+                    easing.type: Easing.Linear
+                }
             }
 
-            readonly property int rightMargin: {
-                if (isLastVisibleButton) {
-                    return buttonsLastMargin;
+            Behavior on rightMargin {
+                NumberAnimation {
+                    duration: 50
+                    easing.type: Easing.Linear
                 }
+            }
 
-                return listContent.margin;
+            Binding {
+                target: auroraeButton
+                property: "leftMargin"
+                value: {
+                    if (loc.buttonIsDragged) {
+                        return buttonsSpacing / 2;
+                    }
+
+                    if (isFirstVisibleButton) {
+                        return buttonsFirstMargin;
+                    } else if (isVisibleButton) {
+                        return buttonsSpacing;
+                    }
+
+                    return listContent.margin;
+                }
+            }
+
+            Binding {
+                target: auroraeButton
+                property: "rightMargin"
+                value: {
+                    if (loc.buttonIsDragged) {
+                        return buttonsSpacing / 2;
+                    }
+
+                    if (isLastVisibleButton) {
+                        return buttonsLastMargin;
+                    }
+
+                    return listContent.margin;
+                }
             }
 
             AppletDecoration.AuroraeButton {
@@ -303,6 +375,7 @@ Rectangle {
                 color: palette.highlight
                 border.color: palette.highlight
                 visible: buttonType === AppletDecoration.Types.Custom
+                opacity: 0.75
             }
         }
     }
