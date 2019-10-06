@@ -210,11 +210,25 @@ Item {
         }
     }
 
-    onCurrentSchemeChanged: initButtons();
+    onCurrentSchemeChanged: {
+        //! This is needed from some themes e.g. Oxygen in order to paint properly
+        //! scheme changes. In the future it must be investigated if it is
+        //! Oxygen fault.
+        initButtons();
+    }
 
     onDisabledMaximizedBordersChanged: {
         if (containmentType === AppletDecoration.Types.Plasma && disabledMaximizedBorders !== 1) { /*SystemDecision*/
             windowSystem.setDisabledMaximizedBorders(disabledMaximizedBorders);
+        }
+    }
+
+    onExistsWindowActiveChanged: {
+        //! This is needed from some themes e.g. Breeze in order to paint properly
+        //! active/inactive buttons. In the future it must be investigated if it is
+        //! Breeze fault
+        if (root.inactiveStateEnabled) {
+            initButtons();
         }
     }
 
