@@ -62,6 +62,9 @@ Item {
 
         return false;
     }
+
+    readonly property bool selectedDecorationExists: decorations.decorationExists(plasmoid.configuration.selectedPlugin, plasmoid.configuration.selectedTheme)
+
     readonly property int containmentType: plasmoid.configuration.containmentType
     readonly property int disabledMaximizedBorders: plasmoid.configuration.disabledMaximizedBorders
     readonly property int visibility: plasmoid.configuration.visibility
@@ -98,7 +101,6 @@ Item {
 
         return PlasmaCore.Types.ActiveStatus;
     }
-
 
     // START visual properties
     property bool inactiveStateEnabled: root.latteInEditMode || plasmoid.userConfiguring ? false : plasmoid.configuration.inactiveStateEnabled
@@ -140,7 +142,7 @@ Item {
     readonly property bool existsWindowActive: (windowInfoLoader.item && windowInfoLoader.item.existsWindowActive)
                                                || containmentIdentifierTimer.running
     readonly property bool existsWindowShown: (windowInfoLoader.item && windowInfoLoader.item.existsWindowShown)
-                                               || containmentIdentifierTimer.running
+                                              || containmentIdentifierTimer.running
 
     readonly property bool isLastActiveWindowPinned: lastActiveTaskItem && lastActiveTaskItem.isOnAllDesktops
     readonly property bool isLastActiveWindowMaximized: lastActiveTaskItem && lastActiveTaskItem.isMaximized
@@ -154,12 +156,12 @@ Item {
     // END Window properties
 
     // START decoration properties
-    property string currentPlugin: plasmoid.configuration.useCurrentDecoration ?
+    property string currentPlugin: plasmoid.configuration.useCurrentDecoration || !selectedDecorationExists ?
                                        decorations.currentPlugin : plasmoid.configuration.selectedPlugin
-    property string currentTheme: plasmoid.configuration.useCurrentDecoration ?
+    property string currentTheme: plasmoid.configuration.useCurrentDecoration || !selectedDecorationExists ?
                                       decorations.currentTheme : plasmoid.configuration.selectedTheme
-    property string currentScheme: enforceLattePalette && plasmoid.configuration.selectedScheme === "kdeglobals"
-                                   ? latteBridge.palette.scheme : plasmoid.configuration.selectedScheme
+    property string currentScheme: (enforceLattePalette && plasmoid.configuration.selectedScheme === "kdeglobals") ?
+                                       latteBridge.palette.scheme : plasmoid.configuration.selectedScheme
     // END decoration properties
 
     //BEGIN Latte Dock Communicator
@@ -207,6 +209,8 @@ Item {
             windowSystem.setDisabledMaximizedBorders(disabledMaximizedBorders);
         }
     }
+
+    onCurrentSchemeChanged: initButtons();
 
     onDisabledMaximizedBordersChanged: {
         if (containmentType === AppletDecoration.Types.Plasma && disabledMaximizedBorders !== 1) { /*SystemDecision*/
@@ -330,7 +334,7 @@ Item {
 
     function performActiveWindowAction(windowOperation) {
         if (windowOperation === AppletDecoration.Types.ActionClose) {
-             windowInfoLoader.item.toggleClose();
+            windowInfoLoader.item.toggleClose();
         } else if (windowOperation === AppletDecoration.Types.ToggleMaximize) {
             windowInfoLoader.item.toggleMaximized();
         } else if (windowOperation === AppletDecoration.Types.ToggleMinimize) {

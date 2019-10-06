@@ -56,6 +56,7 @@ public:
     QString currentTheme() const;
 
 public Q_SLOTS:
+    Q_INVOKABLE bool decorationExists(const QString &plugin, const QString &theme);
     Q_INVOKABLE bool isAurorae(const QString &plugin, const QString &theme);
 
 signals:
@@ -71,7 +72,7 @@ private slots:
     void setCurrentTheme(QString theme);
 
 private:
-    bool decorationExists(const QString &plugin, const QString &theme);
+
     bool pluginExists(const QString &plugin);
 
 private:

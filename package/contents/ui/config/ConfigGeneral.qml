@@ -56,10 +56,14 @@ Item {
     property string currentButtons
 
     // used from the ui
+    readonly property bool selectedDecorationExists: decorations.decorationExists(root.selectedPlugin, root.selectedTheme)
+
     readonly property real centerFactor: 0.3
     readonly property int minimumWidth: 220
-    property string currentPlugin: root.useCurrent ? decorations.currentPlugin : root.selectedPlugin
-    property string currentTheme: root.useCurrent ? decorations.currentTheme : root.selectedTheme
+    property string currentPlugin: root.useCurrent || !selectedDecorationExists ? decorations.currentPlugin : root.selectedPlugin
+    property string currentTheme: root.useCurrent || !selectedDecorationExists ? decorations.currentTheme : root.selectedTheme
+
+
 
     ///START Decoration Items
     AppletDecoration.Bridge {
@@ -78,7 +82,7 @@ Item {
         id: auroraeThemeEngine
         theme: isEnabled ? currentTheme : ""
 
-        readonly property bool isEnabled: decorations.isAurorae(root.currentPlugin, root.currentTheme);
+        readonly property bool isEnabled: decorations.isAurorae(root.currentPlugin, root.currentTheme)
     }
 
     AppletDecoration.DecorationsModel {
