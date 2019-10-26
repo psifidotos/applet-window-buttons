@@ -82,6 +82,13 @@ public:
     };
     Q_ENUM(Visibility)
 
+    enum HiddenState
+    {
+        SlideOut = 0,
+        EmptySpace
+    };
+    Q_ENUM(HiddenState)
+
     enum ContainmentType
     {
         Loading = 0,

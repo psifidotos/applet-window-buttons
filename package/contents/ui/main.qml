@@ -47,6 +47,8 @@ Item {
     property int animatedMinimumWidth: minimumWidth
     property int animatedMinimumHeight: minimumHeight
 
+    readonly property bool inEditMode: latteInEditMode || plasmoid.userConfiguring
+
     readonly property bool plasma515: AppletDecoration.Environment.plasmaDesktopVersion >= AppletDecoration.Environment.makeVersion(5,15,0)
 
     readonly property bool mustHide: {
@@ -65,13 +67,19 @@ Item {
 
     readonly property bool selectedDecorationExists: decorations.decorationExists(plasmoid.configuration.selectedPlugin, plasmoid.configuration.selectedTheme)
 
+    readonly property bool slideAnimationEnabled: ( (visibility !== AppletDecoration.Types.AlwaysVisible)
+                                                   && (plasmoid.configuration.hiddenState === AppletDecoration.Types.SlideOut) )
+    readonly property bool emptySpaceEnabled: ( (visibility !== AppletDecoration.Types.AlwaysVisible)
+                                                   && (plasmoid.configuration.hiddenState === AppletDecoration.Types.EmptySpace) )
+
+
     readonly property int containmentType: plasmoid.configuration.containmentType
     readonly property int disabledMaximizedBorders: plasmoid.configuration.disabledMaximizedBorders
     readonly property int visibility: plasmoid.configuration.visibility
 
     readonly property int minimumWidth: {
         if (plasmoid.formFactor === PlasmaCore.Types.Horizontal) {
-            if (mustHide && !plasmoid.userConfiguring && !latteInEditMode){
+            if (mustHide && slideAnimationEnabled && !plasmoid.userConfiguring && !latteInEditMode){
                 return 0;
             }
         }
@@ -81,7 +89,7 @@ Item {
 
     readonly property int minimumHeight: {
         if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
-            if (mustHide && !plasmoid.userConfiguring && !latteInEditMode){
+            if (mustHide && slideAnimationEnabled && !plasmoid.userConfiguring && !latteInEditMode){
                 return 0;
             }
         }
@@ -186,7 +194,7 @@ Item {
 
     //START Behaviors
     Behavior on animatedMinimumWidth {
-        enabled: plasmoid.configuration.slideAnimation && plasmoid.formFactor===PlasmaCore.Types.Horizontal
+        enabled: slideAnimationEnabled && plasmoid.formFactor===PlasmaCore.Types.Horizontal
         NumberAnimation {
             duration: 250
             easing.type: Easing.InCubic
@@ -194,7 +202,7 @@ Item {
     }
 
     Behavior on animatedMinimumHeight {
-        enabled: plasmoid.configuration.slideAnimation && plasmoid.formFactor===PlasmaCore.Types.Vertical
+        enabled: slideAnimationEnabled && plasmoid.formFactor===PlasmaCore.Types.Vertical
         NumberAnimation {
             duration: 250
             easing.type: Easing.InCubic
@@ -376,6 +384,17 @@ Item {
         readonly property int buttonThickness: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
                                                    root.height - 2 * thickPadding :
                                                    root.width - 2 * thickPadding
+
+        opacity: emptySpaceEnabled && mustHide && !inEditMode ? 0 : 1
+        visible: opacity === 0 ? false : true
+
+        Behavior on opacity {
+            enabled: emptySpaceEnabled
+            NumberAnimation {
+                duration: 250
+                easing.type: Easing.InCubic
+            }
+        }
 
         Repeater {
             id: buttonsRepeater

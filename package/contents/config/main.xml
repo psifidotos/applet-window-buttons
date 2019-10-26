@@ -38,9 +38,13 @@
       <default>true</default>
       <label>if false active window can be on any screen</label>
     </entry>
-    <entry name="slideAnimation" type="Bool">
-      <default>false</default>
-      <label>slide out/in when is shown or becomes hidden</label>
+    <entry name="hiddenState" type="Enum">
+      <choices>
+         <choice name="SlideOut"/>
+         <choice name="EmptySpace"/>
+      </choices>
+      <label>when the applet should be hidden how it should behave</label>
+      <default>0</default>
     </entry>
     <entry name="inactiveStateEnabled" type="Bool">
       <default>false</default>

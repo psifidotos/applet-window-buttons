@@ -37,8 +37,8 @@ Item {
     property alias cfg_buttonSizePercentage: buttonSizeSpn.value
     property alias cfg_visibility: root.visibility
     property alias cfg_filterByScreen: byScreenChk.checked
+    property alias cfg_hiddenState: root.hiddenState
     property alias cfg_inactiveStateEnabled: inactiveChk.checked
-    property alias cfg_slideAnimation: slideChk.checked
     property alias cfg_disabledMaximizedBorders: root.disabledBorders
     property alias cfg_useDecorationMetrics: decorationMetricsChk.checked
     property alias cfg_spacing: spacingSpn.value
@@ -48,6 +48,7 @@ Item {
 
     // used as bridge to communicate properly between configuration and ui
     property bool useCurrent
+    property int hiddenState
     property int visibility
     property int disabledBorders
     property string selectedPlugin
@@ -239,6 +240,47 @@ Item {
         }
 
         GridLayout{
+            columns: 2
+            rows: 2
+            flow: GridLayout.TopToBottom
+
+            enabled: root.visibility !== AppletDecoration.Types.AlwaysVisible
+
+            Label{
+                Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
+                Layout.rowSpan: 2
+                Layout.alignment: Qt.AlignTop | Qt.AlignRight
+                text: i18n("Hidden State:")
+                horizontalAlignment: Text.AlignRight
+            }
+
+            ExclusiveGroup { id: hiddenStateGroup }
+
+            RadioButton{
+                id: slideOutBtn
+                text: i18n("Slide out animation")
+                checked: root.hiddenState === AppletDecoration.Types.SlideOut
+                exclusiveGroup: hiddenStateGroup
+                onCheckedChanged: {
+                    if (checked) {
+                        root.hiddenState = AppletDecoration.Types.SlideOut;
+                    }
+                }
+            }
+            RadioButton{
+                id: emptySpaceBtn
+                text: i18n("Preserve as empty space")
+                checked: root.hiddenState === AppletDecoration.Types.EmptySpace
+                exclusiveGroup: hiddenStateGroup
+                onCheckedChanged: {
+                    if (checked) {
+                        root.hiddenState = AppletDecoration.Types.EmptySpace;
+                    }
+                }
+            }
+        }
+
+        GridLayout{
             Label{
                 Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
                 text: i18n("Filters:")
@@ -268,11 +310,6 @@ Item {
             CheckBox{
                 id: inactiveChk
                 text: i18n("Draw buttons inactive state when needed")
-            }
-
-            CheckBox{
-                id: slideChk
-                text: i18n("Slide animation in order to show or hide")
             }
         }
 
