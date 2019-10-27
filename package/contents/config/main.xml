@@ -15,7 +15,7 @@
       <label>user preferred decoration plugin to use</label>
     </entry>
     <entry name="selectedScheme" type="String">
-      <default>kdeglobals</default>
+      <default>_plasmatheme_</default>
       <label>user preferred color scheme to use with the selected plugin</label>
     </entry>
     <entry name="selectedTheme" type="String">

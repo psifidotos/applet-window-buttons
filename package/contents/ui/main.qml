@@ -168,8 +168,17 @@ Item {
                                        decorations.currentPlugin : plasmoid.configuration.selectedPlugin
     property string currentTheme: plasmoid.configuration.useCurrentDecoration || !selectedDecorationExists ?
                                       decorations.currentTheme : plasmoid.configuration.selectedTheme
-    property string currentScheme: (enforceLattePalette && plasmoid.configuration.selectedScheme === "kdeglobals") ?
-                                       latteBridge.palette.scheme : plasmoid.configuration.selectedScheme
+    property string currentScheme: {
+        if (plasmaThemeExtended.isActive) {
+            return plasmaThemeExtended.colors.schemeFile;
+        }
+
+        if (enforceLattePalette && plasmoid.configuration.selectedScheme === "kdeglobals") {
+            return latteBridge.palette.scheme;
+        }
+
+        return plasmoid.configuration.selectedScheme;
+    }
     // END decoration properties
 
     //BEGIN Latte Dock Communicator
@@ -309,6 +318,21 @@ Item {
 
     AppletDecoration.DecorationsModel {
         id: decorations
+    }
+
+    AppletDecoration.PlasmaThemeExtended {
+        id: plasmaThemeExtended
+
+        readonly property bool isActive: plasmoid.configuration.selectedScheme === "_plasmatheme_"
+
+        function triggerUpdate() {
+            if (isActive) {
+                initButtons();
+            }
+        }
+
+        onThemeChanged: triggerUpdate();
+        onColorsChanged: triggerUpdate();
     }
 
     AppletDecoration.AuroraeTheme {

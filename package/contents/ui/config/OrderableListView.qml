@@ -60,6 +60,14 @@ Rectangle {
     readonly property int margin: 0
     readonly property double iconHeight: itemHeight*(buttonSize/100) - margin * 2
 
+    readonly property string appliedScheme: {
+        if (selectedScheme === "_plasmatheme_") {
+            return plasmaThemeExtended.colors.schemeFile;
+        }
+
+        return selectedScheme;
+    }
+
     Component.onCompleted: initButtons();
 
     function initButtons() {
@@ -88,9 +96,22 @@ Rectangle {
         return str;
     }
 
+    function triggerUpdateFromPlasma() {
+        if (plasmaThemeExtended.isActive) {
+            listContent.initButtons();
+        }
+    }
+
     Connections{
         target: root
         onCurrentPluginChanged: listContent.initButtons();
+    }
+
+    Connections {
+        target: plasmaThemeExtended
+
+        onThemeChanged: triggerUpdateFromPlasma();
+        onColorsChanged: triggerUpdateFromPlasma();
     }
 
     onButtonSizeChanged: listContent.initButtons();
@@ -256,7 +277,7 @@ Rectangle {
                 type: buttonType
                 isOnAllDesktops: false
                 isMaximized: false
-                scheme: selectedScheme
+                scheme: appliedScheme
 
                 visible: buttonType !== AppletDecoration.Types.Custom
             }

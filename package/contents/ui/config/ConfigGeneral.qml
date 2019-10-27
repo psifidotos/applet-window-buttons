@@ -94,6 +94,12 @@ Item {
         id: colorsModel
     }
 
+    AppletDecoration.PlasmaThemeExtended {
+        id: plasmaThemeExtended
+
+        readonly property bool isActive: selectedScheme === "_plasmatheme_"
+    }
+
     SystemPalette {
         id: palette
     }
@@ -174,7 +180,9 @@ Item {
                 buttonsLastMargin: lengthLastSpn.value
                 buttonsSpacing: spacingSpn.value
 
-                readonly property color schemesBackgroundColor: colorsModel.backgroundOf(colorsCmbBox.currentIndex)
+                readonly property color schemesBackgroundColor: plasmaThemeExtended.isActive ?
+                                                                    plasmaThemeExtended.colors.backgroundColor :
+                                                                    colorsModel.backgroundOf(colorsCmbBox.currentIndex)
             }
         }
 

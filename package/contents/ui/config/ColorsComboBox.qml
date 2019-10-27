@@ -66,6 +66,8 @@ Controls22.ComboBox{
                     width: 1.25 * label.height
                     height: label.height
 
+                    opacity: ((file == "kdeglobals") || (file == "_plasmatheme_")) ? 0 : 1
+
                     Rectangle{
                         width: height
                         height: 0.75 * label.height

@@ -50,10 +50,22 @@ QVariant SchemesModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
         case Qt::DisplayRole:
-            return index.row() == 0 ? "Current" : d->schemeName();
+            if (index.row() == 0) {
+                return "Current";
+            } else if (index.row() == 1) {
+                return "Plasma Theme";
+            }
+
+            return d->schemeName();
 
         case Qt::UserRole + 4:
-            return index.row() == 0 ? "kdeglobals" : d->schemeFile();
+            if (index.row() == 0) {
+                return "kdeglobals";
+            } else if (index.row() == 1) {
+                return "_plasmatheme_";
+            }
+
+            return d->schemeFile();
 
         case Qt::UserRole + 5:
             return d->backgroundColor();
@@ -147,6 +159,10 @@ int SchemesModel::indexOf(QString file)
 {
     if (file.isEmpty() || file == "kdeglobals") {
         return 0;
+    }
+
+    if (file == "_plasmatheme_") {
+        return 1;
     }
 
     for (int i = 0; i < m_schemes.count(); i++) {

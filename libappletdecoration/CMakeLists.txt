@@ -25,6 +25,7 @@ set(appletdecoration_SRCS
     previewsettings.cpp
     schemecolors.cpp
     schemesmodel.cpp
+    themeextended.cpp
     types.cpp
     windowsystem.cpp
 )
