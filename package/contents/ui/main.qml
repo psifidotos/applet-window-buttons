@@ -122,9 +122,9 @@ Item {
 
 
         if (plasmoid.formFactor === PlasmaCore.Types.Horizontal) {
-            return root.height - (root.height * (plasmoid.configuration.buttonSizePercentage/100))
+            return (root.height - (root.height * (plasmoid.configuration.buttonSizePercentage/100))) / 2;
         } else {
-            return root.width - (root.width * (plasmoid.configuration.buttonSizePercentage/100))
+            return (root.width - (root.width * (plasmoid.configuration.buttonSizePercentage/100))) / 2;
         }
     }
 
@@ -408,6 +408,8 @@ Item {
         readonly property int buttonThickness: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
                                                    root.height - 2 * thickPadding :
                                                    root.width - 2 * thickPadding
+
+        onButtonThicknessChanged: console.log("Window Buttons Applet :: Button Thickness ::: " + buttonThickness);
 
         opacity: emptySpaceEnabled && mustHide && !inEditMode ? 0 : 1
         visible: opacity === 0 ? false : true
