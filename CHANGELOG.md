@@ -1,5 +1,14 @@
 ### CHANGELOG
 
+#### Version 0.7.0
+
+* introduce a new Button Size percentage option and drop thickness margin in order to set the buttons size
+* introduce Hidden State in order for the user to choose how buttons should behave when they should not be shown. Currently two states are supported: Slide out and Preserve Empty Space 
+* introduce a new Color Scheme based on current Plasma Theme used and make it also default
+* live preview for changes in the settings window
+* do not crash when the selected decoration does not exist in the systemm, for example it was uninstalled
+* update buttons for scheme changes
+
 #### Version 0.6.0
 
 * new visibility mode: At least one window is shown
