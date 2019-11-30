@@ -79,6 +79,12 @@ Item {
         borderSizesIndex: 0
     }
 
+    AppletDecoration.SharedDecoration {
+        id: sharedDecorationItem
+        bridge: bridgeItem.bridge
+        settings: settingsItem
+    }
+
     AppletDecoration.AuroraeTheme {
         id: auroraeThemeEngine
         theme: isEnabled ? currentTheme : ""

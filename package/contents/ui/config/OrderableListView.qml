@@ -30,6 +30,8 @@ Rectangle {
     radius: 4
     anchors.margins: margin
 
+    signal coordinatesChanged();
+
     property int orientation
     property double itemWidth
     property double itemHeight
@@ -68,7 +70,10 @@ Rectangle {
         return selectedScheme;
     }
 
-    Component.onCompleted: initButtons();
+    Component.onCompleted: {
+        initButtons();
+        coordinatesChanged();
+    }
 
     function initButtons() {
         if (!buttonsRecreator.running){
@@ -77,10 +82,14 @@ Rectangle {
     }
 
     function initializeControlButtonsModel() {
+        sharedDecorationItem.createDecoration();
+
         var buttonsList = buttonsStr.split('|');
 
         ModelTools.initializeControlButtonsModel(buttonsList,tasksPreparedArray, controlButtonsModel, false);
         listView.splitterIndex = ModelTools.indexOfSplitter(controlButtonsModel);
+
+        coordinatesTimer.start();
     }
 
     function buttonsListStr() {
@@ -150,6 +159,8 @@ Rectangle {
         move: Transition {
             NumberAnimation { properties: "x"; duration: 75; easing.type: Easing.Linear }
         }
+
+        onWidthChanged: coordinatesTimer.start();
     }
 
     MouseArea {
@@ -269,17 +280,28 @@ Rectangle {
 
                 opacity: listView.splitterIndex !==-1 && listView.splitterIndex<index ? 0.4 : 1
 
-                width: listContent.iconHeight
-                height: listContent.iconHeight
+                width: isButtonSplitter ? parent.width : listContent.iconHeight
+                height: isButtonSplitter ? parent.height : listContent.iconHeight
 
                 bridge: bridgeItem.bridge
-                settings: settingsItem
+                sharedDecoration: sharedDecorationItem
                 type: buttonType
                 isOnAllDesktops: false
                 isMaximized: false
                 scheme: appliedScheme
 
                 visible: buttonType !== AppletDecoration.Types.Custom
+
+                function updateCoordinates() {
+                    var translated = cButton.mapToItem(listView, 0, 0);
+                    cButton.localX = translated.x;
+                    cButton.localY = translated.y;
+                }
+
+                Connections {
+                    target: listContent
+                    onCoordinatesChanged: cButton.updateCoordinates();
+                }
             }
 
             Rectangle{
@@ -407,7 +429,19 @@ Rectangle {
     Timer{
         id: buttonsRecreator
         interval: 200
-        onTriggered: initializeControlButtonsModel();
+        onTriggered: {
+            initializeControlButtonsModel();
+        }
+    }
+
+    //! this timer is used in order to call the relative coordinates updater at the end
+    //! of the buttons moving
+    Timer{
+        id: coordinatesTimer
+        interval: 350
+        onTriggered: {
+            listContent.coordinatesChanged();
+        }
     }
 }
 

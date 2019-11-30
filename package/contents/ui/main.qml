@@ -316,6 +316,12 @@ Item {
         borderSizesIndex: 0 // Normal
     }
 
+    AppletDecoration.SharedDecoration {
+        id: sharedDecorationItem
+        bridge: bridgeItem.bridge
+        settings: settingsItem
+    }
+
     AppletDecoration.DecorationsModel {
         id: decorations
     }
@@ -355,6 +361,8 @@ Item {
 
     function initializeControlButtonsModel() {
         console.log("recreating buttons");
+        sharedDecorationItem.createDecoration();
+
         var buttonsList = buttonsStr.split('|');
 
         ModelTools.initializeControlButtonsModel(buttonsList, tasksPreparedArray, controlButtonsModel, true);
@@ -443,9 +451,10 @@ Item {
 
 
             bridge: bridgeItem.bridge
-            settings: settingsItem
+            sharedDecoration: sharedDecorationItem
             scheme: root.currentScheme
             type: buttonType
+
             isActive: {
                 //!   FIXME-TEST PERIOD: Disabled because it shows an error from c++ theme when its value is changed
                 //!   and breaks in some cases the buttons coloring through the schemeFile
@@ -458,6 +467,9 @@ Item {
             isOnAllDesktops: root.isLastActiveWindowPinned
             isMaximized: root.isLastActiveWindowMaximized
             isKeepAbove: root.isLastActiveWindowKeepAbove
+
+            localX: x
+            localY: y
 
             readonly property int firstPadding: {
                 if (index === 0) {
@@ -488,7 +500,7 @@ Item {
                 root.performActiveWindowAction(windowOperation);
             }
 
-            /* Rectangle{
+            /*Rectangle{
                 anchors.fill: parent
                 color: "transparent"
                 border.width: 1
@@ -504,7 +516,7 @@ Item {
                 color: "transparent"
                 border.width: 1
                 border.color: "blue"
-            } */
+            }*/
         }
     }
 

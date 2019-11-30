@@ -23,6 +23,7 @@ set(appletdecoration_SRCS
     previewbridge.cpp
     previewclient.cpp
     previewsettings.cpp
+    previewshareddecoration.cpp
     schemecolors.cpp
     schemesmodel.cpp
     themeextended.cpp

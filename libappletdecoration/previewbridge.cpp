@@ -80,8 +80,9 @@ std::unique_ptr<KDecoration2::DecoratedClientPrivate> PreviewBridge::createClien
 void PreviewBridge::update(KDecoration2::Decoration *decoration, const QRect &geometry)
 {
     Q_UNUSED(geometry)
-    auto it = std::find_if(m_previewButtons.constBegin(), m_previewButtons.constEnd(), [decoration](PreviewButtonItem * item) {
-        return item->decoration() == decoration;
+
+    auto it = std::find_if(m_previewButtons.constBegin(), m_previewButtons.constEnd(), [decoration, geometry](PreviewButtonItem *item) {
+        return (item->decoration() == decoration) && (item->visualGeometry().contains(geometry.center()));
     });
 
     if (it != m_previewButtons.constEnd()) {
