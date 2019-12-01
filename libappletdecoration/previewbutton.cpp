@@ -416,12 +416,13 @@ void PreviewButtonItem::mousePressEvent(QMouseEvent *event)
         return;
     }
 
+    //! this a workaround in order to send proper coordinates
+    //! that confirm the button visual coordinates
     QMouseEvent e(event->type(),
-                  m_button->geometry().center(),
+                  m_visualGeometry.center(),
                   event->button(),
                   event->buttons(),
                   event->modifiers());
-
 
     QCoreApplication::instance()->sendEvent(m_button, &e);
 }
@@ -434,8 +435,10 @@ void PreviewButtonItem::mouseReleaseEvent(QMouseEvent *event)
 
     bool inItem {m_fullGeometry.contains(event->localPos().x(), event->localPos().y())};
 
+    //! this a workaround in order to send proper coordinates
+    //! that confirm the button visual coordinates
     QMouseEvent e(event->type(),
-                  inItem ? m_button->geometry().center() : QPoint(-5, -5),
+                  inItem ? m_visualGeometry.center() : QPoint(-5, -5),
                   event->button(),
                   event->buttons(),
                   event->modifiers());
@@ -453,6 +456,8 @@ void PreviewButtonItem::mouseMoveEvent(QMouseEvent *event)
         return;
     }
 
+    //! this a workaround in order to send proper coordinates
+    //! that confirm the button visual coordinates
     QMouseEvent e(event->type(),
                   m_visualGeometry.center(),
                   event->button(),
@@ -468,6 +473,8 @@ void PreviewButtonItem::hoverEnterEvent(QHoverEvent *event)
         return;
     }
 
+    //! this a workaround in order to send proper coordinates
+    //! that confirm the button visual coordinates
     QHoverEvent e(event->type(),
                   m_visualGeometry.center(),
                   QPoint(m_visualGeometry.x() + event->posF().x(), m_visualGeometry.y() + event->posF().y()),
@@ -482,9 +489,11 @@ void PreviewButtonItem::hoverLeaveEvent(QHoverEvent *event)
         return;
     }
 
+    //! this a workaround in order to send proper coordinates
+    //! that confirm the button visual coordinates
     QHoverEvent e(event->type(),
                   QPoint(-5, -5),
-                  m_button->geometry().center(),
+                  m_visualGeometry.center(),
                   event->modifiers());
 
     QCoreApplication::instance()->sendEvent(m_button, &e);
@@ -496,6 +505,8 @@ void PreviewButtonItem::hoverMoveEvent(QHoverEvent *event)
         return;
     }
 
+    //! this a workaround in order to send proper coordinates
+    //! that confirm the button visual coordinates
     QHoverEvent e(event->type(),
                   m_visualGeometry.center(),
                   QPoint(m_visualGeometry.x() + event->posF().x(), m_visualGeometry.y() + event->posF().y()),
