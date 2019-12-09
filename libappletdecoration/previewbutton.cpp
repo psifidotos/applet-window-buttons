@@ -424,7 +424,7 @@ void PreviewButtonItem::mousePressEvent(QMouseEvent *event)
                   event->buttons(),
                   event->modifiers());
 
-    QCoreApplication::instance()->sendEvent(m_button, &e);
+    QCoreApplication::instance()->sendEvent(decoration(), &e);
 }
 
 void PreviewButtonItem::mouseReleaseEvent(QMouseEvent *event)
@@ -443,7 +443,7 @@ void PreviewButtonItem::mouseReleaseEvent(QMouseEvent *event)
                   event->buttons(),
                   event->modifiers());
 
-    QCoreApplication::instance()->sendEvent(m_button, event);
+    QCoreApplication::instance()->sendEvent(decoration(), event);
 
     if (inItem) {
         emit clicked();
@@ -464,7 +464,7 @@ void PreviewButtonItem::mouseMoveEvent(QMouseEvent *event)
                   event->buttons(),
                   event->modifiers());
 
-    QCoreApplication::instance()->sendEvent(m_button, &e);
+    QCoreApplication::instance()->sendEvent(decoration(), &e);
 }
 
 void PreviewButtonItem::hoverEnterEvent(QHoverEvent *event)
@@ -480,7 +480,7 @@ void PreviewButtonItem::hoverEnterEvent(QHoverEvent *event)
                   QPoint(m_visualGeometry.x() + event->posF().x(), m_visualGeometry.y() + event->posF().y()),
                   event->modifiers());
 
-    QCoreApplication::instance()->sendEvent(m_button, &e);
+    QCoreApplication::instance()->sendEvent(decoration(), &e);
 }
 
 void PreviewButtonItem::hoverLeaveEvent(QHoverEvent *event)
@@ -496,7 +496,7 @@ void PreviewButtonItem::hoverLeaveEvent(QHoverEvent *event)
                   m_visualGeometry.center(),
                   event->modifiers());
 
-    QCoreApplication::instance()->sendEvent(m_button, &e);
+    QCoreApplication::instance()->sendEvent(decoration(), &e);
 }
 
 void PreviewButtonItem::hoverMoveEvent(QHoverEvent *event)
@@ -512,14 +512,14 @@ void PreviewButtonItem::hoverMoveEvent(QHoverEvent *event)
                   QPoint(m_visualGeometry.x() + event->posF().x(), m_visualGeometry.y() + event->posF().y()),
                   event->modifiers());
 
-    QCoreApplication::instance()->sendEvent(m_button, &e);
+    QCoreApplication::instance()->sendEvent(decoration(), &e);
 
 }
 
 
 void PreviewButtonItem::focusOutEvent(QFocusEvent *event)
 {
-    QCoreApplication::instance()->sendEvent(m_button, event);
+    QCoreApplication::instance()->sendEvent(decoration(), event);
 }
 
 } // namespace Applet
