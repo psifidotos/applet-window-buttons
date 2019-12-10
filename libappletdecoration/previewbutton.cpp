@@ -505,15 +505,17 @@ void PreviewButtonItem::hoverMoveEvent(QHoverEvent *event)
         return;
     }
 
+    QPoint newPos (qBound((double)m_visualGeometry.left(), m_visualGeometry.left() + event->posF().x(), (double)m_visualGeometry.right()),
+                   qBound((double)m_visualGeometry.top(), m_visualGeometry.top() + event->posF().x(), (double)m_visualGeometry.bottom()));
+
+    QPoint oldPos (qBound((double)m_visualGeometry.left(), m_visualGeometry.left() + event->oldPosF().x(), (double)m_visualGeometry.right()),
+                   qBound((double)m_visualGeometry.top(), m_visualGeometry.top() + event->oldPosF().x(), (double)m_visualGeometry.bottom()));
+
     //! this a workaround in order to send proper coordinates
     //! that confirm the button visual coordinates
-    QHoverEvent e(event->type(),
-                  m_visualGeometry.center(),
-                  QPoint(m_visualGeometry.x() + event->posF().x(), m_visualGeometry.y() + event->posF().y()),
-                  event->modifiers());
+    QHoverEvent e(event->type(), newPos, oldPos, event->modifiers());
 
     QCoreApplication::instance()->sendEvent(m_button, &e);
-
 }
 
 
