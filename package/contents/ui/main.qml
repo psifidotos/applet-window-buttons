@@ -55,7 +55,8 @@ Item {
         if (visibility === AppletDecoration.Types.ActiveWindow && !existsWindowActive) {
             return true;
         }
-        if (visibility === AppletDecoration.Types.ActiveMaximizedWindow && (!isLastActiveWindowMaximized || !existsWindowActive)) {
+        if (visibility === AppletDecoration.Types.ActiveMaximizedWindow
+                && (!isLastActiveWindowMaximized || (inPlasmaPanel && !existsWindowActive))) {
             return true;
         }
         if (visibility === AppletDecoration.Types.ShownWindowExists && !existsWindowShown) {
@@ -159,6 +160,9 @@ Item {
     property bool hasDesktopsButton: false
     property bool hasMaximizedButton: false
     property bool hasKeepAboveButton: false
+
+    readonly property bool inPlasmaPanel: latteBridge === null
+    readonly property bool inLatte: latteBridge !== null
 
     readonly property Item lastActiveTaskItem: windowInfoLoader.item.lastActiveTaskItem
     // END Window properties
