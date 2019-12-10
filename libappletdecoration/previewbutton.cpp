@@ -178,7 +178,7 @@ void PreviewButtonItem::setIsKeepAbove(bool keepabove)
         if (m_sharedDecoration) {
             m_sharedDecoration->initDecoration();
         }
-    }    
+    }
     emit isKeepAboveChanged();
 }
 
@@ -269,13 +269,13 @@ int PreviewButtonItem::localX() const
 
 void PreviewButtonItem::setLocalX(int x)
 {
-   if (m_localX == x) {
-       return;
-   }
+    if (m_localX == x) {
+        return;
+    }
 
-   m_localX = x;
+    m_localX = x;
 
-   emit localXChanged();
+    emit localXChanged();
 }
 
 int PreviewButtonItem::localY() const
