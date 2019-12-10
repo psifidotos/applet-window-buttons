@@ -231,7 +231,8 @@ Item {
             }
             RadioButton{
                 id: activeMaximizedBtn
-                text: i18n("Active window is maximized")
+                text: plasmoid.configuration.containmentType === AppletDecoration.Types.Latte ?
+                          i18n("Last active window is maximized") : i18n("Active window is maximized")
                 checked: root.visibility === AppletDecoration.Types.ActiveMaximizedWindow
                 exclusiveGroup: visibilityGroup
                 onCheckedChanged: {
@@ -303,7 +304,7 @@ Item {
 
             CheckBox{
                 id: byScreenChk
-                text: i18n("Show only windows from current screen")
+                text: i18n("Show only for windows in current screen")
             }
         }
 
