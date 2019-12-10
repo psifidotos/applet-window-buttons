@@ -112,6 +112,7 @@ void SharedDecoration::createDecoration()
     if (m_decoration) {
         m_decoration->setSettings(m_settings->settings());
         m_decoration->init();
+        m_decoration->setObjectName("applet-window-buttons");
     }
 
     emit decorationChanged();
