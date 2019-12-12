@@ -153,9 +153,9 @@ Item {
     readonly property bool existsWindowShown: (windowInfoLoader.item && windowInfoLoader.item.existsWindowShown)
                                               || containmentIdentifierTimer.running
 
-    readonly property bool isLastActiveWindowPinned: lastActiveTaskItem && lastActiveTaskItem.isOnAllDesktops
-    readonly property bool isLastActiveWindowMaximized: lastActiveTaskItem && lastActiveTaskItem.isMaximized
-    readonly property bool isLastActiveWindowKeepAbove: lastActiveTaskItem && lastActiveTaskItem.isKeepAbove
+    readonly property bool isLastActiveWindowPinned: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isOnAllDesktops
+    readonly property bool isLastActiveWindowMaximized: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isMaximized
+    readonly property bool isLastActiveWindowKeepAbove: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isKeepAbove
 
     property bool hasDesktopsButton: false
     property bool hasMaximizedButton: false
