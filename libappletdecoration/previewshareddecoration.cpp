@@ -103,17 +103,24 @@ void SharedDecoration::createDecoration()
         return;
     }
 
-    if (m_decoration) {
+    bool newDecoration = (m_bridge->plugin() != m_lastPlugin || m_bridge->theme() != m_lastTheme);
+
+    if (m_decoration && newDecoration) {
         m_decoration->deleteLater();
     }
 
-    m_decoration = m_bridge->createDecoration(this);
+    if (newDecoration) {
+        m_decoration = m_bridge->createDecoration(this);
+    }
 
     if (m_decoration) {
         m_decoration->setSettings(m_settings->settings());
         m_decoration->init();
         m_decoration->setObjectName("applet-window-buttons");
     }
+
+    m_lastPlugin = m_bridge->plugin();
+    m_lastTheme = m_bridge->theme();
 
     emit decorationChanged();
 }

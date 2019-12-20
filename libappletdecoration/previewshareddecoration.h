@@ -74,6 +74,9 @@ private:
     QPointer<Decoration::Applet::PreviewBridge> m_bridge;
     QPointer<KDecoration2::Decoration> m_decoration;
     QPointer<Decoration::Applet::Settings> m_settings;
+
+    QString m_lastPlugin;
+    QString m_lastTheme;
 };
 
 }
