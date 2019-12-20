@@ -44,13 +44,15 @@ SchemeColors::SchemeColors(QObject *parent, QString scheme, bool plasmaTheme) :
         m_schemeName = schemeName(pSchemeFile);
 
         //! track scheme file for changes
-        KDirWatch::self()->addFile(m_schemeFile);
+
+        //! do not create so many trackers
+        /*KDirWatch::self()->addFile(m_schemeFile);
 
         connect(KDirWatch::self(), &KDirWatch::dirty, this, [ & ](const QString & path) {
             if (path == m_schemeFile) {
                 updateScheme();
             }
-        });
+        });*/
     }
 
     updateScheme();

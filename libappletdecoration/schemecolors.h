@@ -79,7 +79,7 @@ signals:
     void colorsChanged();
     void schemeFileChanged();
 
-private slots:
+public slots:
     void updateScheme();
 
 private:
