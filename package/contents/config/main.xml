@@ -55,7 +55,7 @@
       <label>use the discovered decoration metrics in case there are any in order to look consistent with window titlebars</label>
     </entry>
     <entry name="buttonSizePercentage" type="Int">
-      <default>90</default>
+      <default>100</default>
       <label>the buttons size relevant to panel thickness</label>
     </entry>    
     <entry name="lengthFirstMargin" type="Int">

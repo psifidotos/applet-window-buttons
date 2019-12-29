@@ -121,7 +121,16 @@ Item {
                         ((root.width - auroraeThemeEngine.buttonHeight) / 2) - 1;
         }
 
+        //! Latte padding
+        if (inLatte) {
+            if (plasmoid.formFactor === PlasmaCore.Types.Horizontal) {
+                return (root.height - (latteBridge.iconSize * (plasmoid.configuration.buttonSizePercentage/100))) / 2;
+            } else {
+                return (root.width - (latteBridge.iconSize * (plasmoid.configuration.buttonSizePercentage/100))) / 2;
+            }
+        }
 
+        //! Plasma panels code
         if (plasmoid.formFactor === PlasmaCore.Types.Horizontal) {
             return (root.height - (root.height * (plasmoid.configuration.buttonSizePercentage/100))) / 2;
         } else {
