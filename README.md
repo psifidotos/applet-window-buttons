@@ -36,4 +36,4 @@ This is a Plasma 5 applet that shows window buttons in your panels. This plasmoi
 
 # Install
 
-You can execute `sh install.sh` in the root directory as long as you have installed the previous mentioned development packages
+You can execute `sh install.sh` in the root directory as long as you have installed the previous mentioned development packages. For more details please read [INSTALLATION.md](/INSTALLATION.md)
