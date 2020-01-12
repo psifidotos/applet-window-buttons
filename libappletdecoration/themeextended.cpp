@@ -113,11 +113,11 @@ void ExtendedTheme::updateDefaultSchemeValues()
     KSharedConfigPtr defaultPtr = KSharedConfig::openConfig(m_colorsSchemePath);
 
     if (originalPtr && defaultPtr) {
-        KConfigGroup originalViewGroup(originalPtr, "Colors:View");
+        KConfigGroup normalWindowGroup(originalPtr, "Colors:Window");
         KConfigGroup defaultWMGroup(defaultPtr, "WM");
 
-        defaultWMGroup.writeEntry("activeBackground", originalViewGroup.readEntry("BackgroundNormal", QColor()));
-        defaultWMGroup.writeEntry("activeForeground", originalViewGroup.readEntry("ForegroundNormal", QColor()));
+        defaultWMGroup.writeEntry("activeBackground", normalWindowGroup.readEntry("BackgroundNormal", QColor()));
+        defaultWMGroup.writeEntry("activeForeground", normalWindowGroup.readEntry("ForegroundNormal", QColor()));
 
         defaultWMGroup.sync();
     }
