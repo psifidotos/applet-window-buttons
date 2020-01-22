@@ -68,6 +68,11 @@ Item {
                 readonly property bool isOnAllDesktops: IsOnAllVirtualDesktops === true ? true : false
                 readonly property bool isKeepAbove: IsKeepAbove === true ? true : false
 
+                readonly property bool isClosable: IsClosable === true ? true : false
+                readonly property bool isMinimizable: IsMinimizable === true ? true : false
+                readonly property bool isMaximizable: IsMaximizable === true ? true : false
+                readonly property bool isVirtualDesktopsChangeable: IsVirtualDesktopsChangeable === true ? true : false
+
                 onIsActiveChanged: {
                     if (isActive) {
                         plasmaTasksItem.lastActiveTaskItem = task;

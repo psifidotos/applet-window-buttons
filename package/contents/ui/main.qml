@@ -166,6 +166,11 @@ Item {
     readonly property bool isLastActiveWindowMaximized: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isMaximized
     readonly property bool isLastActiveWindowKeepAbove: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isKeepAbove
 
+    readonly property bool isLastActiveWindowClosable: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isClosable
+    readonly property bool isLastActiveWindowMaximizable: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isMaximizable
+    readonly property bool isLastActiveWindowMinimizable: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isMinimizable
+    readonly property bool isLastActiveWindowVirtualDesktopsChangeable: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isVirtualDesktopsChangeable
+
     property bool hasDesktopsButton: false
     property bool hasMaximizedButton: false
     property bool hasKeepAboveButton: false
@@ -484,6 +489,21 @@ Item {
             localX: x
             localY: y
 
+            visible: {
+                if (type === AppletDecoration.Types.Close) {
+                    return root.isLastActiveWindowClosable;
+                } else if (type === AppletDecoration.Types.Maximize) {
+                    return root.isLastActiveWindowMaximizable;
+                } else if (type === AppletDecoration.Types.Minimize) {
+                    return root.isLastActiveWindowMinimizable;
+                } else if (type === AppletDecoration.Types.OnAllDesktops) {
+                    return root.isLastActiveWindowVirtualDesktopsChangeable;
+                }
+
+                return true;
+            }
+
+
             readonly property int firstPadding: {
                 if (index === 0) {
                     //! first button
@@ -582,6 +602,21 @@ Item {
             isKeepAbove: root.isLastActiveWindowKeepAbove
             buttonType: model.buttonType
             auroraeTheme: auroraeThemeEngine
+
+
+            visible: {
+                if (buttonType === AppletDecoration.Types.Close) {
+                    return root.isLastActiveWindowClosable;
+                } else if (buttonType === AppletDecoration.Types.Maximize) {
+                    return root.isLastActiveWindowMaximizable;
+                } else if (buttonType === AppletDecoration.Types.Minimize) {
+                    return root.isLastActiveWindowMinimizable;
+                } else if (buttonType === AppletDecoration.Types.OnAllDesktops) {
+                    return root.isLastActiveWindowVirtualDesktopsChangeable;
+                }
+
+                return true;
+            }
 
             onClicked: {
                 root.performActiveWindowAction(windowOperation);

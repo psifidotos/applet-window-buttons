@@ -33,6 +33,12 @@ Item {
         readonly property bool isActive: selectedTracker.lastActiveWindow.isActive
         readonly property bool isOnAllDesktops: selectedTracker.lastActiveWindow.isOnAllDesktops
         readonly property bool isKeepAbove: selectedTracker.lastActiveWindow.isKeepAbove
+
+        readonly property bool isClosable: selectedTracker.lastActiveWindow.hasOwnProperty("isClosable") ? selectedTracker.lastActiveWindow.isClosable : true
+        readonly property bool isMinimizable: selectedTracker.lastActiveWindow.hasOwnProperty("isMinimizable") ? selectedTracker.lastActiveWindow.isMinimizable : true
+        readonly property bool isMaximizable: selectedTracker.lastActiveWindow.hasOwnProperty("isMaximizable") ? selectedTracker.lastActiveWindow.isMaximizable : true
+        readonly property bool isVirtualDesktopsChangeable: selectedTracker.lastActiveWindow.hasOwnProperty("isVirtualDesktopsChangeable") ?
+                                                                selectedTracker.lastActiveWindow.isVirtualDesktopsChangeable : true
     }
 
     function toggleMaximized() {
