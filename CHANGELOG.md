@@ -1,5 +1,16 @@
 ### CHANGELOG
 
+#### Version 0.8.0
+
+* fix which plasma theme colors are used for buttons when Colors:Plasma Theme is chosen
+* do not show buttons that the current window has disabled them, for example a window is NOT Closable; Close button becomes hidden in such case
+* hide buttons when the last active maximized window is minimized and there are no other shown windows
+* improve configuration window texts
+* create a new decoration only when it is really needed 
+* reduce filesystem trackers for scheme colors files
+* use shared decoration between all buttons
+* set an object name for the shared decoration in order to be easily identified by KDecoration2 decorations
+
 #### Version 0.7.0
 
 * introduce a new Button Size percentage option and drop thickness margin in order to set the buttons size
