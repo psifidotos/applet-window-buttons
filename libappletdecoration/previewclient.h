@@ -107,6 +107,10 @@ public:
     void requestHideToolTip() override;
 #endif
 
+#if KDECORATION2_VERSION_MINOR >= 18
+    QSize size() const override;
+#endif
+
     void requestClose() override;
     void requestContextHelp() override;
     void requestToggleMaximization(Qt::MouseButtons buttons) override;

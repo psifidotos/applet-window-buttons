@@ -396,6 +396,12 @@ void PreviewClient::requestHideToolTip()
 }
 #endif
 
+#if KDECORATION2_VERSION_MINOR >= 18
+QSize PreviewClient::size() const
+{
+    return {m_width, m_height};
+}
+#endif
 
 void PreviewClient::requestClose()
 {
