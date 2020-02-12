@@ -52,9 +52,14 @@ Item {
     readonly property bool plasma515: AppletDecoration.Environment.plasmaDesktopVersion >= AppletDecoration.Environment.makeVersion(5,15,0)
 
     readonly property bool mustHide: {
+        if (visibility === AppletDecoration.Types.AlwaysVisible) {
+            return false;
+        }
+
         if (visibility === AppletDecoration.Types.ActiveWindow && !existsWindowActive) {
             return true;
         }
+
         if (visibility === AppletDecoration.Types.ActiveMaximizedWindow
                 && (!isLastActiveWindowMaximized || (inPlasmaPanel && !existsWindowActive))) {
             return true;
@@ -72,7 +77,6 @@ Item {
                                                    && (plasmoid.configuration.hiddenState === AppletDecoration.Types.SlideOut) )
     readonly property bool emptySpaceEnabled: ( (visibility !== AppletDecoration.Types.AlwaysVisible)
                                                    && (plasmoid.configuration.hiddenState === AppletDecoration.Types.EmptySpace) )
-
 
     readonly property int containmentType: plasmoid.configuration.containmentType
     readonly property int disabledMaximizedBorders: plasmoid.configuration.disabledMaximizedBorders
@@ -490,6 +494,10 @@ Item {
             localY: y
 
             visible: {
+                if (visibility === AppletDecoration.Types.AlwaysVisible) {
+                    return true;
+                }
+
                 if (type === AppletDecoration.Types.Close) {
                     return root.isLastActiveWindowClosable;
                 } else if (type === AppletDecoration.Types.Maximize) {
@@ -603,8 +611,11 @@ Item {
             buttonType: model.buttonType
             auroraeTheme: auroraeThemeEngine
 
-
             visible: {
+                if (visibility === AppletDecoration.Types.AlwaysVisible) {
+                    return true;
+                }
+
                 if (buttonType === AppletDecoration.Types.Close) {
                     return root.isLastActiveWindowClosable;
                 } else if (buttonType === AppletDecoration.Types.Maximize) {
