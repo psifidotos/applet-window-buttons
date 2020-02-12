@@ -136,7 +136,12 @@ void DecorationPalette::update()
     m_activeTitleBarColor     = wmConfig.readEntry("activeBackground", m_palette.color(QPalette::Active, QPalette::Highlight));
     m_inactiveTitleBarColor   = wmConfig.readEntry("inactiveBackground", m_inactiveFrameColor);
     m_activeForegroundColor   = wmConfig.readEntry("activeForeground", m_palette.color(QPalette::Active, QPalette::HighlightedText));
+
+#if QT_VERSION >= QT_VERSION_CHECK(5,13,0)
     m_inactiveForegroundColor = wmConfig.readEntry("inactiveForeground", m_activeForegroundColor.darker());
+#else
+    m_inactiveForegroundColor = wmConfig.readEntry("inactiveForeground", m_activeForegroundColor.dark());
+#endif
 
     KConfigGroup windowColorsConfig(config, QStringLiteral("Colors:Window"));
     m_warningForegroundColor = windowColorsConfig.readEntry("ForegroundNegative", QColor(237, 21, 2));
