@@ -1,5 +1,10 @@
 ### CHANGELOG
 
+#### Version 0.8.1
+
+* fix compatibility with Plasma 5.18 (Rodrigo Pedra Brum)
+* never hide buttons for AlwaysVisible visibility state
+
 #### Version 0.8.0
 
 * fix which plasma theme colors are used for buttons when Colors:Plasma Theme is chosen
