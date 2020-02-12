@@ -95,6 +95,7 @@ public:
 
     int width() const override;
     int height() const override;
+    QSize size() const override;
     QPalette palette() const override;
     QColor color(KDecoration2::ColorGroup group, KDecoration2::ColorRole role) const override;
     Qt::Edges adjacentScreenEdges() const override;
