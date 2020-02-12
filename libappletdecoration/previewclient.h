@@ -95,7 +95,6 @@ public:
 
     int width() const override;
     int height() const override;
-    QSize size() const override;
     QPalette palette() const override;
     QColor color(KDecoration2::ColorGroup group, KDecoration2::ColorRole role) const override;
     Qt::Edges adjacentScreenEdges() const override;
@@ -106,6 +105,10 @@ public:
 #if KDECORATION2_VERSION_MINOR >= 13
     void requestShowToolTip(const QString &text) override;
     void requestHideToolTip() override;
+#endif
+
+#if KDECORATION2_VERSION_MINOR >= 18
+    QSize size() const override;
 #endif
 
     void requestClose() override;

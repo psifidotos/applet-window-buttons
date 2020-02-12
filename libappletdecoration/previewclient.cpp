@@ -139,11 +139,6 @@ int PreviewClient::height() const
     return m_height;
 }
 
-QSize PreviewClient::size() const
-{
-    return {m_width, m_height};
-}
-
 QString PreviewClient::caption() const
 {
     return m_caption;
@@ -401,6 +396,12 @@ void PreviewClient::requestHideToolTip()
 }
 #endif
 
+#if KDECORATION2_VERSION_MINOR >= 18
+QSize PreviewClient::size() const
+{
+    return {m_width, m_height};
+}
+#endif
 
 void PreviewClient::requestClose()
 {
