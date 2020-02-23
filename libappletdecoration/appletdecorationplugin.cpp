@@ -57,10 +57,17 @@ void AppletDecorationPlugin::registerTypes(const char *uri)
     qmlRegisterType<Decoration::Applet::ExtendedTheme>(uri, 0, 1, "PlasmaThemeExtended");
     qmlRegisterType<Decoration::Applet::WindowSystem>(uri, 0, 1, "WindowSystem");
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+    qmlRegisterAnonymousType<Decoration::Applet::Padding>("", 1);
+    qmlRegisterAnonymousType<Decoration::Applet::PreviewClient>("", 1);
+    qmlRegisterAnonymousType<Decoration::Applet::PreviewBridge>("", 1);
+    qmlRegisterAnonymousType<KDecoration2::Decoration>("", 1);
+#else
     qmlRegisterType<Decoration::Applet::Padding>();
     qmlRegisterType<Decoration::Applet::PreviewClient>();
     qmlRegisterType<Decoration::Applet::PreviewBridge>();
     qmlRegisterType<KDecoration2::Decoration>();
+#endif
 
     qmlRegisterSingletonType<Decoration::Applet::Environment>(uri, 0, 1, "Environment", &Decoration::Applet::Environment::instance);
 }

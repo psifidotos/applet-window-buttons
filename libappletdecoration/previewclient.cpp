@@ -387,6 +387,7 @@ void PreviewClient::setBordersTopEdge(bool enabled)
 #if KDECORATION2_VERSION_MINOR >= 13
 void PreviewClient::requestShowToolTip(const QString &text)
 {
+    Q_UNUSED(text)
     //qDebug() << "tooltip show requested with text:" << text;
 }
 
