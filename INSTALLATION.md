@@ -10,6 +10,10 @@ The provided `install.sh` script will build everything and install it for you. B
 ```
 sudo apt install g++ extra-cmake-modules qtbase5-dev qtdeclarative5-dev libkf5declarative-dev libkf5plasma-dev libkdecorations2-dev gettext
 ```
+- Fedora:
+```
+sudo dnf install extra-cmake-modules qt5-qtdeclarative-devel kf5-plasma-devel kf5-kdeclarative-devel kf5-kconfigwidgets-devel kf5-ki18n-devel kdecoration-devel
+```
 
 ### Building and Installing
 Once you have installed the dependencies listed above you can execute the build and install script:
