@@ -204,7 +204,7 @@ Item {
     // END decoration properties
 
     //BEGIN Latte Dock Communicator
-    property Item latteBridge: null // current Latte v0.9 API
+    property QtObject latteBridge: null // current Latte v0.9 API
 
     onLatteBridgeChanged: {
         if (latteBridge) {
