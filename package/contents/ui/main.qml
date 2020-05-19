@@ -314,12 +314,16 @@ Item {
 
         Component{
             id: latteTrackerComponent
-            LatteWindowsTracker{}
+            LatteWindowsTracker{
+                filterByScreen: plasmoid.configuration.filterByScreen
+            }
         }
 
         Component{
             id: plasmaTasksModel
-            PlasmaTasksModel{}
+            PlasmaTasksModel{
+                filterByScreen: plasmoid.configuration.filterByScreen
+            }
         }
     }
     //!

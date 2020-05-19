@@ -26,6 +26,7 @@ import org.kde.taskmanager 0.1 as TaskManager
 
 Item {
     id: plasmaTasksItem
+    property bool filterByScreen: true
 
     readonly property bool existsWindowActive: lastActiveTaskItem && tasksRepeater.count > 0 && lastActiveTaskItem.isActive
     readonly property bool existsWindowShown: lastActiveTaskItem && tasksRepeater.count > 0 && !lastActiveTaskItem.isMinimized
@@ -50,7 +51,7 @@ Item {
         activity: activityInfo.currentActivity
         virtualDesktop: virtualDesktopInfo.currentDesktop
 
-        filterByScreen: plasmoid.configuration.filterByScreen
+        filterByScreen: plasmaTasksItem.filterByScreen
         filterByVirtualDesktop: true
         filterByActivity: true
     }
