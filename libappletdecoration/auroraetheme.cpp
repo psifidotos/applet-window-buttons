@@ -122,6 +122,16 @@ QColor AuroraeTheme::titleBackgroundColor() const
     return m_titleBackgroundColor;
 }
 
+bool AuroraeTheme::hasMonochromeIcons() const
+{
+    return m_hasMonochromeIcons;
+}
+
+QString AuroraeTheme::monochromePrefix() const
+{
+    return m_monochromePrefix;
+}
+
 void AuroraeTheme::auroraeRCChanged(const QString &filename)
 {
     if (!filename.endsWith(s_auroraerc)) {
@@ -179,6 +189,16 @@ void AuroraeTheme::loadSettings()
     m_buttonWidth = layoutGroup.readEntry("ButtonWidth", 24);
     m_buttonHeight = layoutGroup.readEntry("ButtonHeight", 24);
     m_buttonSpacing = layoutGroup.readEntry("ButtonSpacing", 2);
+
+    QString monoprefix = generalGroup.readEntry("MonochromeIconsPrefix","");
+
+    if (!monoprefix.isEmpty()) {
+        m_hasMonochromeIcons = true;
+        m_monochromePrefix = (monoprefix == "*" ? "" : monoprefix);
+    } else {
+        m_hasMonochromeIcons = false;
+        m_monochromePrefix = "";
+    }
 
     parseThemeImages();
 

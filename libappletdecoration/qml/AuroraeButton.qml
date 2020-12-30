@@ -18,6 +18,7 @@
 */
 
 import QtQuick 2.7
+import QtGraphicalEffects 1.0
 
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
@@ -37,7 +38,9 @@ MouseArea{
                       (isKeepAbove && buttonType === AppletDecoration.Types.KeepAbove)
         );
     }
-    
+
+    property bool monochromeIconsEnabled: false
+    property color monochromeIconsColor: "white"
 
     property int topPadding: 0
     property int bottomPadding: 0
@@ -48,7 +51,7 @@ MouseArea{
 
     property QtObject auroraeTheme: null
 
-    property string buttonImagePath: auroraeTheme ? auroraeTheme.themePath + '/' + iconName + '.' + auroraeTheme.themeType : ""
+    property string buttonImagePath: auroraeTheme ? auroraeTheme.themePath + '/' + auroraeTheme.monochromePrefix + iconName + '.' + auroraeTheme.themeType : ""
 
     property string iconName: {
         switch(buttonType){
@@ -107,6 +110,16 @@ MouseArea{
         }
     }
 
+    //! monochromize icon
+    Loader {
+        anchors.fill: svgNormalItem
+        active: monochromeIconsEnabled
+        sourceComponent:    ColorOverlay {
+            color: monochromeIconsColor
+            source: svgNormalItem
+        }
+    }
+
     // hovered icon
     PlasmaCore.SvgItem {
         id: svgHoveredItem
@@ -129,6 +142,16 @@ MouseArea{
             elementId: svgHoveredElementId
 
             readonly property int minimumSide: Math.min(parent.width,parent.height)
+        }
+    }
+
+    //! monochromize icon
+    Loader {
+        anchors.fill: svgHoveredItem
+        active: monochromeIconsEnabled && svgHoveredItem.opacity>0
+        sourceComponent:    ColorOverlay {
+            color: monochromeIconsColor
+            source: svgHoveredItem
         }
     }
 }

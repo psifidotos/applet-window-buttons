@@ -615,6 +615,9 @@ Item {
             buttonType: model.buttonType
             auroraeTheme: auroraeThemeEngine
 
+            monochromeIconsEnabled: latteBridge && latteBridge.applyPalette && auroraeThemeEngine.hasMonochromeIcons
+            monochromeIconsColor: latteBridge ? latteBridge.palette.textColor : "transparent"
+
             visible: {
                 if (visibility === AppletDecoration.Types.AlwaysVisible || inEditMode) {
                     return true;

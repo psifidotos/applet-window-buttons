@@ -45,6 +45,9 @@ class AuroraeTheme: public QObject
 
     Q_PROPERTY(QColor titleBackgroundColor READ titleBackgroundColor NOTIFY settingsChanged)
 
+    Q_PROPERTY(bool hasMonochromeIcons READ hasMonochromeIcons NOTIFY settingsChanged)
+    Q_PROPERTY(QString monochromePrefix READ monochromePrefix NOTIFY settingsChanged)
+
 public:
     explicit AuroraeTheme(QObject *parent = nullptr);
     ~AuroraeTheme() override;;
@@ -65,6 +68,9 @@ public:
 
     QColor titleBackgroundColor() const;
 
+    bool hasMonochromeIcons() const;
+    QString monochromePrefix() const;
+
 signals:
     void settingsChanged();
     void themeChanged();
@@ -78,6 +84,8 @@ private:
     void updateAurorae(const QString &themeName);
 
 private:
+    bool m_hasMonochromeIcons{false};
+
     int m_buttonHeight{24};
     int m_buttonWidth{24};
     int m_buttonSpacing{2};
@@ -89,6 +97,8 @@ private:
     QString m_themeName;
     QString m_themePath;
     QString m_themeType;
+
+    QString m_monochromePrefix;
 
     QColor m_titleBackgroundColor;
 };
