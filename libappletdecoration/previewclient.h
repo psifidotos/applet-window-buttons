@@ -111,6 +111,12 @@ public:
     QSize size() const override;
 #endif
 
+#if KDECORATION2_VERSION_MINOR <= 20
+    void requestShowWindowMenu() override;
+#else
+    void requestShowWindowMenu(const QRect &rect) override;
+#endif
+
     void requestClose() override;
     void requestContextHelp() override;
     void requestToggleMaximization(Qt::MouseButtons buttons) override;
@@ -118,7 +124,6 @@ public:
     void requestToggleKeepAbove() override;
     void requestToggleKeepBelow() override;
     void requestToggleShade() override;
-    void requestShowWindowMenu() override;
     void requestShowApplicationMenu(const QRect &rect, int actionId) override;
     void requestToggleOnAllDesktops() override;
 

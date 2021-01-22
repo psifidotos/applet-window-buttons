@@ -38,7 +38,7 @@ PreviewClient::PreviewClient(KDecoration2::DecoratedClient *c, KDecoration2::Dec
     , ApplicationMenuEnabledDecoratedClientPrivate(c, decoration)
     , m_icon(QIcon::fromTheme(QStringLiteral("start-here-kde")))
     , m_iconName(m_icon.name())
-      //  , m_palette(new KWin::Decoration::DecorationPalette(QStringLiteral("kdeglobals")))
+    //  , m_palette(new KWin::Decoration::DecorationPalette(QStringLiteral("kdeglobals")))
     , m_active(true)
     , m_closeable(true)
     , m_keepBelow(false)
@@ -71,40 +71,40 @@ PreviewClient::PreviewClient(KDecoration2::DecoratedClient *c, KDecoration2::Dec
     connect(this, &PreviewClient::maximizedVerticallyChanged,   c, &KDecoration2::DecoratedClient::maximizedVerticallyChanged);
     connect(this, &PreviewClient::maximizedHorizontallyChanged, c, &KDecoration2::DecoratedClient::maximizedHorizontallyChanged);
     connect(this, &PreviewClient::minimizableChanged,           c, &KDecoration2::DecoratedClient::minimizeableChanged);
-//         connect(this, &PreviewClient::modalChanged, c, &DecoratedClient::modalChanged);
+    //         connect(this, &PreviewClient::modalChanged, c, &DecoratedClient::modalChanged);
     connect(this, &PreviewClient::movableChanged,               c, &KDecoration2::DecoratedClient::moveableChanged);
     connect(this, &PreviewClient::onAllDesktopsChanged,         c, &KDecoration2::DecoratedClient::onAllDesktopsChanged);
     connect(this, &PreviewClient::resizableChanged,             c, &KDecoration2::DecoratedClient::resizeableChanged);
     connect(this, &PreviewClient::shadeableChanged,             c, &KDecoration2::DecoratedClient::shadeableChanged);
     connect(this, &PreviewClient::shadedChanged,                c, &KDecoration2::DecoratedClient::shadedChanged);
     connect(this, &PreviewClient::providesContextHelpChanged,   c, &KDecoration2::DecoratedClient::providesContextHelpChanged);
-//    connect(this, &PreviewClient::onAllDesktopsChanged,         c, &KDecoration2::DecoratedClient::onAllDesktopsChanged);
+    //    connect(this, &PreviewClient::onAllDesktopsChanged,         c, &KDecoration2::DecoratedClient::onAllDesktopsChanged);
     connect(this, &PreviewClient::widthChanged,                 c, &KDecoration2::DecoratedClient::widthChanged);
     connect(this, &PreviewClient::heightChanged,                c, &KDecoration2::DecoratedClient::heightChanged);
     connect(this, &PreviewClient::iconChanged,                  c, &KDecoration2::DecoratedClient::iconChanged);
     connect(this, &PreviewClient::paletteChanged,               c, &KDecoration2::DecoratedClient::paletteChanged);
-//         connect(this, &PreviewClient::, c, &DecoratedClient::);
+    //         connect(this, &PreviewClient::, c, &DecoratedClient::);
     connect(this, &PreviewClient::maximizedVerticallyChanged, this,
-    [this]() {
+            [this]() {
         emit maximizedChanged(isMaximized());
     }
-           );
+    );
     connect(this, &PreviewClient::maximizedHorizontallyChanged, this,
-    [this]() {
+            [this]() {
         emit maximizedChanged(isMaximized());
     }
-           );
+    );
     connect(this, &PreviewClient::iconNameChanged, this,
-    [this]() {
+            [this]() {
         m_icon = QIcon::fromTheme(m_iconName);
         emit iconChanged(m_icon);
     }
-           );
+    );
     connect(this, &PreviewClient::desktopChanged, this,
-    [this](int) {
+            [this](int) {
         emit onAllDesktopsChanged(isOnAllDesktops());
     }
-           );
+    );
     /* connect(m_palette, &KWin::Decoration::DecorationPalette::changed, [this]() {
          emit paletteChanged(m_palette->palette());
      });*/
@@ -404,6 +404,20 @@ QSize PreviewClient::size() const
 }
 #endif
 
+
+#if KDECORATION2_VERSION_MINOR <= 20
+void PreviewClient::requestShowWindowMenu()
+{
+    emit showWindowMenuRequested();
+}
+#else
+void PreviewClient::requestShowWindowMenu(const QRect &rect)
+{
+    emit showWindowMenuRequested();
+}
+#endif
+
+
 void PreviewClient::requestClose()
 {
     emit closeRequested();
@@ -442,11 +456,6 @@ void PreviewClient::requestToggleKeepBelow()
     setKeepBelow(!isKeepBelow());
 }
 
-void PreviewClient::requestShowWindowMenu()
-{
-    emit showWindowMenuRequested();
-}
-
 void PreviewClient::requestShowApplicationMenu(const QRect &rect, int actionId)
 {
     Q_UNUSED(rect);
@@ -470,13 +479,13 @@ void PreviewClient::requestToggleShade()
 
 #define SETTER(type, name, variable) \
     void PreviewClient::name(type variable) \
-    { \
-        if (m_##variable == variable) { \
-            return; \
-        } \
-        m_##variable = variable; \
-        emit variable##Changed(m_##variable); \
-    }
+{ \
+    if (m_##variable == variable) { \
+    return; \
+} \
+    m_##variable = variable; \
+    emit variable##Changed(m_##variable); \
+}
 
 #define SETTER2(name, variable) SETTER(bool, name, variable)
 
