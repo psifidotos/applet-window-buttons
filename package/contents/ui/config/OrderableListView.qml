@@ -65,6 +65,8 @@ Rectangle {
     readonly property string appliedScheme: {
         if (selectedScheme === "_plasmatheme_") {
             return plasmaThemeExtended.colors.schemeFile;
+        } else if (selectedScheme === "kdeglobals") {
+            return colorsModel.defaultSchemeFile();
         }
 
         return selectedScheme;

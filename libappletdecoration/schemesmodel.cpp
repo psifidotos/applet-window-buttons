@@ -99,11 +99,23 @@ QHash< int, QByteArray > SchemesModel::roleNames() const
 
 QColor SchemesModel::backgroundOf(const int &index) const
 {
-    if (index>=0 && index<m_schemes.count()) {
+    if (index == 0) {
+        auto ind = indexOf(m_defaultSchemeFile);
+        return ind>=0 ? m_schemes[ind]->backgroundColor() : QColor("transparent");
+    }
+
+    if (index>0 && index<m_schemes.count()) {
         return m_schemes[index]->backgroundColor();
     }
 
     return QColor("transparent");
+}
+
+QString SchemesModel::defaultSchemeFile() const
+{
+    auto ind = indexOf(m_defaultSchemeFile);
+
+    return ind>=0 ? m_schemes[ind]->schemeFile() : QString();
 }
 
 void SchemesModel::initSchemes()
@@ -113,6 +125,7 @@ void SchemesModel::initSchemes()
 
     QString currentSchemePath = SchemeColors::possibleSchemeFile("kdeglobals");
     insertSchemeInList(currentSchemePath);
+    m_defaultSchemeFile = currentSchemePath;
 
     QStringList standardPaths = AppletDecoration::standardPathsFor("color-schemes");
 
@@ -155,7 +168,7 @@ void SchemesModel::insertSchemeInList(QString file)
     m_schemes.insert(atPos, tempScheme);
 }
 
-int SchemesModel::indexOf(QString file)
+int SchemesModel::indexOf(QString file) const
 {
     if (file.isEmpty() || file == "kdeglobals") {
         return 0;

@@ -40,9 +40,10 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QHash< int, QByteArray > roleNames() const override;
 
-    Q_INVOKABLE int indexOf(QString file);
+    Q_INVOKABLE int indexOf(QString file) const;
     Q_INVOKABLE QColor backgroundOf(const int &index) const;
 
+    Q_INVOKABLE QString defaultSchemeFile() const;
 private slots:
     void initSchemes();
 
@@ -50,6 +51,7 @@ private:
     void insertSchemeInList(QString file);
 
 private:
+    QString m_defaultSchemeFile;
     QList<Decoration::Applet::SchemeColors *> m_schemes;
 };
 
