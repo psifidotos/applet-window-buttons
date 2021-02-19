@@ -20,6 +20,7 @@
 
 #include "schemecolors.h"
 
+#include <config-decoration.h>
 #include "commontools.h"
 
 #include <QDebug>
@@ -161,7 +162,11 @@ QString SchemeColors::possibleSchemeFile(QString scheme)
         if (QFileInfo(settingsFile).exists()) {
             KSharedConfigPtr filePtr = KSharedConfig::openConfig(settingsFile);
             KConfigGroup generalGroup = KConfigGroup(filePtr, "General");
+#if KDECORATION2_VERSION_MINOR >= 21
             tempScheme = generalGroup.readEntry("ColorScheme", "BreezeLight");
+#else
+            tempScheme = generalGroup.readEntry("ColorScheme", "Breeze");
+#endif
         }
     }
 
