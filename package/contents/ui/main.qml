@@ -75,8 +75,7 @@ Item {
 
     readonly property bool slideAnimationEnabled: ( (visibility !== AppletDecoration.Types.AlwaysVisible)
                                                    && (plasmoid.configuration.hiddenState === AppletDecoration.Types.SlideOut) )
-    readonly property bool emptySpaceEnabled: ( (visibility !== AppletDecoration.Types.AlwaysVisible)
-                                                   && (plasmoid.configuration.hiddenState === AppletDecoration.Types.EmptySpace) )
+    readonly property bool isEmptySpaceEnabled: plasmoid.configuration.hiddenState === AppletDecoration.Types.EmptySpace
 
     readonly property int containmentType: plasmoid.configuration.containmentType
     readonly property int disabledMaximizedBorders: plasmoid.configuration.disabledMaximizedBorders
@@ -84,7 +83,7 @@ Item {
 
     readonly property int minimumWidth: {
         if (plasmoid.formFactor === PlasmaCore.Types.Horizontal) {
-            if (mustHide && slideAnimationEnabled && !plasmoid.userConfiguring && !latteInEditMode){
+            if (mustHide && !isEmptySpaceEnabled && slideAnimationEnabled && !plasmoid.userConfiguring && !latteInEditMode){
                 return 0;
             }
         }
@@ -94,7 +93,7 @@ Item {
 
     readonly property int minimumHeight: {
         if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
-            if (mustHide && slideAnimationEnabled && !plasmoid.userConfiguring && !latteInEditMode){
+            if (mustHide && !isEmptySpaceEnabled && slideAnimationEnabled && !plasmoid.userConfiguring && !latteInEditMode){
                 return 0;
             }
         }
@@ -105,7 +104,7 @@ Item {
     readonly property string buttonsStr: plasmoid.configuration.buttons
 
     Plasmoid.status: {
-        if (mustHide) {
+        if (mustHide && !isEmptySpaceEnabled) {
             if ((plasmoid.formFactor === PlasmaCore.Types.Horizontal && animatedMinimumWidth === 0)
                     || (plasmoid.formFactor === PlasmaCore.Types.Vertical && animatedMinimumHeight === 0)) {
                 return PlasmaCore.Types.HiddenStatus;
@@ -433,11 +432,11 @@ Item {
 
         onButtonThicknessChanged: console.log("Window Buttons Applet :: Button Thickness ::: " + buttonThickness);
 
-        opacity: emptySpaceEnabled && mustHide && !inEditMode ? 0 : 1
+        opacity: mustHide && !inEditMode ? 0 : 1
         visible: opacity === 0 ? false : true
 
         Behavior on opacity {
-            enabled: emptySpaceEnabled
+            enabled: isEmptySpaceEnabled
             NumberAnimation {
                 duration: 250
                 easing.type: Easing.InCubic
@@ -485,7 +484,10 @@ Item {
             localX: x
             localY: y
 
-            visible: {
+            opacity: isVisible ? 1 : 0
+            visible: (isVisible && !root.isEmptySpaceEnabled) || root.isEmptySpaceEnabled
+
+            readonly property bool isVisible: {
                 if (visibility === AppletDecoration.Types.AlwaysVisible || inEditMode) {
                     return true;
                 }
@@ -606,7 +608,10 @@ Item {
             monochromeIconsEnabled: latteBridge && latteBridge.applyPalette && auroraeThemeEngine.hasMonochromeIcons
             monochromeIconsColor: latteBridge ? latteBridge.palette.textColor : "transparent"
 
-            visible: {
+            opacity: isVisible ? 1 : 0
+            visible: (isVisible && !root.isEmptySpaceEnabled) || root.isEmptySpaceEnabled
+
+            readonly property bool isVisible: {
                 if (visibility === AppletDecoration.Types.AlwaysVisible || inEditMode) {
                     return true;
                 }
