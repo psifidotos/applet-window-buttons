@@ -57,7 +57,7 @@ MouseArea{
         switch(buttonType){
         case AppletDecoration.Types.Close: return "close";
         case AppletDecoration.Types.Minimize: return "minimize";
-        case AppletDecoration.Types.Maximize: return "maximize";
+        case AppletDecoration.Types.Maximize: return (auroraeTheme.hasRestoreButton && button.isMaximized ? "restore" : "maximize");
         case AppletDecoration.Types.OnAllDesktops: return "alldesktops";
         case AppletDecoration.Types.KeepAbove: return "keepabove"
         default: return "close";

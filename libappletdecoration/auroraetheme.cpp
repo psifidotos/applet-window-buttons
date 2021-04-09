@@ -127,6 +127,11 @@ bool AuroraeTheme::hasMonochromeIcons() const
     return m_hasMonochromeIcons;
 }
 
+bool AuroraeTheme::hasRestoreButton() const
+{
+    return m_hasRestoreButton;
+}
+
 QString AuroraeTheme::monochromePrefix() const
 {
     return m_monochromePrefix;
@@ -156,6 +161,8 @@ void AuroraeTheme::updateAurorae(const QString &themeName)
     } else {
         m_themeType = "svg";
     }
+
+    m_hasRestoreButton = QFileInfo(path + "/restore." + m_themeType).exists();
 
     m_themeName = name;
     m_themePath = path;

@@ -45,6 +45,8 @@ class AuroraeTheme: public QObject
 
     Q_PROPERTY(QColor titleBackgroundColor READ titleBackgroundColor NOTIFY settingsChanged)
 
+    Q_PROPERTY(bool hasRestoreButton READ hasRestoreButton NOTIFY settingsChanged)
+
     Q_PROPERTY(bool hasMonochromeIcons READ hasMonochromeIcons NOTIFY settingsChanged)
     Q_PROPERTY(QString monochromePrefix READ monochromePrefix NOTIFY settingsChanged)
 
@@ -68,6 +70,8 @@ public:
 
     QColor titleBackgroundColor() const;
 
+    bool hasRestoreButton() const;
+
     bool hasMonochromeIcons() const;
     QString monochromePrefix() const;
 
@@ -85,6 +89,7 @@ private:
 
 private:
     bool m_hasMonochromeIcons{false};
+    bool m_hasRestoreButton{false};
 
     int m_buttonHeight{24};
     int m_buttonWidth{24};
