@@ -2,7 +2,7 @@ project(applet_windowbuttons)
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 
 set(CMAKE_CXX_STANDARD 14)
-set(VERSION 0.8.1)
+set(VERSION 0.9.0)
 set(AUTHOR "Michail Vourlakos")
 set(EMAIL "mvourlakos@gmail.com")
 

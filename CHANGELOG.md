@@ -1,5 +1,17 @@
 ### CHANGELOG
 
+#### Version 0.9.0
+
+* support Plasma 5.18 and 5.21
+* support aurorae monochrome icons with Latte auto-color functionality
+* support aurorae restore button
+* fix, do not hide buttons for AlwaysVisible
+* fix, do not hide button in Latte edit mode
+* fix, improve default based on Plasma values
+* fix, preserve empty space for hidden states when needed
+* remove no needed workarounds
+
+
 #### Version 0.8.1
 
 * fix compatibility with Plasma 5.18 (Rodrigo Pedra Brum)
