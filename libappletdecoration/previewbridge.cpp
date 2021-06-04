@@ -77,19 +77,6 @@ std::unique_ptr<KDecoration2::DecoratedClientPrivate> PreviewBridge::createClien
     return std::move(ptr);
 }
 
-void PreviewBridge::update(KDecoration2::Decoration *decoration, const QRect &geometry)
-{
-    Q_UNUSED(geometry)
-
-    auto it = std::find_if(m_previewButtons.constBegin(), m_previewButtons.constEnd(), [decoration, geometry](PreviewButtonItem *item) {
-        return (item->decoration() == decoration) && (item->visualGeometry().contains(geometry.center()));
-    });
-
-    if (it != m_previewButtons.constEnd()) {
-        (*it)->update();
-    }
-}
-
 std::unique_ptr<KDecoration2::DecorationSettingsPrivate> PreviewBridge::settings(KDecoration2::DecorationSettings *parent)
 {
     auto ptr = std::unique_ptr<PreviewSettings>(new PreviewSettings(parent));
@@ -192,7 +179,15 @@ KDecoration2::Decoration *PreviewBridge::createDecoration(QObject *parent)
         args.insert(QStringLiteral("theme"), m_theme);
     }
 
-    return m_factory->create<KDecoration2::Decoration>(parent, QVariantList({args}));
+    auto it = m_factory->create<KDecoration2::Decoration>(parent, QVariantList({args}));
+    connect(it, &KDecoration2::Decoration::damaged, [this, decoration = it](const QRegion &geometry) {
+        for (const auto& it : m_previewButtons) {
+            if (it->decoration() == decoration && geometry.intersects(it->visualGeometry())) {
+                it->update();
+            }
+        }
+    });
+    return it;
 }
 
 KDecoration2::DecorationButton *PreviewBridge::createButton(KDecoration2::Decoration *decoration, KDecoration2::DecorationButtonType type, QObject *parent)

@@ -50,7 +50,6 @@ public:
     explicit PreviewBridge(QObject *parent = nullptr);
     virtual ~PreviewBridge();
     std::unique_ptr<KDecoration2::DecoratedClientPrivate> createClient(KDecoration2::DecoratedClient *client, KDecoration2::Decoration *decoration) override;
-    void update(KDecoration2::Decoration *decoration, const QRect &geometry) override;
     std::unique_ptr<KDecoration2::DecorationSettingsPrivate> settings(KDecoration2::DecorationSettings *parent) override;
 
     PreviewClient *lastCreatedClient() {
