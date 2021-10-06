@@ -78,7 +78,6 @@ Item {
     readonly property bool isEmptySpaceEnabled: plasmoid.configuration.hiddenState === AppletDecoration.Types.EmptySpace
 
     readonly property int containmentType: plasmoid.configuration.containmentType
-    readonly property int disabledMaximizedBorders: plasmoid.configuration.disabledMaximizedBorders
     readonly property int visibility: plasmoid.configuration.visibility
 
     readonly property int minimumWidth: {
@@ -243,18 +242,6 @@ Item {
     //END Behaviors
 
     onButtonsStrChanged: initButtons();
-
-    onContainmentTypeChanged: {
-        if (containmentType === AppletDecoration.Types.Plasma && disabledMaximizedBorders !== 1) { /*SystemDecision*/
-            windowSystem.setDisabledMaximizedBorders(disabledMaximizedBorders);
-        }
-    }
-
-    onDisabledMaximizedBordersChanged: {
-        if (containmentType === AppletDecoration.Types.Plasma && disabledMaximizedBorders !== 1) { /*SystemDecision*/
-            windowSystem.setDisabledMaximizedBorders(disabledMaximizedBorders);
-        }
-    }
 
     Connections{
         target: !auroraeThemeEngine.isEnabled ? root : null

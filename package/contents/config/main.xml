@@ -78,15 +78,6 @@
       <default>2</default>
       <label>it is used in order to inform settings window about the plasmoid form factor. 2=Horizontal and 3=Vertical</label>
     </entry>
-    <entry name="disabledMaximizedBorders" type="Enum">
-        <choices>
-            <choice name="ShowBorders"/>
-            <choice name="SystemDecision"/>
-            <choice name="NoBorders"/>
-        </choices>
-      <default>1</default>
-      <label>used only when the plasmoid is in a plasma panel in order to show/system decide/hide windows borders</label>
-    </entry>
     <entry name="containmentType" type="Enum">
       <choices>
          <choice name="Loading"/>
