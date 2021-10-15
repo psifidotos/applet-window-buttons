@@ -134,11 +134,14 @@ private Q_SLOTS:
     void createButton();
     void syncInternalGeometry();
 
+    void onDamaged(const QRegion &region);
+
 private:
 
     QPointer<Decoration::Applet::PreviewBridge> m_bridge;
     QPointer<Decoration::Applet::PreviewClient> m_client;
     QPointer<Decoration::Applet::SharedDecoration> m_sharedDecoration;
+    QPointer<KDecoration2::Decoration> m_lastAppliedDecoration;
 
     KDecoration2::DecorationButton *m_button = nullptr;
     KDecoration2::DecorationButtonType m_type = KDecoration2::DecorationButtonType::Custom;

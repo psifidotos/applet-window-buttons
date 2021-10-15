@@ -365,6 +365,20 @@ void PreviewButtonItem::createButton()
 
     m_button = m_bridge->createButton(m_sharedDecoration->decoration(), m_type, this);
 
+    if (!m_button) {
+        return;
+    }
+
+    if (!m_lastAppliedDecoration.isNull()) {
+        disconnect(m_lastAppliedDecoration.data(), &KDecoration2::Decoration::damaged, this, &PreviewButtonItem::onDamaged);
+    }
+
+    connect(m_sharedDecoration->decoration(), &KDecoration2::Decoration::damaged, this, &PreviewButtonItem::onDamaged);
+    m_lastAppliedDecoration = m_sharedDecoration->decoration();
+
+    m_button->setEnabled(true);
+    m_button->setVisible(true);
+
     syncInternalGeometry();
 }
 
@@ -388,6 +402,13 @@ void PreviewButtonItem::syncInternalGeometry()
     m_button->setGeometry(m_visualGeometry);
 
     update();
+}
+
+void PreviewButtonItem::onDamaged(const QRegion &region)
+{
+    if (region.intersects(m_visualGeometry)) {
+        update();
+    }
 }
 
 void PreviewButtonItem::paint(QPainter *painter)

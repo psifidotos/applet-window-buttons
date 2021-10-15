@@ -77,19 +77,6 @@ std::unique_ptr<KDecoration2::DecoratedClientPrivate> PreviewBridge::createClien
     return std::move(ptr);
 }
 
-void PreviewBridge::update(KDecoration2::Decoration *decoration, const QRect &geometry)
-{
-    Q_UNUSED(geometry)
-
-    auto it = std::find_if(m_previewButtons.constBegin(), m_previewButtons.constEnd(), [decoration, geometry](PreviewButtonItem *item) {
-        return (item->decoration() == decoration) && (item->visualGeometry().contains(geometry.center()));
-    });
-
-    if (it != m_previewButtons.constEnd()) {
-        (*it)->update();
-    }
-}
-
 std::unique_ptr<KDecoration2::DecorationSettingsPrivate> PreviewBridge::settings(KDecoration2::DecorationSettings *parent)
 {
     auto ptr = std::unique_ptr<PreviewSettings>(new PreviewSettings(parent));
@@ -201,7 +188,7 @@ KDecoration2::DecorationButton *PreviewBridge::createButton(KDecoration2::Decora
         return nullptr;
     }
 
-    return m_factory->create<KDecoration2::DecorationButton>(QStringLiteral("button"), parent, QVariantList({QVariant::fromValue(type), QVariant::fromValue(decoration)}));
+    return m_factory->create<KDecoration2::DecorationButton>(parent, QVariantList({QVariant::fromValue(type), QVariant::fromValue(decoration)}));
 }
 
 void PreviewBridge::settingsFileChanged(const QString &filename)
