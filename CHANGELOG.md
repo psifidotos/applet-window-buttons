@@ -1,5 +1,11 @@
 ### CHANGELOG
 
+#### Version 0.10.0
+
+* support Plasma 5.23
+* depend only on Plasma and KDecorations2 >= 5.23
+* drop option for plasma panels to disable decoration on maximized windows
+
 #### Version 0.9.0
 
 * support Plasma 5.18 and 5.21
@@ -10,7 +16,6 @@
 * fix, improve default based on Plasma values
 * fix, preserve empty space for hidden states when needed
 * remove no needed workarounds
-
 
 #### Version 0.8.1
 
