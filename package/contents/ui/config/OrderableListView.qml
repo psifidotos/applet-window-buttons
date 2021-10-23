@@ -120,12 +120,8 @@ Rectangle {
 
     Connections {
         target: plasmaThemeExtended
-
         onThemeChanged: triggerUpdateFromPlasma();
-        onColorsChanged: triggerUpdateFromPlasma();
     }
-
-    onButtonSizeChanged: listContent.initButtons();
 
     ListModel {
         id: controlButtonsModel

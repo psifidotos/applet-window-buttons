@@ -26,6 +26,7 @@
 #include "padding.h"
 #include "previewbridge.h"
 #include "previewclient.h"
+#include "previewsettings.h"
 #include "previewshareddecoration.h"
 
 #include <KDecoration2/Decoration>
@@ -51,6 +52,16 @@ PreviewButtonItem::PreviewButtonItem(QQuickItem *parent)
     connect(this, &PreviewButtonItem::heightChanged, this, &PreviewButtonItem::syncInternalGeometry);
     connect(this, &PreviewButtonItem::localXChanged, this, &PreviewButtonItem::syncInternalGeometry);
     connect(this, &PreviewButtonItem::localYChanged, this, &PreviewButtonItem::syncInternalGeometry);
+
+    connect(this, &PreviewButtonItem::bridgeChanged, this, &PreviewButtonItem::onButtonDamaged);
+    connect(this, &PreviewButtonItem::sharedDecorationChanged, this, &PreviewButtonItem::onButtonDamaged);
+
+    connect(this, &PreviewButtonItem::isActiveChanged, this, &PreviewButtonItem::onButtonDamaged);
+    connect(this, &PreviewButtonItem::isKeepAboveChanged, this, &PreviewButtonItem::onButtonDamaged);
+    connect(this, &PreviewButtonItem::isMaximizedChanged, this, &PreviewButtonItem::onButtonDamaged);
+    connect(this, &PreviewButtonItem::isOnAllDesktopsChanged, this, &PreviewButtonItem::onButtonDamaged);
+    connect(this, &PreviewButtonItem::schemeChanged, this, &PreviewButtonItem::onButtonDamaged);
+    connect(this, &PreviewButtonItem::typeChanged, this, &PreviewButtonItem::onButtonDamaged);
 
     connect(m_padding, &Padding::leftChanged, this, &PreviewButtonItem::syncInternalGeometry);
     connect(m_padding, &Padding::rightChanged, this, &PreviewButtonItem::syncInternalGeometry);
@@ -84,11 +95,6 @@ void PreviewButtonItem::setIsActive(bool active)
 
     if (m_client) {
         m_client->setActive(m_isActive);
-
-        //! update decoration
-        if (m_sharedDecoration) {
-            m_sharedDecoration->initDecoration();
-        }
     }
 
     emit isActiveChanged();
@@ -116,11 +122,6 @@ void PreviewButtonItem::setIsMaximized(bool maximized)
             m_client->setMaximizedVertically(false);
             m_client->setMaximizedHorizontally(false);
         }
-
-        //! update decoration
-        if (m_sharedDecoration) {
-            m_sharedDecoration->initDecoration();
-        }
     }
 
     emit isMaximizedChanged();
@@ -144,11 +145,6 @@ void PreviewButtonItem::setIsOnAllDesktops(bool onalldesktops)
             m_client->setDesktop(-1);
         } else {
             m_client->setDesktop(1);
-        }
-
-        //! update decoration
-        if (m_sharedDecoration) {
-            m_sharedDecoration->initDecoration();
         }
     }
 
@@ -174,11 +170,8 @@ void PreviewButtonItem::setIsKeepAbove(bool keepabove)
         } else {
             m_client->setKeepAbove(false);
         }
-
-        if (m_sharedDecoration) {
-            m_sharedDecoration->initDecoration();
-        }
     }
+
     emit isKeepAboveChanged();
 }
 
@@ -223,11 +216,6 @@ void PreviewButtonItem::setScheme(QString scheme)
     if (m_client) {
         m_client->setColorScheme(m_scheme);
         qDebug() << "buttons scheme update to:" << m_scheme;
-
-        //! update decoration
-        if (m_sharedDecoration) {
-            m_sharedDecoration->initDecoration();
-        }
     }
 
     emit schemeChanged();
@@ -370,14 +358,16 @@ void PreviewButtonItem::createButton()
     }
 
     if (!m_lastAppliedDecoration.isNull()) {
-        disconnect(m_lastAppliedDecoration.data(), &KDecoration2::Decoration::damaged, this, &PreviewButtonItem::onDamaged);
+        disconnect(m_lastAppliedDecoration.data(), &KDecoration2::Decoration::damaged, this, &PreviewButtonItem::onDecorationDamaged);
     }
 
-    connect(m_sharedDecoration->decoration(), &KDecoration2::Decoration::damaged, this, &PreviewButtonItem::onDamaged);
+    connect(m_sharedDecoration->decoration(), &KDecoration2::Decoration::damaged, this, &PreviewButtonItem::onDecorationDamaged);
     m_lastAppliedDecoration = m_sharedDecoration->decoration();
 
     m_button->setEnabled(true);
     m_button->setVisible(true);
+
+    connect(m_button, &KDecoration2::DecorationButton::geometryChanged, this, &PreviewButtonItem::onButtonDamaged);
 
     syncInternalGeometry();
 }
@@ -400,11 +390,18 @@ void PreviewButtonItem::syncInternalGeometry()
     }
 
     m_button->setGeometry(m_visualGeometry);
-
-    update();
 }
 
-void PreviewButtonItem::onDamaged(const QRegion &region)
+void PreviewButtonItem::onButtonDamaged()
+{
+    if (m_sharedDecoration && m_sharedDecoration->decoration()) {
+        emit m_sharedDecoration->decoration()->damaged(m_visualGeometry);
+    } else {
+        update();
+    }
+}
+
+void PreviewButtonItem::onDecorationDamaged(const QRegion &region)
 {
     if (region.intersects(m_visualGeometry)) {
         update();

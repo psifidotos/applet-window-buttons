@@ -134,7 +134,8 @@ private Q_SLOTS:
     void createButton();
     void syncInternalGeometry();
 
-    void onDamaged(const QRegion &region);
+    void onButtonDamaged();
+    void onDecorationDamaged(const QRegion &region);
 
 private:
 

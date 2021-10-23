@@ -72,7 +72,6 @@ public:
     KDecoration2::DecorationButton *createButton(KDecoration2::Decoration *decoration, KDecoration2::DecorationButtonType type, QObject *parent = nullptr);
 
 public Q_SLOTS:
-    void configure();
     void reconfigure();
 
 Q_SIGNALS:
