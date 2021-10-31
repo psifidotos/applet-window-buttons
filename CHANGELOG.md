@@ -1,5 +1,8 @@
 ### CHANGELOG
 
+#### Version 0.10.1
+* remove all workarounds related to faulty buttons painting. Respect and trust bug fixes in decorations provided with Plasma 5.23.2
+
 #### Version 0.10.0
 
 * support Plasma 5.23
