@@ -1,7 +1,11 @@
 ### CHANGELOG
 
 #### Version 0.10.1
-* remove all workarounds related to faulty buttons painting. Respect and trust bug fixes in decorations provided with Plasma 5.23.2
+
+* fix glitches with slide-in/out animations
+* improve cpu and hard disk usage
+* remove all workarounds related to faulty buttons painting
+* respect and trust bug fixes in decorations provided with Plasma 5.23.2
 
 #### Version 0.10.0
 
