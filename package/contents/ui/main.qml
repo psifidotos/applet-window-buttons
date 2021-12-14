@@ -403,16 +403,19 @@ Item {
                                                    root.height - 2 * thickPadding :
                                                    root.width - 2 * thickPadding
 
-        opacity: mustHide && !inEditMode && (plasmoid.status === PlasmaCore.Types.HiddenStatus) ? 0 : 1
+        opacity: mustHide
+                 && !inEditMode
+                 && (!root.slideAnimationEnabled /*when buttons are not sliding out*/
+                     || (root.slideAnimationEnabled && plasmoid.status === PlasmaCore.Types.HiddenStatus/*wait for slide-out animation*/)) ? 0 : 1
         visible: opacity === 0 ? false : true
 
-        Behavior on opacity {
+       /* Behavior on opacity {
             enabled: isEmptySpaceEnabled
             NumberAnimation {
                 duration: 250
                 easing.type: Easing.InCubic
             }
-        }
+        }*/
 
         Repeater {
             id: buttonsRepeater
