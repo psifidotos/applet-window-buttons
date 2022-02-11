@@ -23,8 +23,9 @@
 
 #include "decorationsmodel.h"
 // KDecoration2
-#include <KDecoration2/DecorationSettings>
 #include <KDecoration2/Decoration>
+#include <KDecoration2/DecorationSettings>
+#include <KDecoration2/DecorationThemeProvider>
 // KDE
 #include <KDirWatch>
 #include <KPluginInfo>
@@ -196,62 +197,36 @@ void DecorationsModel::init()
 {
     beginResetModel();
     m_plugins.clear();
-    const auto plugins = KPluginTrader::self()->query(s_pluginName, s_pluginName);
-
+    const auto plugins = KPluginMetaData::findPlugins(s_pluginName);
     for (const auto &info : plugins) {
-        KPluginLoader loader(info.libraryPath());
-        KPluginFactory *factory = loader.factory();
+        QScopedPointer<KDecoration2::DecorationThemeProvider> themeFinder(
+            KPluginFactory::instantiatePlugin<KDecoration2::DecorationThemeProvider>(info).plugin);
 
-        if (!factory) {
-            continue;
-        }
-
-        auto metadata = loader.metaData().value(QStringLiteral("MetaData")).toObject().value(s_pluginName);
+        const auto decoSettingsMap = info.rawData().value("org.kde.kdecoration2").toObject().toVariantMap();
         bool config = false;
-
-        if (!metadata.isUndefined()) {
-            const auto decoSettingsMap = metadata.toObject().toVariantMap();
+        if (themeFinder) {
             const QString &kns = findKNewStuff(decoSettingsMap);
-
-            if (!kns.isEmpty()) {
-                m_knsProvides.insert(kns, info.name().isEmpty() ? info.pluginName() : info.name());
+            if (!kns.isEmpty() && !m_knsProvides.contains(kns)) {
+                m_knsProvides.insert(kns, info.name().isEmpty() ? info.pluginId() : info.name());
             }
-
             if (isThemeEngine(decoSettingsMap)) {
                 const QString keyword = themeListKeyword(decoSettingsMap);
-
                 if (keyword.isNull()) {
                     // We cannot list the themes
                     continue;
                 }
-
-                QScopedPointer<QObject> themeFinder(factory->create<QObject>(keyword));
-
-                if (themeFinder.isNull()) {
-                    continue;
-                }
-
-                QVariant themes = themeFinder->property("themes");
-
-                if (!themes.isValid()) {
-                    continue;
-                }
-
-                const auto themesMap = themes.toMap();
-
-                for (auto it = themesMap.begin(); it != themesMap.end(); ++it) {
+                const auto themesList = themeFinder->themes();
+                for (const KDecoration2::DecorationThemeMetaData &data : themesList) {
                     Data d;
-                    d.pluginName = info.pluginName();
-                    d.themeName = it.value().toString();
-                    d.visibleName = it.key();
+                    d.pluginName = info.pluginId();
+                    d.themeName = data.themeName();
+                    d.visibleName = data.visibleName();
 
                     if (d.pluginName == s_auroraePlugin && d.themeName.startsWith(s_auroraeSvgTheme)) {
                         d.isAuroraeTheme = true;
-                        QMetaObject::invokeMethod(themeFinder.data(), "hasConfiguration",
-                                                  Q_RETURN_ARG(bool, d.configuration),
-                                                  Q_ARG(QString, d.themeName));
-                        m_plugins.emplace_back(std::move(d));
                     }
+
+                    m_plugins.emplace_back(std::move(d));
                 }
 
                 // it's a theme engine, we don't want to show this entry
@@ -260,15 +235,13 @@ void DecorationsModel::init()
 
             config = isConfigureable(decoSettingsMap);
         }
-
         Data data;
-        data.pluginName = info.pluginName();
-        data.visibleName = info.name().isEmpty() ? info.pluginName() : info.name();
+        data.pluginName = info.pluginId();
+        data.visibleName = info.name().isEmpty() ? info.pluginId() : info.name();
         data.configuration = config;
 
         m_plugins.emplace_back(std::move(data));
     }
-
     endResetModel();
 }
 
