@@ -1,5 +1,10 @@
 ### CHANGELOG
 
+#### Version 0.11.0
+
+* support Plasma 5.24 way of discovering themes from theme engines
+* hide when preserveemptyspace is selected
+
 #### Version 0.10.1
 
 * fix glitches with slide-in/out animations
