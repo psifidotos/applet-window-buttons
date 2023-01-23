@@ -263,6 +263,11 @@ WId PreviewClient::windowId() const
     return 0;
 }
 
+QString PreviewClient::windowClass() const
+{
+    return QString("kwin_preview");
+}
+
 QPalette PreviewClient::palette() const
 {
     return m_palette->palette();

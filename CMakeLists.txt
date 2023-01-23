@@ -8,7 +8,7 @@ set(EMAIL "mvourlakos@gmail.com")
 
 set(QT_MIN_VERSION "5.15.0")
 set(KF5_MIN_VERSION "5.81.0")
-set(KDECORATION2_MIN_VERSION "5.24.0")
+set(KDECORATION2_MIN_VERSION "5.26.90")
 
 set(KF5_LOCALE_PREFIX "")
 
