@@ -37,3 +37,10 @@ This is a Plasma 5 applet that shows window buttons in your panels. This plasmoi
 # Install
 
 You can execute `sh install.sh` in the root directory as long as you have installed the previous mentioned development packages. For more details please read [INSTALLATION.md](/INSTALLATION.md)
+
+# Distribution packages
+
+On Arch Linux, this applet is available in the [official repositories](plasma5-applets-window-buttons)
+```
+sudo pacman -S plasma5-applets-window-buttons
+```
