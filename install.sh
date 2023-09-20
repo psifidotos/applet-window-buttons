@@ -1,3 +1,5 @@
+#!/bin/bash
+.translate/build
 if ! [ -a build ] ; then
     mkdir build
 fi

@@ -19,3 +19,6 @@ X-KDE-PluginInfo-Version=0.11.1
 X-KDE-PluginInfo-Website=https://github.com/psifidotos/applet-window-buttons
 X-KDE-ServiceTypes=Plasma/Applet
 
+Name[zh_CN]=窗口按钮
+Comment[zh_CN]=面板上的窗口按钮
+Keywords[zh_CN]=窗口 按钮
