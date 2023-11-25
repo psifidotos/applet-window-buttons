@@ -258,6 +258,11 @@ bool PreviewClient::providesContextHelp() const
     return m_providesContextHelp;
 }
 
+QString PreviewClient::windowClass() const
+{
+    return QStringLiteral("kwin_preview");
+}
+
 WId PreviewClient::windowId() const
 {
     return 0;

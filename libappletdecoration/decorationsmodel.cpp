@@ -28,11 +28,12 @@
 #include <KDecoration2/DecorationThemeProvider>
 // KDE
 #include <KDirWatch>
-#include <KPluginInfo>
-#include <KPluginLoader>
-#include <KPluginFactory>
-#include <KPluginTrader>
 #include <KSharedConfig>
+#include <Plasma/PluginLoader>
+#include <KPluginFactory>
+#include <KSharedConfig>
+#include <KConfigGroup>
+
 // Qt
 #include <QDebug>
 #include <QDir>

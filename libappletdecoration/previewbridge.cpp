@@ -32,9 +32,8 @@
 
 #include <KCModule>
 #include <KDirWatch>
-#include <KPluginLoader>
+#include <KPluginMetaData>
 #include <KPluginFactory>
-#include <KPluginTrader>
 
 #include <QDebug>
 #include <QDBusConnection>
@@ -44,6 +43,8 @@
 #include <QPushButton>
 #include <QStandardPaths>
 #include <QVBoxLayout>
+#include <kpluginfactory.h>
+#include <kpluginmetadata.h>
 
 namespace Decoration {
 namespace Applet {
@@ -74,14 +75,14 @@ std::unique_ptr<KDecoration2::DecoratedClientPrivate> PreviewBridge::createClien
 {
     auto ptr = std::unique_ptr<PreviewClient>(new PreviewClient(client, decoration));
     m_lastCreatedClient = ptr.get();
-    return std::move(ptr);
+    return ptr;
 }
 
 std::unique_ptr<KDecoration2::DecorationSettingsPrivate> PreviewBridge::settings(KDecoration2::DecorationSettings *parent)
 {
     auto ptr = std::unique_ptr<PreviewSettings>(new PreviewSettings(parent));
     m_lastCreatedSettings = ptr.get();
-    return std::move(ptr);
+    return ptr;
 }
 
 void PreviewBridge::registerButton(PreviewButtonItem *button)
@@ -135,18 +136,11 @@ void PreviewBridge::createFactory()
         return;
     }
 
-    const auto offers = KPluginTrader::self()->query(s_pluginName,
-                        s_pluginName,
-                        QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(m_plugin));
+    qDebug() << "Searching for plugins: " << m_plugin;
 
-    if (offers.isEmpty()) {
-        setValid(false);
-        qDebug() << "no offers";
-        return;
-    }
+    const auto plugins = KPluginMetaData::findPluginById("org.kde.kdecoration2", m_plugin);
 
-    KPluginLoader loader(offers.first().libraryPath());
-    m_factory = loader.factory();
+    m_factory = KPluginFactory::loadFactory(plugins).plugin;
     qDebug() << "Factory: " << !m_factory.isNull();
     setValid(!m_factory.isNull());
     reconfigure();
@@ -191,11 +185,13 @@ KDecoration2::DecorationButton *PreviewBridge::createButton(KDecoration2::Decora
     auto button = m_factory->create<KDecoration2::DecorationButton>(parent, QVariantList({QVariant::fromValue(type), QVariant::fromValue(decoration)}));
 
     if (!button) {
-        //! support decorations that have not been updated yet to KWin 5.23 decoration plugin approach
-        button = m_factory->create<KDecoration2::DecorationButton>(QStringLiteral("button"), parent, QVariantList({QVariant::fromValue(type), QVariant::fromValue(decoration)}));
-        if (button) {
-            qWarning() << "Loading a KDecoration2::DecorationButton using the button keyword is deprecated in KWin 5.23, register the plugin without a keyword instead" << m_plugin;
-        }
+        // //! support decorations that have not been updated yet to KWin 5.23 decoration plugin approach
+        // button = m_factory->create<KDecoration2::DecorationButton>(QStringLiteral("button"), parent, QVariantList({QVariant::fromValue(type), QVariant::fromValue(decoration)}));
+        // if (button) {
+        //     qWarning() << "Loading a KDecoration2::DecorationButton using the button keyword is deprecated in KWin 5.23, register the plugin without a keyword instead" << m_plugin;
+        // }
+
+        qWarning() << "removed button" << (int) type << "from" << m_plugin;
     }
 
     return button;

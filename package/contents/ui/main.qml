@@ -17,17 +17,17 @@
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.7
-import QtQuick.Layouts 1.1
+import QtQuick
+import QtQuick.Layouts
 
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.plasmoid
+import org.kde.plasma.core as PlasmaCore
 
-import org.kde.appletdecoration 0.1 as AppletDecoration
+import org.kde.appletdecoration as AppletDecoration
 
 import "../code/tools.js" as ModelTools
 
-Item {
+PlasmoidItem {
     id: root
     clip: true
 
@@ -41,15 +41,13 @@ Item {
     Layout.maximumHeight: Layout.minimumHeight
     Layout.maximumWidth: Layout.minimumWidth
 
-    Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
+    preferredRepresentation: fullRepresentation
     Plasmoid.onFormFactorChanged: plasmoid.configuration.formFactor = plasmoid.formFactor;
 
     property int animatedMinimumWidth: minimumWidth
     property int animatedMinimumHeight: minimumHeight
 
     readonly property bool inEditMode: latteInEditMode || plasmoid.userConfiguring
-
-    readonly property bool plasma515: AppletDecoration.Environment.plasmaDesktopVersion >= AppletDecoration.Environment.makeVersion(5,15,0)
 
     readonly property bool mustHide: {
         if (visibility === AppletDecoration.Types.AlwaysVisible || inEditMode) {

@@ -30,7 +30,7 @@
 #include <KDirWatch>
 #include <KSharedConfig>
 
-#include <Plasma/Svg>
+#include <KSvg/Svg>
 
 namespace Decoration {
 namespace Applet {
@@ -189,8 +189,8 @@ void AuroraeTheme::loadSettings()
 
     KSharedConfigPtr rcPtr = KSharedConfig::openConfig(rc);
 
-    const KConfigGroup generalGroup = KConfigGroup(rcPtr, "General");
-    const KConfigGroup layoutGroup = KConfigGroup(rcPtr, "Layout");
+    const KConfigGroup generalGroup = KConfigGroup(rcPtr, u"General"_qs);
+    const KConfigGroup layoutGroup = KConfigGroup(rcPtr, u"Layout"_qs);
 
     m_duration = generalGroup.readEntry("Animation", 0);
     m_buttonWidth = layoutGroup.readEntry("ButtonWidth", 24);
@@ -221,7 +221,7 @@ void AuroraeTheme::parseThemeImages()
         return;
     }
 
-    Plasma::Svg *svg = new Plasma::Svg(this);
+    KSvg::Svg *svg = new KSvg::Svg(this);
     svg->setImagePath(origBackgroundFilePath);
     svg->resize(50,50);
     QImage img = svg->image(QSize(50,50), "decoration-top");
@@ -229,9 +229,8 @@ void AuroraeTheme::parseThemeImages()
     int maxOpacity = -1;
 
     for (int y=49; y>=0; --y) {
-        QRgb *line = (QRgb *)img.scanLine(y);
         for (int x=0; x<50; ++x) {
-            QRgb pix = line[x];
+            QRgb pix = img.pixel(x, y);
             int opacity = qAlpha(pix);
 
             //! the equality returns better results for more aurorae themes

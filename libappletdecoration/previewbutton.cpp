@@ -161,9 +161,9 @@ void PreviewButtonItem::setIsKeepAbove(bool keepabove)
     if (m_isKeepAbove == keepabove){
         return;
     }
-    
+
     m_isKeepAbove = keepabove;
-    
+
     if (m_client && m_button && m_type == KDecoration2::DecorationButtonType::KeepAbove) {
         if (m_isKeepAbove){
             m_client->setKeepAbove(true);
@@ -451,7 +451,7 @@ void PreviewButtonItem::mouseReleaseEvent(QMouseEvent *event)
         return;
     }
 
-    bool inItem {m_fullGeometry.contains(event->localPos().x(), event->localPos().y())};
+    bool inItem {m_fullGeometry.contains(event->position().x(), event->position().y())};
 
     //! this a workaround in order to send proper coordinates
     //! that confirm the button visual coordinates
@@ -495,7 +495,7 @@ void PreviewButtonItem::hoverEnterEvent(QHoverEvent *event)
     //! that confirm the button visual coordinates
     QHoverEvent e(event->type(),
                   m_visualGeometry.center(),
-                  QPoint(m_visualGeometry.x() + event->posF().x(), m_visualGeometry.y() + event->posF().y()),
+                  QPoint(m_visualGeometry.x() + event->position().x(), m_visualGeometry.y() + event->position().y()),
                   event->modifiers());
 
     QCoreApplication::instance()->sendEvent(m_button, &e);
@@ -523,8 +523,8 @@ void PreviewButtonItem::hoverMoveEvent(QHoverEvent *event)
         return;
     }
 
-    QPoint newPos (qBound((double)m_visualGeometry.left(), m_visualGeometry.left() + event->posF().x(), (double)m_visualGeometry.right()),
-                   qBound((double)m_visualGeometry.top(), m_visualGeometry.top() + event->posF().x(), (double)m_visualGeometry.bottom()));
+    QPoint newPos (qBound((double)m_visualGeometry.left(), m_visualGeometry.left() + event->position().x(), (double)m_visualGeometry.right()),
+                   qBound((double)m_visualGeometry.top(), m_visualGeometry.top() + event->position().x(), (double)m_visualGeometry.bottom()));
 
     QPoint oldPos (qBound((double)m_visualGeometry.left(), m_visualGeometry.left() + event->oldPosF().x(), (double)m_visualGeometry.right()),
                    qBound((double)m_visualGeometry.top(), m_visualGeometry.top() + event->oldPosF().x(), (double)m_visualGeometry.bottom()));

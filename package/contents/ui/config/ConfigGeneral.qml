@@ -17,14 +17,16 @@
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.0
-import QtQuick.Controls 1.0
-import QtQuick.Layouts 1.0
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
 
-import org.kde.appletdecoration 0.1 as AppletDecoration
+import org.kde.kitemmodels
+
+import org.kde.appletdecoration as AppletDecoration
 
 Item {
     id: root
@@ -109,10 +111,10 @@ Item {
     }
 
     // sort decorations based on display name
-    PlasmaCore.SortFilterModel {
+    KSortFilterProxyModel {
         id: sortedDecorations
         sourceModel: decorations
-        sortRole: 'display'
+        sortRoleName: 'display'
         sortOrder: Qt.AscendingOrder
     }
 
@@ -203,50 +205,52 @@ Item {
                 horizontalAlignment: Text.AlignRight
             }
 
-            ExclusiveGroup { id: visibilityGroup }
+            ButtonGroup {
+                buttons: column.children
+            }
 
-            RadioButton{
-                id: alwaysVisibleBtn
-                text: i18n("Always visible")
-                checked: root.visibility === AppletDecoration.Types.AlwaysVisible
-                exclusiveGroup: visibilityGroup
-                onCheckedChanged: {
-                    if (checked) {
-                        root.visibility = AppletDecoration.Types.AlwaysVisible;
+            Column {
+                id: column
+
+                RadioButton{
+                    id: alwaysVisibleBtn
+                    text: i18n("Always visible")
+                    checked: root.visibility === AppletDecoration.Types.AlwaysVisible
+                    onCheckedChanged: {
+                        if (checked) {
+                            root.visibility = AppletDecoration.Types.AlwaysVisible;
+                        }
                     }
                 }
-            }
-            RadioButton{
-                id: activeWindowBtn
-                text: i18n("Active window is present")
-                checked: root.visibility === AppletDecoration.Types.ActiveWindow
-                exclusiveGroup: visibilityGroup
-                onCheckedChanged: {
-                    if (checked) {
-                        root.visibility = AppletDecoration.Types.ActiveWindow;
+                RadioButton{
+                    id: activeWindowBtn
+                    text: i18n("Active window is present")
+                    checked: root.visibility === AppletDecoration.Types.ActiveWindow
+                    onCheckedChanged: {
+                        if (checked) {
+                            root.visibility = AppletDecoration.Types.ActiveWindow;
+                        }
                     }
                 }
-            }
-            RadioButton{
-                id: activeMaximizedBtn
-                text: plasmoid.configuration.containmentType === AppletDecoration.Types.Latte ?
-                          i18n("Last active window is maximized") : i18n("Active window is maximized")
-                checked: root.visibility === AppletDecoration.Types.ActiveMaximizedWindow
-                exclusiveGroup: visibilityGroup
-                onCheckedChanged: {
-                    if (checked) {
-                        root.visibility = AppletDecoration.Types.ActiveMaximizedWindow;
+                RadioButton{
+                    id: activeMaximizedBtn
+                    text: plasmoid.configuration.containmentType === AppletDecoration.Types.Latte ?
+                              i18n("Last active window is maximized") : i18n("Active window is maximized")
+                    checked: root.visibility === AppletDecoration.Types.ActiveMaximizedWindow
+                    onCheckedChanged: {
+                        if (checked) {
+                            root.visibility = AppletDecoration.Types.ActiveMaximizedWindow;
+                        }
                     }
                 }
-            }
-            RadioButton{
-                id: shownWindowBtn
-                text: i18n("At least one window is shown")
-                checked: root.visibility === AppletDecoration.Types.ShownWindowExists
-                exclusiveGroup: visibilityGroup
-                onCheckedChanged: {
-                    if (checked) {
-                        root.visibility = AppletDecoration.Types.ShownWindowExists;
+                RadioButton{
+                    id: shownWindowBtn
+                    text: i18n("At least one window is shown")
+                    checked: root.visibility === AppletDecoration.Types.ShownWindowExists
+                    onCheckedChanged: {
+                        if (checked) {
+                            root.visibility = AppletDecoration.Types.ShownWindowExists;
+                        }
                     }
                 }
             }
@@ -267,27 +271,31 @@ Item {
                 horizontalAlignment: Text.AlignRight
             }
 
-            ExclusiveGroup { id: hiddenStateGroup }
+            ButtonGroup {
+                buttons: column2.children
+            }
 
-            RadioButton{
-                id: slideOutBtn
-                text: i18n("Slide out animation")
-                checked: root.hiddenState === AppletDecoration.Types.SlideOut
-                exclusiveGroup: hiddenStateGroup
-                onCheckedChanged: {
-                    if (checked) {
-                        root.hiddenState = AppletDecoration.Types.SlideOut;
+            Column {
+                id: column2
+
+                RadioButton{
+                    id: slideOutBtn
+                    text: i18n("Slide out animation")
+                    checked: root.hiddenState === AppletDecoration.Types.SlideOut
+                    onCheckedChanged: {
+                        if (checked) {
+                            root.hiddenState = AppletDecoration.Types.SlideOut;
+                        }
                     }
                 }
-            }
-            RadioButton{
-                id: emptySpaceBtn
-                text: i18n("Preserve as empty space")
-                checked: root.hiddenState === AppletDecoration.Types.EmptySpace
-                exclusiveGroup: hiddenStateGroup
-                onCheckedChanged: {
-                    if (checked) {
-                        root.hiddenState = AppletDecoration.Types.EmptySpace;
+                RadioButton{
+                    id: emptySpaceBtn
+                    text: i18n("Preserve as empty space")
+                    checked: root.hiddenState === AppletDecoration.Types.EmptySpace
+                    onCheckedChanged: {
+                        if (checked) {
+                            root.hiddenState = AppletDecoration.Types.EmptySpace;
+                        }
                     }
                 }
             }
@@ -353,26 +361,26 @@ Item {
                     enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
                 }
 
-                SpinBox{
+                SpinBox {
                     id: buttonSizeSpn
-                    minimumValue: 40
-                    maximumValue: 100
-                    suffix: " %"
+                    from: 40
+                    to: 100
+                    // suffix: " %"
                     enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
                 }
 
-                Label{
+                Label {
                     Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
                     text: i18n("Spacing:")
                     horizontalAlignment: Text.AlignRight
                     enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
                 }
 
-                SpinBox{
+                SpinBox {
                     id: spacingSpn
-                    minimumValue: 0
-                    maximumValue: 24
-                    suffix: " " + i18nc("pixels","px.")
+                    from: 0
+                    to: 24
+                    // suffix: " " + i18nc("pixels","px.")
                     enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
                 }
             }
@@ -407,9 +415,9 @@ Item {
 
                 SpinBox{
                     id: lengthFirstSpn
-                    minimumValue: 0
-                    maximumValue: 24
-                    suffix: " " + i18nc("pixels","px.")
+                    from: 0
+                    to: 24
+                    // suffix: " " + i18nc("pixels","px.")
 
                     property int lastValue: -1
 
@@ -428,9 +436,9 @@ Item {
 
                 SpinBox{
                     id: lengthLastSpn
-                    minimumValue: 0
-                    maximumValue: 24
-                    suffix: " " + i18nc("pixels","px.")
+                    from: 0
+                    to: 24
+                    // suffix: " " + i18nc("pixels","px.")
                     enabled: !lockItem.locked
                 }
 

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 
 set(QT_MIN_VERSION "5.6.0")
-set(KF5_MIN_VERSION "5.26.0")
+set(KF6_MIN_VERSION "5.26.0")
 
 find_package(ECM 0.0.11 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
@@ -33,21 +33,23 @@ set(appletdecoration_SRCS
 
 add_library(appletdecorationplugin SHARED ${appletdecoration_SRCS})
 
-find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED  Quick DBus Widgets)
-find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS Plasma WindowSystem I18n Service ConfigWidgets)
+find_package(Qt6 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Quick DBus Widgets)
+find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS CoreAddons Plasma WindowSystem I18n Service ConfigWidgets KCMUtils)
 find_package(KDecoration2 REQUIRED)
 
 target_link_libraries(appletdecorationplugin
-                      Qt5::Core
-                      Qt5::DBus
-                      Qt5::Widgets
-                      Qt5::Quick
-                      KF5::ConfigWidgets
-                      KF5::I18n
-                      KF5::Plasma
-                      KF5::WindowSystem
-                      KF5::I18n
-                      KF5::Service
+                      Qt6::Core
+                      Qt6::DBus
+                      Qt6::Widgets
+                      Qt6::Quick
+                      KF6::CoreAddons
+                      KF6::ConfigWidgets
+                      KF6::I18n
+                      KF6::Plasma
+                      KF6::WindowSystem
+                      KF6::Service
+                      KF6::Svg
+                      KF6::KCMUtils
                       KDecoration2::KDecoration
                       KDecoration2::KDecoration2Private)
 

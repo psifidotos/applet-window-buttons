@@ -24,7 +24,7 @@
 #include <QProcess>
 
 // Plasma
-#include <plasma/version.h>
+#include <plasma_version.h>
 
 namespace Decoration {
 namespace Applet {
@@ -41,7 +41,7 @@ Environment::~Environment()
 
 uint Environment::frameworksVersion() const
 {
-    return Plasma::version();
+    return PLASMA_VERSION;
 }
 
 uint Environment::plasmaDesktopVersion()

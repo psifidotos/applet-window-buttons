@@ -31,6 +31,8 @@
 #include <KDirWatch>
 #include <KSharedConfig>
 
+using namespace Qt::StringLiterals;
+
 namespace Decoration {
 namespace Applet {
 
@@ -161,7 +163,7 @@ QString SchemeColors::possibleSchemeFile(QString scheme)
 
         if (QFileInfo(settingsFile).exists()) {
             KSharedConfigPtr filePtr = KSharedConfig::openConfig(settingsFile);
-            KConfigGroup generalGroup = KConfigGroup(filePtr, "General");
+            KConfigGroup generalGroup = KConfigGroup(filePtr, u"General"_qs);
 #if KDECORATION2_VERSION_MINOR >= 21
             tempScheme = generalGroup.readEntry("ColorScheme", "BreezeLight");
 #else
@@ -195,7 +197,7 @@ QString SchemeColors::schemeName(QString originalFile)
     }
 
     KSharedConfigPtr filePtr = KSharedConfig::openConfig(originalFile);
-    KConfigGroup generalGroup = KConfigGroup(filePtr, "General");
+    KConfigGroup generalGroup = KConfigGroup(filePtr, u"General"_qs);
 
     return generalGroup.readEntry("Name", fileNameNoExt);
 }
@@ -207,11 +209,11 @@ void SchemeColors::updateScheme()
     }
 
     KSharedConfigPtr filePtr = KSharedConfig::openConfig(m_schemeFile);
-    KConfigGroup wmGroup = KConfigGroup(filePtr, "WM");
-    KConfigGroup selGroup = KConfigGroup(filePtr, "Colors:Selection");
-    KConfigGroup viewGroup = KConfigGroup(filePtr, "Colors:View");
+    KConfigGroup wmGroup = KConfigGroup(filePtr, u"WM"_qs);
+    KConfigGroup selGroup = KConfigGroup(filePtr, u"Colors:Selection"_qs);
+    KConfigGroup viewGroup = KConfigGroup(filePtr, u"Colors:View"_qs);
     //KConfigGroup windowGroup = KConfigGroup(filePtr, "Colors:Window");
-    KConfigGroup buttonGroup = KConfigGroup(filePtr, "Colors:Button");
+    KConfigGroup buttonGroup = KConfigGroup(filePtr, u"Colors:Button"_qs);
 
     if (!m_basedOnPlasmaTheme) {
         m_activeBackgroundColor = wmGroup.readEntry("activeBackground", QColor());

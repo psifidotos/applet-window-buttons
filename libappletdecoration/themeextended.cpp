@@ -96,7 +96,7 @@ void ExtendedTheme::updateDefaultScheme()
     if (m_colorsScheme) {
         disconnect(m_colorsScheme, &SchemeColors::colorsChanged, this, &ExtendedTheme::themeChanged);
         m_colorsScheme->deleteLater();
-    }    
+    }
 
     m_colorsScheme = new SchemeColors(this, m_colorsSchemePath, true);
     connect(m_colorsScheme, &SchemeColors::colorsChanged, this, &ExtendedTheme::themeChanged);
@@ -113,8 +113,8 @@ void ExtendedTheme::updateDefaultSchemeValues()
     KSharedConfigPtr defaultPtr = KSharedConfig::openConfig(m_colorsSchemePath);
 
     if (originalPtr && defaultPtr) {
-        KConfigGroup normalWindowGroup(originalPtr, "Colors:Window");
-        KConfigGroup defaultWMGroup(defaultPtr, "WM");
+        KConfigGroup normalWindowGroup(originalPtr, u"Colors:Window"_qs);
+        KConfigGroup defaultWMGroup(defaultPtr, u"WM"_qs);
 
         defaultWMGroup.writeEntry("activeBackground", normalWindowGroup.readEntry("BackgroundNormal", QColor()));
         defaultWMGroup.writeEntry("activeForeground", normalWindowGroup.readEntry("ForegroundNormal", QColor()));

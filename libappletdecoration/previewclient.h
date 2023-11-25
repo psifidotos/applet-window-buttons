@@ -31,6 +31,7 @@
 #include <KDecoration2/Private/DecoratedClientPrivate>
 #include <QObject>
 #include <QPalette>
+#include <kdecoration2/decoration.h>
 
 class QAbstractItemModel;
 
@@ -74,7 +75,7 @@ public:
     QString caption() const override;
     WId decorationId() const override;
     WId windowId() const override;
-    int desktop() const override;
+    int desktop() const;
     QIcon icon() const override;
     bool isActive() const override;
     bool isCloseable() const override;
@@ -92,6 +93,7 @@ public:
     bool isShadeable() const override;
     bool isShaded() const override;
     bool providesContextHelp() const override;
+    QString windowClass() const override;
 
     int width() const override;
     int height() const override;

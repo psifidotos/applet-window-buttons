@@ -24,6 +24,7 @@
 #ifndef KDECORATIONS_PREVIEW_BUTTON_ITEM_H
 #define KDECORATIONS_PREVIEW_BUTTON_ITEM_H
 
+#include "previewshareddecoration.h"
 #include <QMargins>
 #include <QQuickPaintedItem>
 #include <QPointer>
@@ -39,7 +40,6 @@ namespace Applet {
 class Padding;
 class PreviewBridge;
 class PreviewClient;
-class SharedDecoration;
 
 class PreviewButtonItem : public QQuickPaintedItem
 {
@@ -81,7 +81,7 @@ public:
 
     bool isOnAllDesktops() const;
     void setIsOnAllDesktops(bool onalldesktops);
-    
+
     bool isKeepAbove() const;
     void setIsKeepAbove(bool keepabove);
 

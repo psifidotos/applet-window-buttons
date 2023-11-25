@@ -103,11 +103,7 @@ Item {
                 }
 
                 function togglePinToAllDesktops() {
-                    if (root.plasma515) {
-                        tasksModel.requestVirtualDesktops(modelIndex(), 0);
-                    } else {
-                        tasksModel.requestVirtualDesktop(modelIndex(), 0);
-                    }
+                    tasksModel.requestVirtualDesktops(modelIndex(), 0);
                 }
 
                 function toggleKeepAbove(){

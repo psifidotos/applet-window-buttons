@@ -26,6 +26,7 @@
 #include <QObject>
 
 #include "previewbridge.h"
+#include "previewsettings.h"
 
 
 namespace KDecoration2 {

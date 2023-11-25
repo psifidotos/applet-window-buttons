@@ -28,6 +28,7 @@
 #include <KDecoration2/DecorationSettings>
 #include <QObject>
 #include <QAbstractListModel>
+#include <QPointer>
 
 namespace KDecoration2 {
 class DecorationSettings;
@@ -143,7 +144,7 @@ public:
     PreviewBridge *bridge() const;
     void setBridge(PreviewBridge *bridge);
 
-    QSharedPointer<KDecoration2::DecorationSettings> settings() const;
+    std::shared_ptr<KDecoration2::DecorationSettings> settings() const;
     KDecoration2::DecorationSettings *settingsPointer() const;
     int borderSizesIndex() const {
         return m_borderSize;
@@ -158,7 +159,7 @@ Q_SIGNALS:
 private:
     void createSettings();
     QPointer<PreviewBridge> m_bridge;
-    QSharedPointer<KDecoration2::DecorationSettings> m_settings;
+    std::shared_ptr<KDecoration2::DecorationSettings> m_settings;
     PreviewSettings *m_previewSettings = nullptr;
     int m_borderSize = 3;
 };
