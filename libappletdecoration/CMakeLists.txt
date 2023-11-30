@@ -34,7 +34,7 @@ set(appletdecoration_SRCS
 add_library(appletdecorationplugin SHARED ${appletdecoration_SRCS})
 
 find_package(Qt6 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Quick DBus Widgets)
-find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS CoreAddons Plasma WindowSystem I18n Service ConfigWidgets KCMUtils)
+find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS CoreAddons WindowSystem I18n Service ConfigWidgets KCMUtils)
 find_package(KDecoration2 REQUIRED)
 
 target_link_libraries(appletdecorationplugin
@@ -45,7 +45,7 @@ target_link_libraries(appletdecorationplugin
                       KF6::CoreAddons
                       KF6::ConfigWidgets
                       KF6::I18n
-                      KF6::Plasma
+                      Plasma::Plasma
                       KF6::WindowSystem
                       KF6::Service
                       KF6::Svg
