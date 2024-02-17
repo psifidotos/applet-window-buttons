@@ -47,7 +47,7 @@ Item {
         id: tasksModel
         sortMode: TaskManager.TasksModel.SortVirtualDesktop
         groupMode: TaskManager.TasksModel.GroupDisabled
-        screenGeometry: plasmoid.screenGeometry
+        screenGeometry: root.screenGeometry
         activity: activityInfo.currentActivity
         virtualDesktop: virtualDesktopInfo.currentDesktop
 
