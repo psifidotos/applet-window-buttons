@@ -104,16 +104,16 @@ public:
     bool hasApplicationMenu() const override;
     bool isApplicationMenuActive() const override;
 
-#if KDECORATION2_VERSION_MINOR >= 13
+#if KDECORATION2_VERSION_MAJOR > 5 || KDECORATION2_VERSION_MINOR >= 13
     void requestShowToolTip(const QString &text) override;
     void requestHideToolTip() override;
 #endif
 
-#if KDECORATION2_VERSION_MINOR >= 18
+#if KDECORATION2_VERSION_MAJOR > 5 || KDECORATION2_VERSION_MINOR >= 18
     QSize size() const override;
 #endif
 
-#if KDECORATION2_VERSION_MINOR <= 20
+#if KDECORATION2_VERSION_MAJOR <= 5 && KDECORATION2_VERSION_MINOR <= 20
     void requestShowWindowMenu() override;
 #else
     void requestShowWindowMenu(const QRect &rect) override;
