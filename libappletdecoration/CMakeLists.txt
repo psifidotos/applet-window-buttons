@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 
-set(QT_MIN_VERSION "5.6.0")
+set(QT_MIN_VERSION "6.6.0")
 set(KF6_MIN_VERSION "5.26.0")
 
 find_package(ECM 0.0.11 REQUIRED NO_MODULE)
@@ -33,7 +33,7 @@ set(appletdecoration_SRCS
 
 add_library(appletdecorationplugin SHARED ${appletdecoration_SRCS})
 
-find_package(Qt6 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Quick DBus Widgets)
+find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED Quick DBus Widgets)
 find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS CoreAddons WindowSystem I18n Service ConfigWidgets KCMUtils)
 find_package(KDecoration2 REQUIRED)
 

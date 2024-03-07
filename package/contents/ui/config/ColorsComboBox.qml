@@ -24,9 +24,11 @@ import QtQuick.Layouts
 ComboBox {
     id: combobox
 
-    Connections{
+    Connections {
         target: popup
-        onClosed: root.forceActiveFocus();
+        function onClosed() {
+            root.forceActiveFocus();
+        }
     }
 
     delegate: MouseArea{
@@ -72,7 +74,7 @@ ComboBox {
                         height: 0.75 * label.height
                         color: backgroundColor
                         border.width: 1
-                        border.color: containsMouse  || (combobox.currentIndex === index) ? palette.highlightedText : palette.text
+                        border.color: containsMouse || (combobox.currentIndex === index) ? palette.highlightedText : palette.text
 
                         Rectangle{
                             anchors.horizontalCenter: parent.right
@@ -88,7 +90,7 @@ ComboBox {
 
                 Label{
                     id: label
-                    text:display
+                    text: display
                     color: containsMouse ? palette.highlightedText : palette.text
                 }
             }

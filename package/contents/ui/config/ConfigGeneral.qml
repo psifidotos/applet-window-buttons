@@ -25,6 +25,7 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 
 import org.kde.kitemmodels
+import org.kde.kirigami as Kirigami
 
 import org.kde.appletdecoration as AppletDecoration
 
@@ -46,6 +47,27 @@ Item {
     property alias cfg_lengthFirstMargin: lengthFirstSpn.value
     property alias cfg_lengthLastMargin: lengthLastSpn.value
     property alias cfg_lengthMarginsLock: lockItem.locked
+
+    property var cfg_buttonSizePercentageDefault
+    property var cfg_buttonsDefault
+    property var cfg_containmentType
+    property var cfg_containmentTypeDefault
+    property var cfg_filterByScreenDefault
+    property var cfg_formFactor
+    property var cfg_formFactorDefault
+    property var cfg_hiddenStateDefault
+    property var cfg_inactiveStateEnabledDefault
+    property var cfg_lengthFirstMarginDefault
+    property var cfg_lengthLastMarginDefault
+    property var cfg_lengthMarginsLockDefault
+    property var cfg_selectedPluginDefault
+    property var cfg_selectedSchemeDefault
+    property var cfg_selectedThemeDefault
+    property var cfg_spacingDefault
+    property var cfg_useCurrentDecorationDefault
+    property var cfg_useDecorationMetricsDefault
+    property var cfg_visibilityDefault
+    property var title
 
     // used as bridge to communicate properly between configuration and ui
     property bool useCurrent
@@ -122,7 +144,7 @@ Item {
 
     ColumnLayout {
         id:mainColumn
-        spacing: units.largeSpacing
+        spacing: Kirigami.Units.largeSpacing
         Layout.fillWidth: true
 
         RowLayout{

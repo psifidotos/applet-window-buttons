@@ -115,12 +115,16 @@ Rectangle {
 
     Connections{
         target: root
-        onCurrentPluginChanged: listContent.initButtons();
+        function onCurrentPluginChanged() {
+            listContent.initButtons();
+        }
     }
 
     Connections {
         target: plasmaThemeExtended
-        onThemeChanged: triggerUpdateFromPlasma();
+        function onThemeChanged() {
+            triggerUpdateFromPlasma();
+        }
     }
 
     ListModel {
@@ -298,7 +302,9 @@ Rectangle {
 
                 Connections {
                     target: listContent
-                    onCoordinatesChanged: cButton.updateCoordinates();
+                    function onCoordinatesChanged() {
+                        cButton.updateCoordinates();
+                    }
                 }
             }
 
