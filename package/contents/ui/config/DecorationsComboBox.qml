@@ -20,31 +20,48 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
 
 ComboBox {
     id: combobox
-
-    model: decs
-    property var decs: []
+    model: sortedDecorations
+    textRole: "display"
+    valueRole: "plugin"
 
     Connections{
         target: popup
-        onClosed: root.forceActiveFocus();
+        function onClosed() {
+            root.forceActiveFocus();
+        }
     }
 
-    delegate: MouseArea{
-        width: combobox.width
+    onActivated: {
+        var index = combobox.currentIndex;
+        if (index === -1) {
+            return;
+        }
+
+        console.log(currentTheme, combobox.currentText, combobox.currentValue)
+        root.useCurrent = false;
+        root.selectedPlugin = combobox.currentValue;
+        root.selectedTheme = combobox.currentText;
+    }
+
+    delegate: MouseArea {
         height: combobox.height
+        width: combobox.width
         hoverEnabled: true
 
         onClicked: {
             combobox.currentIndex = index;
-            activateItem(index);
+            root.useCurrent = false;
+            root.selectedPlugin = plugin;
+            root.selectedTheme = theme;
             combobox.popup.close();
         }
 
-        Rectangle{
-            id:delegateBackground
+        Rectangle {
+            id: delegateBackground
             anchors.fill: parent
             color: {
                 if (containsMouse) {
@@ -62,57 +79,15 @@ ComboBox {
             Label{
                 id: label
                 anchors.left: parent.left
-                anchors.leftMargin: units.smallSpacing
+                anchors.leftMargin: Kirigami.Units.smallSpacing
                 anchors.verticalCenter: parent.verticalCenter
-                text: decs[index];
+                text: display + " (" + plugin + ")"
                 color: containsMouse ? palette.highlightedText : palette.text
             }
         }
     }
 
-
-    function activateItem(itemIndex) {
-        if (itemIndex===0) {
-            root.useCurrent = true;
-            root.selectedPlugin = "";
-            root.selectedTheme = "";
-        } else {
-            root.useCurrent = false;
-            var d = sortedDecorations.get(itemIndex-1);
-            root.selectedPlugin = d.plugin;
-            root.selectedTheme = d.theme;
-        }
-    }
-
-    function feedDecorations() {
-        for (var i=0; i<sortedDecorations.count; ++i) {
-            var d = sortedDecorations.get(i);
-            decs.push(d.display);
-        }
-
-        decorationCmb.model = decs;
-    }
-
-    function indexFor(plugin, theme) {
-        for (var i=0; i<sortedDecorations.count; ++i) {
-            var d = sortedDecorations.get(i);
-            if (d.plugin === plugin && d.theme === theme) {
-                return i+1;
-            }
-        }
-
-        return 0;
-    }
-
-    function initDecorations() {
-        decs.push("Current");
-    }
-
     Component.onCompleted: {
-        initDecorations();
-        feedDecorations();
-        if (!root.useCurrent) {
-            currentIndex = indexFor(root.currentPlugin, root.currentTheme);
-        }
+        combobox.currentIndex = combobox.find(root.currentTheme);
     }
 }
