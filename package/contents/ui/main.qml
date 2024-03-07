@@ -47,6 +47,8 @@ PlasmoidItem {
     property int animatedMinimumWidth: minimumWidth
     property int animatedMinimumHeight: minimumHeight
 
+    property int screen: plasmoid.containment.screen
+
     readonly property bool inEditMode: latteInEditMode || plasmoid.userConfiguring
 
     readonly property bool mustHide: {
@@ -77,6 +79,7 @@ PlasmoidItem {
 
     readonly property int containmentType: plasmoid.configuration.containmentType
     readonly property int visibility: plasmoid.configuration.visibility
+    readonly property bool perScreenActive: plasmoid.configuration.perScreenActive
 
     readonly property int minimumWidth: {
         if (plasmoid.formFactor === PlasmaCore.Types.Horizontal) {

@@ -38,6 +38,10 @@
       <default>true</default>
       <label>if false active window can be on any screen</label>
     </entry>
+    <entry name="perScreenActive" type="Bool">
+      <default>false</default>
+      <label>Per-screen active window</label>
+    </entry>
     <entry name="hiddenState" type="Enum">
       <choices>
          <choice name="SlideOut"/>

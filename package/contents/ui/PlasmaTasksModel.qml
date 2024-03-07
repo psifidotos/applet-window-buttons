@@ -28,7 +28,7 @@ Item {
     id: plasmaTasksItem
     property bool filterByScreen: true
 
-    readonly property bool existsWindowActive: lastActiveTaskItem && tasksRepeater.count > 0 && lastActiveTaskItem.isActive
+    readonly property bool existsWindowActive: lastActiveTaskItem && tasksRepeater.count > 0 && (root.perScreenActive || lastActiveTaskItem.isActive)
     readonly property bool existsWindowShown: lastActiveTaskItem && tasksRepeater.count > 0 && !lastActiveTaskItem.isMinimized
 
     property Item lastActiveTaskItem: null

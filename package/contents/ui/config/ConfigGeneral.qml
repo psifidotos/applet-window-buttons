@@ -40,6 +40,7 @@ Item {
     property alias cfg_buttonSizePercentage: buttonSizeSpn.value
     property alias cfg_visibility: root.visibility
     property alias cfg_filterByScreen: byScreenChk.checked
+    property alias cfg_perScreenActive: stickyChk.checked
     property alias cfg_hiddenState: root.hiddenState
     property alias cfg_inactiveStateEnabled: inactiveChk.checked
     property alias cfg_useDecorationMetrics: decorationMetricsChk.checked
@@ -53,6 +54,7 @@ Item {
     property var cfg_containmentType
     property var cfg_containmentTypeDefault
     property var cfg_filterByScreenDefault
+    property var cfg_perScreenActiveDefault
     property var cfg_formFactor
     property var cfg_formFactorDefault
     property var cfg_hiddenStateDefault
@@ -333,6 +335,19 @@ Item {
             CheckBox{
                 id: byScreenChk
                 text: i18n("Show only for windows in current screen")
+            }
+        }
+
+        GridLayout {
+            Label {
+                Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
+                text: i18n("Per-screen active window:")
+                horizontalAlignment: Text.AlignRight
+            }
+
+            CheckBox {
+                id: stickyChk
+                text: i18n("Enabled")
             }
         }
 
