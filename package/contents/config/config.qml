@@ -18,13 +18,13 @@
 */
 
 import QtQuick 2.0
-
 import org.kde.plasma.configuration 2.0
 
 ConfigModel {
     ConfigCategory {
-         name: i18n("General")
-         icon: "preferences-desktop-display-color"
-         source: "config/ConfigGeneral.qml"
+        name: i18n("General")
+        icon: "preferences-desktop-display-color"
+        source: "config/ConfigGeneral.qml"
     }
+
 }

@@ -21,55 +21,42 @@
 #ifndef PLASMAEXTENDEDTHEME_H
 #define PLASMAEXTENDEDTHEME_H
 
-// C++
-#include <array>
+#include "schemecolors.h"
 
-// Qt
-#include <QObject>
-#include <QTemporaryDir>
-
-// KDE
 #include <KConfigGroup>
 #include <KSharedConfig>
-
-// Plasma
 #include <KSvg/FrameSvg>
 #include <Plasma/Theme>
+#include <QObject>
+#include <QTemporaryDir>
+#include <array>
 
-namespace Decoration {
-namespace Applet {
-class SchemeColors;
-}
-}
-
-namespace Decoration {
-namespace Applet {
-
-class ExtendedTheme: public QObject
+class ExtendedTheme : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QObject *colors READ colors NOTIFY colorsChanged)
 
-public:
+  public:
     ExtendedTheme(QObject *parent = nullptr);
-    ~ExtendedTheme() override;;
+    ~ExtendedTheme() override;
+    ;
 
     QObject *colors() const;
 
     void load();
 
-signals:
+  signals:
     void colorsChanged();
     void themeChanged();
 
-private:
+  private:
     void loadThemePaths();
 
     void setOriginalSchemeFile(const QString &file);
     void updateDefaultScheme();
     void updateDefaultSchemeValues();
 
-private:
+  private:
     QString m_themePath;
     QString m_themeWidgetsPath;
     QString m_colorsSchemePath;
@@ -81,10 +68,7 @@ private:
     KConfigGroup m_themeGroup;
     Plasma::Theme m_theme;
 
-    SchemeColors *m_colorsScheme{nullptr};
+    SchemeColors *m_colorsScheme{ nullptr };
 };
-
-}
-}
 
 #endif

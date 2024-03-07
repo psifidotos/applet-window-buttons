@@ -23,25 +23,18 @@
 
 #include <QObject>
 
-namespace Decoration {
-namespace Applet {
-
 class WindowSystem : public QObject
 {
     Q_OBJECT
-public:
+  public:
     explicit WindowSystem(QObject *parent = nullptr);
     virtual ~WindowSystem();
 
-public Q_SLOTS:
+  public Q_SLOTS:
     Q_INVOKABLE void setDisabledMaximizedBorders(bool disable);
 
-private:
+  private:
     bool kwin_disabledMaximizedBorders() const;
 };
 
-}
-}
-
 #endif
-

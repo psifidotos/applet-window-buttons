@@ -21,12 +21,9 @@
 #include <QString>
 #include <QStringList>
 
-namespace AppletDecoration {
-
 //! returns the standard path found that contains the subPath
 //! local paths have higher priority by default
 QString standardPath(QString subPath, bool localFirst = true);
 
 QStringList standardPaths(bool localfirst = true);
 QStringList standardPathsFor(QString subPath, bool localfirst = true);
-}

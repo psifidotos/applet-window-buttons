@@ -23,12 +23,7 @@
 #include <QProcess>
 #include <QtDBus/QtDBus>
 
-namespace Decoration {
-namespace Applet {
-
-
-WindowSystem::WindowSystem(QObject *parent)
-    : QObject(parent)
+WindowSystem::WindowSystem(QObject *parent) : QObject(parent)
 {
 }
 
@@ -48,7 +43,8 @@ bool WindowSystem::kwin_disabledMaximizedBorders() const
 
 void WindowSystem::setDisabledMaximizedBorders(bool disable)
 {
-    if (kwin_disabledMaximizedBorders() == disable) {
+    if (kwin_disabledMaximizedBorders() == disable)
+    {
         return;
     }
 
@@ -61,10 +57,8 @@ void WindowSystem::setDisabledMaximizedBorders(bool disable)
 
     QDBusInterface iface("org.kde.KWin", "/KWin", "", QDBusConnection::sessionBus());
 
-    if (iface.isValid()) {
+    if (iface.isValid())
+    {
         iface.call("reconfigure");
     }
-}
-
-}
 }

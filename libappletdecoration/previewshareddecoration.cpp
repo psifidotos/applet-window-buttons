@@ -28,14 +28,10 @@
 
 #include <KDecoration2/Decoration>
 
-namespace Decoration {
-namespace Applet {
-
-SharedDecoration::SharedDecoration(QObject *parent) :
-    QObject(parent)
+SharedDecoration::SharedDecoration(QObject *parent) : QObject(parent)
 {
-    connect(this, &Decoration::Applet::SharedDecoration::bridgeChanged, this, &Decoration::Applet::SharedDecoration::createDecoration);
-    connect(this, &Decoration::Applet::SharedDecoration::settingsChanged, this, &Decoration::Applet::SharedDecoration::applySettings);
+    connect(this, &SharedDecoration::bridgeChanged, this, &SharedDecoration::createDecoration);
+    connect(this, &SharedDecoration::settingsChanged, this, &SharedDecoration::applySettings);
 }
 
 SharedDecoration::~SharedDecoration()
@@ -49,17 +45,19 @@ PreviewBridge *SharedDecoration::bridge() const
 
 void SharedDecoration::setBridge(PreviewBridge *bridge)
 {
-    if (m_bridge == bridge) {
+    if (m_bridge == bridge)
+    {
         return;
     }
 
-    if (m_bridge) {
-        connect(m_bridge, &Decoration::Applet::PreviewBridge::validChanged, this, &Decoration::Applet::SharedDecoration::createDecoration);
+    if (m_bridge)
+    {
+        connect(m_bridge, &PreviewBridge::validChanged, this, &SharedDecoration::createDecoration);
     }
 
     m_bridge = bridge;
 
-    connect(m_bridge, &Decoration::Applet::PreviewBridge::validChanged, this, &Decoration::Applet::SharedDecoration::createDecoration);
+    connect(m_bridge, &PreviewBridge::validChanged, this, &SharedDecoration::createDecoration);
 
     emit bridgeChanged();
 }
@@ -76,7 +74,8 @@ Settings *SharedDecoration::settings() const
 
 void SharedDecoration::setSettings(Settings *settings)
 {
-    if (m_settings == settings) {
+    if (m_settings == settings)
+    {
         return;
     }
 
@@ -89,7 +88,8 @@ void SharedDecoration::setSettings(Settings *settings)
 
 void SharedDecoration::applySettings()
 {
-    if (!m_decoration || !m_settings) {
+    if (!m_decoration || !m_settings)
+    {
         return;
     }
 
@@ -99,21 +99,25 @@ void SharedDecoration::applySettings()
 
 void SharedDecoration::createDecoration()
 {
-    if (!m_bridge || !m_settings) {
+    if (!m_bridge || !m_settings)
+    {
         return;
     }
 
     bool newDecoration = (m_bridge->plugin() != m_lastPlugin || m_bridge->theme() != m_lastTheme);
 
-    if (m_decoration && newDecoration) {
+    if (m_decoration && newDecoration)
+    {
         m_decoration->deleteLater();
     }
 
-    if (newDecoration) {
+    if (newDecoration)
+    {
         m_decoration = m_bridge->createDecoration(this);
     }
 
-    if (m_decoration) {
+    if (m_decoration)
+    {
         m_decoration->setSettings(m_settings->settings());
         m_decoration->init();
         m_decoration->setObjectName("applet-window-buttons");
@@ -127,10 +131,8 @@ void SharedDecoration::createDecoration()
 
 void SharedDecoration::initDecoration()
 {
-    if (m_decoration) {
+    if (m_decoration)
+    {
         m_decoration->init();
     }
-}
-
-}
 }

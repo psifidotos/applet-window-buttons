@@ -24,34 +24,36 @@ import org.kde.kirigami as Kirigami
 
 ComboBox {
     id: combobox
+
     model: sortedDecorations
     textRole: "display"
     valueRole: "plugin"
-
-    Connections{
-        target: popup
-        function onClosed() {
-            root.forceActiveFocus();
-        }
-    }
-
     onActivated: {
         var index = combobox.currentIndex;
-        if (index === -1) {
-            return;
-        }
+        if (index === -1)
+            return ;
 
-        console.log(currentTheme, combobox.currentText, combobox.currentValue)
+        console.log(currentTheme, combobox.currentText, combobox.currentValue);
         root.useCurrent = false;
         root.selectedPlugin = combobox.currentValue;
         root.selectedTheme = combobox.currentText;
+    }
+    Component.onCompleted: {
+        combobox.currentIndex = combobox.find(root.currentTheme);
+    }
+
+    Connections {
+        function onClosed() {
+            root.forceActiveFocus();
+        }
+
+        target: popup
     }
 
     delegate: MouseArea {
         height: combobox.height
         width: combobox.width
         hoverEnabled: true
-
         onClicked: {
             combobox.currentIndex = index;
             root.useCurrent = false;
@@ -62,32 +64,32 @@ ComboBox {
 
         Rectangle {
             id: delegateBackground
+
+            readonly property color selectedColor: Qt.rgba(palette.highlight.r, palette.highlight.g, palette.highlight.b, 0.5)
+
             anchors.fill: parent
             color: {
-                if (containsMouse) {
+                if (containsMouse)
                     return palette.highlight;
-                }
-                if (combobox.currentIndex === index) {
+
+                if (combobox.currentIndex === index)
                     return selectedColor;
-                }
 
                 return "transparent";
             }
 
-            readonly property color selectedColor: Qt.rgba(palette.highlight.r, palette.highlight.g, palette.highlight.b, 0.5);
-
-            Label{
+            Label {
                 id: label
+
                 anchors.left: parent.left
                 anchors.leftMargin: Kirigami.Units.smallSpacing
                 anchors.verticalCenter: parent.verticalCenter
                 text: display + " (" + plugin + ")"
                 color: containsMouse ? palette.highlightedText : palette.text
             }
+
         }
+
     }
 
-    Component.onCompleted: {
-        combobox.currentIndex = combobox.find(root.currentTheme);
-    }
 }

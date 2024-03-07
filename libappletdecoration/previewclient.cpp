@@ -22,98 +22,62 @@
  */
 
 #include "previewclient.h"
-#include <KDecoration2/Decoration>
-#include <KDecoration2/DecoratedClient>
 
-#include <QDebug>
+#include <KDecoration2/DecoratedClient>
+#include <KDecoration2/Decoration>
 #include <QCoreApplication>
+#include <QDebug>
 #include <QEvent>
 #include <QModelIndex>
 
-namespace Decoration {
-namespace Applet {
-
 PreviewClient::PreviewClient(KDecoration2::DecoratedClient *c, KDecoration2::Decoration *decoration)
-    : QObject(decoration)
-    , ApplicationMenuEnabledDecoratedClientPrivate(c, decoration)
-    , m_icon(QIcon::fromTheme(QStringLiteral("start-here-kde")))
-    , m_iconName(m_icon.name())
-    //  , m_palette(new KWin::Decoration::DecorationPalette(QStringLiteral("kdeglobals")))
-    , m_active(true)
-    , m_closeable(true)
-    , m_keepBelow(false)
-    , m_keepAbove(false)
-    , m_maximizable(true)
-    , m_maximizedHorizontally(false)
-    , m_maximizedVertically(false)
-    , m_minimizable(true)
-    , m_modal(false)
-    , m_movable(true)
-    , m_resizable(true)
-    , m_shadeable(true)
-    , m_shaded(false)
-    , m_providesContextHelp(false)
-    , m_desktop(1)
-    , m_width(0)
-    , m_height(0)
-    , m_bordersTopEdge(false)
-    , m_bordersLeftEdge(false)
-    , m_bordersRightEdge(false)
-    , m_bordersBottomEdge(false)
+    : QObject(decoration), ApplicationMenuEnabledDecoratedClientPrivate(c, decoration), m_icon(QIcon::fromTheme(QStringLiteral("start-here-kde"))),
+      m_iconName(m_icon.name())
+      //  , m_palette(new KWin::Decoration::DecorationPalette(QStringLiteral("kdeglobals")))
+      ,
+      m_active(true), m_closeable(true), m_keepBelow(false), m_keepAbove(false), m_maximizable(true), m_maximizedHorizontally(false), m_maximizedVertically(false),
+      m_minimizable(true), m_modal(false), m_movable(true), m_resizable(true), m_shadeable(true), m_shaded(false), m_providesContextHelp(false), m_desktop(1), m_width(0),
+      m_height(0), m_bordersTopEdge(false), m_bordersLeftEdge(false), m_bordersRightEdge(false), m_bordersBottomEdge(false)
 {
-    connect(this, &PreviewClient::captionChanged,               c, &KDecoration2::DecoratedClient::captionChanged);
-    connect(this, &PreviewClient::activeChanged,                c, &KDecoration2::DecoratedClient::activeChanged);
-    connect(this, &PreviewClient::closeableChanged,             c, &KDecoration2::DecoratedClient::closeableChanged);
-    connect(this, &PreviewClient::keepAboveChanged,             c, &KDecoration2::DecoratedClient::keepAboveChanged);
-    connect(this, &PreviewClient::keepBelowChanged,             c, &KDecoration2::DecoratedClient::keepBelowChanged);
-    connect(this, &PreviewClient::maximizableChanged,           c, &KDecoration2::DecoratedClient::maximizeableChanged);
-    connect(this, &PreviewClient::maximizedChanged,             c, &KDecoration2::DecoratedClient::maximizedChanged);
-    connect(this, &PreviewClient::maximizedVerticallyChanged,   c, &KDecoration2::DecoratedClient::maximizedVerticallyChanged);
+    connect(this, &PreviewClient::captionChanged, c, &KDecoration2::DecoratedClient::captionChanged);
+    connect(this, &PreviewClient::activeChanged, c, &KDecoration2::DecoratedClient::activeChanged);
+    connect(this, &PreviewClient::closeableChanged, c, &KDecoration2::DecoratedClient::closeableChanged);
+    connect(this, &PreviewClient::keepAboveChanged, c, &KDecoration2::DecoratedClient::keepAboveChanged);
+    connect(this, &PreviewClient::keepBelowChanged, c, &KDecoration2::DecoratedClient::keepBelowChanged);
+    connect(this, &PreviewClient::maximizableChanged, c, &KDecoration2::DecoratedClient::maximizeableChanged);
+    connect(this, &PreviewClient::maximizedChanged, c, &KDecoration2::DecoratedClient::maximizedChanged);
+    connect(this, &PreviewClient::maximizedVerticallyChanged, c, &KDecoration2::DecoratedClient::maximizedVerticallyChanged);
     connect(this, &PreviewClient::maximizedHorizontallyChanged, c, &KDecoration2::DecoratedClient::maximizedHorizontallyChanged);
-    connect(this, &PreviewClient::minimizableChanged,           c, &KDecoration2::DecoratedClient::minimizeableChanged);
+    connect(this, &PreviewClient::minimizableChanged, c, &KDecoration2::DecoratedClient::minimizeableChanged);
     //         connect(this, &PreviewClient::modalChanged, c, &DecoratedClient::modalChanged);
-    connect(this, &PreviewClient::movableChanged,               c, &KDecoration2::DecoratedClient::moveableChanged);
-    connect(this, &PreviewClient::onAllDesktopsChanged,         c, &KDecoration2::DecoratedClient::onAllDesktopsChanged);
-    connect(this, &PreviewClient::resizableChanged,             c, &KDecoration2::DecoratedClient::resizeableChanged);
-    connect(this, &PreviewClient::shadeableChanged,             c, &KDecoration2::DecoratedClient::shadeableChanged);
-    connect(this, &PreviewClient::shadedChanged,                c, &KDecoration2::DecoratedClient::shadedChanged);
-    connect(this, &PreviewClient::providesContextHelpChanged,   c, &KDecoration2::DecoratedClient::providesContextHelpChanged);
+    connect(this, &PreviewClient::movableChanged, c, &KDecoration2::DecoratedClient::moveableChanged);
+    connect(this, &PreviewClient::onAllDesktopsChanged, c, &KDecoration2::DecoratedClient::onAllDesktopsChanged);
+    connect(this, &PreviewClient::resizableChanged, c, &KDecoration2::DecoratedClient::resizeableChanged);
+    connect(this, &PreviewClient::shadeableChanged, c, &KDecoration2::DecoratedClient::shadeableChanged);
+    connect(this, &PreviewClient::shadedChanged, c, &KDecoration2::DecoratedClient::shadedChanged);
+    connect(this, &PreviewClient::providesContextHelpChanged, c, &KDecoration2::DecoratedClient::providesContextHelpChanged);
     //    connect(this, &PreviewClient::onAllDesktopsChanged,         c, &KDecoration2::DecoratedClient::onAllDesktopsChanged);
-    connect(this, &PreviewClient::widthChanged,                 c, &KDecoration2::DecoratedClient::widthChanged);
-    connect(this, &PreviewClient::heightChanged,                c, &KDecoration2::DecoratedClient::heightChanged);
-    connect(this, &PreviewClient::iconChanged,                  c, &KDecoration2::DecoratedClient::iconChanged);
-    connect(this, &PreviewClient::paletteChanged,               c, &KDecoration2::DecoratedClient::paletteChanged);
+    connect(this, &PreviewClient::widthChanged, c, &KDecoration2::DecoratedClient::widthChanged);
+    connect(this, &PreviewClient::heightChanged, c, &KDecoration2::DecoratedClient::heightChanged);
+    connect(this, &PreviewClient::iconChanged, c, &KDecoration2::DecoratedClient::iconChanged);
+    connect(this, &PreviewClient::paletteChanged, c, &KDecoration2::DecoratedClient::paletteChanged);
     //         connect(this, &PreviewClient::, c, &DecoratedClient::);
-    connect(this, &PreviewClient::maximizedVerticallyChanged, this,
-            [this]() {
-        emit maximizedChanged(isMaximized());
-    }
-    );
-    connect(this, &PreviewClient::maximizedHorizontallyChanged, this,
-            [this]() {
-        emit maximizedChanged(isMaximized());
-    }
-    );
+    connect(this, &PreviewClient::maximizedVerticallyChanged, this, [this]() { emit maximizedChanged(isMaximized()); });
+    connect(this, &PreviewClient::maximizedHorizontallyChanged, this, [this]() { emit maximizedChanged(isMaximized()); });
     connect(this, &PreviewClient::iconNameChanged, this,
-            [this]() {
-        m_icon = QIcon::fromTheme(m_iconName);
-        emit iconChanged(m_icon);
-    }
-    );
-    connect(this, &PreviewClient::desktopChanged, this,
-            [this](int) {
-        emit onAllDesktopsChanged(isOnAllDesktops());
-    }
-    );
+            [this]()
+            {
+                m_icon = QIcon::fromTheme(m_iconName);
+                emit iconChanged(m_icon);
+            });
+    connect(this, &PreviewClient::desktopChanged, this, [this](int) { emit onAllDesktopsChanged(isOnAllDesktops()); });
     /* connect(m_palette, &KWin::Decoration::DecorationPalette::changed, [this]() {
          emit paletteChanged(m_palette->palette());
      });*/
-    auto emitEdgesChanged = [this, c]() {
-        c->adjacentScreenEdgesChanged(adjacentScreenEdges());
-    };
-    connect(this, &PreviewClient::bordersTopEdgeChanged,    this, emitEdgesChanged);
-    connect(this, &PreviewClient::bordersLeftEdgeChanged,   this, emitEdgesChanged);
-    connect(this, &PreviewClient::bordersRightEdgeChanged,  this, emitEdgesChanged);
+    auto emitEdgesChanged = [this, c]() { c->adjacentScreenEdgesChanged(adjacentScreenEdges()); };
+    connect(this, &PreviewClient::bordersTopEdgeChanged, this, emitEdgesChanged);
+    connect(this, &PreviewClient::bordersLeftEdgeChanged, this, emitEdgesChanged);
+    connect(this, &PreviewClient::bordersRightEdgeChanged, this, emitEdgesChanged);
     connect(this, &PreviewClient::bordersBottomEdgeChanged, this, emitEdgesChanged);
 
     setColorScheme("kdeglobals");
@@ -156,11 +120,13 @@ int PreviewClient::desktop() const
 
 void PreviewClient::setDesktop(int desktop)
 {
-    if (desktop == 0) {
+    if (desktop == 0)
+    {
         desktop = 1;
     }
 
-    if (m_desktop == desktop) {
+    if (m_desktop == desktop)
+    {
         return;
     }
 
@@ -280,17 +246,19 @@ QColor PreviewClient::color(KDecoration2::ColorGroup group, KDecoration2::ColorR
 
 void PreviewClient::setColorScheme(QString scheme)
 {
-    if (m_colorScheme == scheme && !m_colorScheme.isEmpty()) {
+    if (m_colorScheme == scheme && !m_colorScheme.isEmpty())
+    {
         return;
     }
 
     m_colorScheme = scheme;
 
-    if (m_palette) {
+    if (m_palette)
+    {
         m_palette->deleteLater();
     }
 
-    m_palette = new Decoration::Applet::DecorationPalette(scheme);
+    m_palette = new DecorationPalette(scheme);
 
     emit paletteChanged(m_palette->palette());
 }
@@ -299,19 +267,23 @@ Qt::Edges PreviewClient::adjacentScreenEdges() const
 {
     Qt::Edges edges;
 
-    if (m_bordersBottomEdge) {
+    if (m_bordersBottomEdge)
+    {
         edges |= Qt::BottomEdge;
     }
 
-    if (m_bordersLeftEdge) {
+    if (m_bordersLeftEdge)
+    {
         edges |= Qt::LeftEdge;
     }
 
-    if (m_bordersRightEdge) {
+    if (m_bordersRightEdge)
+    {
         edges |= Qt::RightEdge;
     }
 
-    if (m_bordersTopEdge) {
+    if (m_bordersTopEdge)
+    {
         edges |= Qt::TopEdge;
     }
 
@@ -350,7 +322,8 @@ bool PreviewClient::bordersTopEdge() const
 
 void PreviewClient::setBordersBottomEdge(bool enabled)
 {
-    if (m_bordersBottomEdge == enabled) {
+    if (m_bordersBottomEdge == enabled)
+    {
         return;
     }
 
@@ -360,7 +333,8 @@ void PreviewClient::setBordersBottomEdge(bool enabled)
 
 void PreviewClient::setBordersLeftEdge(bool enabled)
 {
-    if (m_bordersLeftEdge == enabled) {
+    if (m_bordersLeftEdge == enabled)
+    {
         return;
     }
 
@@ -370,7 +344,8 @@ void PreviewClient::setBordersLeftEdge(bool enabled)
 
 void PreviewClient::setBordersRightEdge(bool enabled)
 {
-    if (m_bordersRightEdge == enabled) {
+    if (m_bordersRightEdge == enabled)
+    {
         return;
     }
 
@@ -380,7 +355,8 @@ void PreviewClient::setBordersRightEdge(bool enabled)
 
 void PreviewClient::setBordersTopEdge(bool enabled)
 {
-    if (m_bordersTopEdge == enabled) {
+    if (m_bordersTopEdge == enabled)
+    {
         return;
     }
 
@@ -388,27 +364,25 @@ void PreviewClient::setBordersTopEdge(bool enabled)
     emit bordersTopEdgeChanged(enabled);
 }
 
-
 #if KDECORATION2_VERSION_MAJOR > 5 || KDECORATION2_VERSION_MINOR >= 13
 void PreviewClient::requestShowToolTip(const QString &text)
 {
     Q_UNUSED(text)
-    //qDebug() << "tooltip show requested with text:" << text;
+    // qDebug() << "tooltip show requested with text:" << text;
 }
 
 void PreviewClient::requestHideToolTip()
 {
-    //qDebug() << "tooltip hide requested";
+    // qDebug() << "tooltip hide requested";
 }
 #endif
 
 #if KDECORATION2_VERSION_MAJOR > 5 || KDECORATION2_VERSION_MINOR >= 18
 QSize PreviewClient::size() const
 {
-    return {m_width, m_height};
+    return { m_width, m_height };
 }
 #endif
-
 
 #if KDECORATION2_VERSION_MAJOR <= 5 && KDECORATION2_VERSION_MINOR <= 20
 void PreviewClient::requestShowWindowMenu()
@@ -422,7 +396,6 @@ void PreviewClient::requestShowWindowMenu(const QRect &rect)
 }
 #endif
 
-
 void PreviewClient::requestClose()
 {
     emit closeRequested();
@@ -435,13 +408,18 @@ void PreviewClient::requestContextHelp()
 
 void PreviewClient::requestToggleMaximization(Qt::MouseButtons buttons)
 {
-    if (buttons.testFlag(Qt::LeftButton)) {
+    if (buttons.testFlag(Qt::LeftButton))
+    {
         const bool set = !isMaximized();
         setMaximizedHorizontally(set);
         setMaximizedVertically(set);
-    } else if (buttons.testFlag(Qt::RightButton)) {
+    }
+    else if (buttons.testFlag(Qt::RightButton))
+    {
         setMaximizedHorizontally(!isMaximizedHorizontally());
-    } else if (buttons.testFlag(Qt::MiddleButton)) {
+    }
+    else if (buttons.testFlag(Qt::MiddleButton))
+    {
         setMaximizedVertically(!isMaximizedVertically());
     }
 }
@@ -482,15 +460,16 @@ void PreviewClient::requestToggleShade()
     setShaded(!isShaded());
 }
 
-#define SETTER(type, name, variable) \
-    void PreviewClient::name(type variable) \
-{ \
-    if (m_##variable == variable) { \
-    return; \
-} \
-    m_##variable = variable; \
-    emit variable##Changed(m_##variable); \
-}
+#define SETTER(type, name, variable)                                                                                                                                     \
+    void PreviewClient::name(type variable)                                                                                                                              \
+    {                                                                                                                                                                    \
+        if (m_##variable == variable)                                                                                                                                    \
+        {                                                                                                                                                                \
+            return;                                                                                                                                                      \
+        }                                                                                                                                                                \
+        m_##variable = variable;                                                                                                                                         \
+        emit variable##Changed(m_##variable);                                                                                                                            \
+    }
 
 #define SETTER2(name, variable) SETTER(bool, name, variable)
 
@@ -516,6 +495,3 @@ SETTER2(setProvidesContextHelp, providesContextHelp)
 
 #undef SETTER2
 #undef SETTER
-
-} // namespace Applet
-} // namespace Decoration

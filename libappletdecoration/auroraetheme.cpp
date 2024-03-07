@@ -1,47 +1,40 @@
 /*
-*  Copyright 2018  Michail Vourlakos <mvourlakos@gmail.com>
-*
-*  This file is part of the libappletdecoration library
-*
-*  Latte-Dock is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License as
-*  published by the Free Software Foundation; either version 2 of
-*  the License, or (at your option) any later version.
-*
-*  Latte-Dock is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ *  Copyright 2018  Michail Vourlakos <mvourlakos@gmail.com>
+ *
+ *  This file is part of the libappletdecoration library
+ *
+ *  Latte-Dock is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public License as
+ *  published by the Free Software Foundation; either version 2 of
+ *  the License, or (at your option) any later version.
+ *
+ *  Latte-Dock is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "auroraetheme.h"
 
 #include "commontools.h"
 
+#include <KConfigGroup>
+#include <KDirWatch>
+#include <KSharedConfig>
+#include <KSvg/Svg>
 #include <QDebug>
 #include <QDir>
 #include <QFileInfo>
 #include <QRgb>
 
-#include <KConfigGroup>
-#include <KDirWatch>
-#include <KSharedConfig>
-
-#include <KSvg/Svg>
-
-namespace Decoration {
-namespace Applet {
-
 static const QString s_auroraeSvgTheme = QStringLiteral("__aurorae__svg__");
-static const QString s_auroraerc =  QStringLiteral("auroraerc");
+static const QString s_auroraerc = QStringLiteral("auroraerc");
 static int i_buttonSizeStep = 4;
 
-
-AuroraeTheme::AuroraeTheme(QObject *parent) :
-    QObject(parent)
+AuroraeTheme::AuroraeTheme(QObject *parent) : QObject(parent)
 {
     const auto auroraerc = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QLatin1Char('/') + s_auroraerc;
 
@@ -59,13 +52,13 @@ AuroraeTheme::~AuroraeTheme()
 
 int AuroraeTheme::buttonWidth() const
 {
-    int f = (int)m_buttonSize;
+    int f = (int) m_buttonSize;
     return m_buttonWidth + ((f - 1) * i_buttonSizeStep);
 }
 
 int AuroraeTheme::buttonHeight() const
 {
-    int f = (int)m_buttonSize;
+    int f = (int) m_buttonSize;
 
     return m_buttonHeight + ((f - 1) * i_buttonSizeStep);
 }
@@ -82,7 +75,7 @@ int AuroraeTheme::duration() const
 
 float AuroraeTheme::buttonRatio() const
 {
-    return ((float)m_buttonWidth / (float)m_buttonHeight);
+    return ((float) m_buttonWidth / (float) m_buttonHeight);
 }
 
 QString AuroraeTheme::theme() const
@@ -92,7 +85,8 @@ QString AuroraeTheme::theme() const
 
 void AuroraeTheme::setTheme(QString theme)
 {
-    if (m_theme == theme || theme.isEmpty()) {
+    if (m_theme == theme || theme.isEmpty())
+    {
         return;
     }
 
@@ -139,7 +133,8 @@ QString AuroraeTheme::monochromePrefix() const
 
 void AuroraeTheme::auroraeRCChanged(const QString &filename)
 {
-    if (!filename.endsWith(s_auroraerc)) {
+    if (!filename.endsWith(s_auroraerc))
+    {
         return;
     }
 
@@ -150,15 +145,22 @@ void AuroraeTheme::updateAurorae(const QString &themeName)
 {
     const QString separator("__");
     const QString name = themeName.section(separator, -1, -1);
-    QString path = AppletDecoration::standardPath("aurorae/themes/"+name);
+    QString path = AppletDecoration::standardPath("aurorae/themes/" + name);
 
-    if (QFileInfo(path + "/close.svg").exists()) {
+    if (QFileInfo(path + "/close.svg").exists())
+    {
         m_themeType = "svg";
-    } else if (QFileInfo(path + "/close.svgz").exists()) {
+    }
+    else if (QFileInfo(path + "/close.svgz").exists())
+    {
         m_themeType = "svgz";
-    } else if (QFileInfo(path + "/close.png").exists()) {
+    }
+    else if (QFileInfo(path + "/close.png").exists())
+    {
         m_themeType = "png";
-    } else {
+    }
+    else
+    {
         m_themeType = "svg";
     }
 
@@ -172,18 +174,22 @@ void AuroraeTheme::loadSettings()
 {
     const QString rc(m_themePath + "/" + m_themeName + "rc");
 
-    if (!QFileInfo(rc).exists()) {
+    if (!QFileInfo(rc).exists())
+    {
         return;
     }
 
     const auto auroraerc = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QLatin1Char('/') + s_auroraerc;
 
-    if (QFileInfo(auroraerc).exists()) {
+    if (QFileInfo(auroraerc).exists())
+    {
         KSharedConfigPtr auroraePtr = KSharedConfig::openConfig(auroraerc);
 
         const KConfigGroup themeGroup = KConfigGroup(auroraePtr, m_themeName);
-        m_buttonSize = static_cast<Types::ButtonSize>(themeGroup.readEntry("ButtonSize", (int)Types::NormalButton));
-    } else {
+        m_buttonSize = static_cast<Types::ButtonSize>(themeGroup.readEntry("ButtonSize", (int) Types::NormalButton));
+    }
+    else
+    {
         m_buttonSize = Types::NormalButton;
     }
 
@@ -197,12 +203,15 @@ void AuroraeTheme::loadSettings()
     m_buttonHeight = layoutGroup.readEntry("ButtonHeight", 24);
     m_buttonSpacing = layoutGroup.readEntry("ButtonSpacing", 2);
 
-    QString monoprefix = generalGroup.readEntry("MonochromeIconsPrefix","");
+    QString monoprefix = generalGroup.readEntry("MonochromeIconsPrefix", "");
 
-    if (!monoprefix.isEmpty()) {
+    if (!monoprefix.isEmpty())
+    {
         m_hasMonochromeIcons = true;
         m_monochromePrefix = (monoprefix == "*" ? "" : monoprefix);
-    } else {
+    }
+    else
+    {
         m_hasMonochromeIcons = false;
         m_monochromePrefix = "";
     }
@@ -214,27 +223,31 @@ void AuroraeTheme::loadSettings()
 
 void AuroraeTheme::parseThemeImages()
 {
-    QString origBackgroundFilePath = m_themePath + "/decoration."+m_themeType;
+    QString origBackgroundFilePath = m_themePath + "/decoration." + m_themeType;
 
-    if (!QFileInfo(origBackgroundFilePath).exists()) {
+    if (!QFileInfo(origBackgroundFilePath).exists())
+    {
         qDebug() << "Aurorare decoration file was not found for theme: " << m_themeName;
         return;
     }
 
     KSvg::Svg *svg = new KSvg::Svg(this);
     svg->setImagePath(origBackgroundFilePath);
-    svg->resize(50,50);
-    QImage img = svg->image(QSize(50,50), "decoration-top");
+    svg->resize(50, 50);
+    QImage img = svg->image(QSize(50, 50), "decoration-top");
 
     int maxOpacity = -1;
 
-    for (int y=49; y>=0; --y) {
-        for (int x=0; x<50; ++x) {
+    for (int y = 49; y >= 0; --y)
+    {
+        for (int x = 0; x < 50; ++x)
+        {
             QRgb pix = img.pixel(x, y);
             int opacity = qAlpha(pix);
 
             //! the equality returns better results for more aurorae themes
-            if (maxOpacity<=opacity) {
+            if (maxOpacity <= opacity)
+            {
                 maxOpacity = opacity;
                 m_titleBackgroundColor = QColor(qRed(pix), qGreen(pix), qBlue(pix));
             }
@@ -242,7 +255,4 @@ void AuroraeTheme::parseThemeImages()
     }
 
     svg->deleteLater();
-}
-
-}
 }

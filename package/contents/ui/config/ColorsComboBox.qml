@@ -25,58 +25,58 @@ ComboBox {
     id: combobox
 
     Connections {
-        target: popup
         function onClosed() {
             root.forceActiveFocus();
         }
+
+        target: popup
     }
 
-    delegate: MouseArea{
+    delegate: MouseArea {
         width: combobox.width
         height: combobox.height
         hoverEnabled: true
-
         onClicked: {
             combobox.currentIndex = index;
             selectedScheme = model.file;
             combobox.popup.close();
         }
 
-        Rectangle{
-            id:delegateBackground
+        Rectangle {
+            id: delegateBackground
+
+            readonly property color selectedColor: Qt.rgba(palette.highlight.r, palette.highlight.g, palette.highlight.b, 0.5)
+
             anchors.fill: parent
             color: {
-                if (containsMouse) {
+                if (containsMouse)
                     return palette.highlight;
-                }
-                if (combobox.currentIndex === index) {
+
+                if (combobox.currentIndex === index)
                     return selectedColor;
-                }
 
                 return "transparent";
             }
 
-            readonly property color selectedColor: Qt.rgba(palette.highlight.r, palette.highlight.g, palette.highlight.b, 0.5);
-
-            RowLayout{
+            RowLayout {
                 id: delegateRow
+
                 height: parent.height
 
-                Item{
+                Item {
                     Layout.leftMargin: 2
                     width: 1.25 * label.height
                     height: label.height
-
                     opacity: ((file == "kdeglobals") || (file == "_plasmatheme_")) ? 0 : 1
 
-                    Rectangle{
+                    Rectangle {
                         width: height
                         height: 0.75 * label.height
                         color: backgroundColor
                         border.width: 1
                         border.color: containsMouse || (combobox.currentIndex === index) ? palette.highlightedText : palette.text
 
-                        Rectangle{
+                        Rectangle {
                             anchors.horizontalCenter: parent.right
                             anchors.verticalCenter: parent.bottom
                             width: parent.width
@@ -85,15 +85,22 @@ ComboBox {
                             border.width: parent.border.width
                             border.color: parent.border.color
                         }
+
                     }
+
                 }
 
-                Label{
+                Label {
                     id: label
+
                     text: display
                     color: containsMouse ? palette.highlightedText : palette.text
                 }
+
             }
+
         }
+
     }
+
 }

@@ -25,9 +25,6 @@
 
 #include <QObject>
 
-namespace Decoration {
-namespace Applet {
-
 class Padding : public QObject
 {
     Q_OBJECT
@@ -37,7 +34,7 @@ class Padding : public QObject
     Q_PROPERTY(int bottom READ bottom WRITE setBottom NOTIFY bottomChanged);
     Q_PROPERTY(int right READ right WRITE setRight NOTIFY rightChanged);
 
-public:
+  public:
     explicit Padding(QObject *parent = nullptr);
     virtual ~Padding();
 
@@ -47,26 +44,23 @@ public:
     int left() const;
     void setLeft(int left);
 
-    int bottom()const;
+    int bottom() const;
     void setBottom(int bottom);
 
     int right() const;
     void setRight(int right);
 
-signals:
+  signals:
     void topChanged();
     void leftChanged();
     void bottomChanged();
     void rightChanged();
 
-private:
-    int m_top{0};
-    int m_left{0};
-    int m_bottom{0};
-    int m_right{0};
+  private:
+    int m_top{ 0 };
+    int m_left{ 0 };
+    int m_bottom{ 0 };
+    int m_right{ 0 };
 };
-
-}
-}
 
 #endif

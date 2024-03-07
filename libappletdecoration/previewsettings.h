@@ -24,18 +24,11 @@
 #ifndef KDECOARTIONS_PREVIEW_SETTINGS_H
 #define KDECOARTIONS_PREVIEW_SETTINGS_H
 
-#include <KDecoration2/Private/DecorationSettingsPrivate>
 #include <KDecoration2/DecorationSettings>
-#include <QObject>
+#include <KDecoration2/Private/DecorationSettingsPrivate>
 #include <QAbstractListModel>
+#include <QObject>
 #include <QPointer>
-
-namespace KDecoration2 {
-class DecorationSettings;
-}
-
-namespace Decoration {
-namespace Applet {
 
 class ButtonsModel;
 class PreviewBridge;
@@ -43,27 +36,23 @@ class PreviewBridge;
 class BorderSizesModel : public QAbstractListModel
 {
     Q_OBJECT
-public:
+  public:
     explicit BorderSizesModel(QObject *parent = 0);
     virtual ~BorderSizesModel();
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    QHash< int, QByteArray > roleNames() const override;
-private:
-    QList<KDecoration2::BorderSize> m_borders = QList<KDecoration2::BorderSize>({
-        KDecoration2::BorderSize::None,
-        KDecoration2::BorderSize::NoSides,
-        KDecoration2::BorderSize::Tiny,
-        KDecoration2::BorderSize::Normal,
-        KDecoration2::BorderSize::Large,
-        KDecoration2::BorderSize::VeryLarge,
-        KDecoration2::BorderSize::Huge,
-        KDecoration2::BorderSize::VeryHuge,
-        KDecoration2::BorderSize::Oversized
-    });
+    QHash<int, QByteArray> roleNames() const override;
+
+  private:
+    QList<KDecoration2::BorderSize> m_borders =
+        QList<KDecoration2::BorderSize>({ KDecoration2::BorderSize::None, KDecoration2::BorderSize::NoSides, KDecoration2::BorderSize::Tiny,
+                                          KDecoration2::BorderSize::Normal, KDecoration2::BorderSize::Large, KDecoration2::BorderSize::VeryLarge,
+                                          KDecoration2::BorderSize::Huge, KDecoration2::BorderSize::VeryHuge, KDecoration2::BorderSize::Oversized });
 };
 
-class PreviewSettings : public QObject, public KDecoration2::DecorationSettingsPrivate
+class PreviewSettings
+    : public QObject
+    , public KDecoration2::DecorationSettingsPrivate
 {
     Q_OBJECT
     Q_PROPERTY(bool onAllDesktopsAvailable READ isOnAllDesktopsAvailable WRITE setOnAllDesktopsAvailable NOTIFY onAllDesktopsAvailableChanged)
@@ -75,12 +64,13 @@ class PreviewSettings : public QObject, public KDecoration2::DecorationSettingsP
     Q_PROPERTY(QAbstractItemModel *borderSizesModel READ borderSizesModel CONSTANT)
     Q_PROPERTY(int borderSizesIndex READ borderSizesIndex WRITE setBorderSizesIndex NOTIFY borderSizesIndexChanged)
     Q_PROPERTY(QFont font READ font WRITE setFont NOTIFY fontChanged)
-public:
+  public:
     explicit PreviewSettings(KDecoration2::DecorationSettings *parent);
     virtual ~PreviewSettings();
     bool isAlphaChannelSupported() const override;
     bool isOnAllDesktopsAvailable() const override;
-    bool isCloseOnDoubleClickOnMenu() const override {
+    bool isCloseOnDoubleClickOnMenu() const override
+    {
         return m_closeOnDoubleClick;
     }
     KDecoration2::BorderSize borderSize() const override;
@@ -92,34 +82,37 @@ public:
     QAbstractItemModel *leftButtonsModel() const;
     QAbstractItemModel *rightButtonsModel() const;
     QAbstractItemModel *availableButtonsModel() const;
-    QAbstractItemModel *borderSizesModel() const {
+    QAbstractItemModel *borderSizesModel() const
+    {
         return m_borderSizes;
     }
 
-    QVector< KDecoration2::DecorationButtonType > decorationButtonsLeft() const override;
-    QVector< KDecoration2::DecorationButtonType > decorationButtonsRight() const override;
+    QVector<KDecoration2::DecorationButtonType> decorationButtonsLeft() const override;
+    QVector<KDecoration2::DecorationButtonType> decorationButtonsRight() const override;
 
     Q_INVOKABLE void addButtonToLeft(int row);
     Q_INVOKABLE void addButtonToRight(int row);
 
-    int borderSizesIndex() const {
+    int borderSizesIndex() const
+    {
         return m_borderSize;
     }
     void setBorderSizesIndex(int index);
 
-    QFont font() const override{
+    QFont font() const override
+    {
         return m_font;
     }
     void setFont(const QFont &font);
 
-Q_SIGNALS:
+  Q_SIGNALS:
     void onAllDesktopsAvailableChanged(bool);
     void alphaChannelSupportedChanged(bool);
     void closeOnDoubleClickOnMenuChanged(bool);
     void borderSizesIndexChanged(int);
     void fontChanged(const QFont &);
 
-private:
+  private:
     bool m_alphaChannelSupported;
     bool m_onAllDesktopsAvailable;
     bool m_closeOnDoubleClick;
@@ -134,10 +127,10 @@ private:
 class Settings : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(Decoration::Applet::PreviewBridge *bridge READ bridge WRITE setBridge NOTIFY bridgeChanged)
+    Q_PROPERTY(PreviewBridge *bridge READ bridge WRITE setBridge NOTIFY bridgeChanged)
     Q_PROPERTY(KDecoration2::DecorationSettings *settings READ settingsPointer NOTIFY settingsChanged)
     Q_PROPERTY(int borderSizesIndex READ borderSizesIndex WRITE setBorderSizesIndex NOTIFY borderSizesIndexChanged)
-public:
+  public:
     explicit Settings(QObject *parent = nullptr);
     virtual ~Settings();
 
@@ -146,25 +139,23 @@ public:
 
     std::shared_ptr<KDecoration2::DecorationSettings> settings() const;
     KDecoration2::DecorationSettings *settingsPointer() const;
-    int borderSizesIndex() const {
+    int borderSizesIndex() const
+    {
         return m_borderSize;
     }
     void setBorderSizesIndex(int index);
 
-Q_SIGNALS:
+  Q_SIGNALS:
     void bridgeChanged();
     void settingsChanged();
     void borderSizesIndexChanged(int);
 
-private:
+  private:
     void createSettings();
     QPointer<PreviewBridge> m_bridge;
     std::shared_ptr<KDecoration2::DecorationSettings> m_settings;
     PreviewSettings *m_previewSettings = nullptr;
     int m_borderSize = 3;
 };
-
-}
-}
 
 #endif

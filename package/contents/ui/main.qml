@@ -17,203 +17,128 @@
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import "../code/tools.js" as ModelTools
 import QtQuick
 import QtQuick.Layouts
-
-import org.kde.plasma.plasmoid
-import org.kde.plasma.core as PlasmaCore
-
 import org.kde.appletdecoration as AppletDecoration
-
-import "../code/tools.js" as ModelTools
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.plasmoid
 
 PlasmoidItem {
+    // END visual properties
+    // START window properties
+    // END Window properties
+    // END decoration properties
+    // current Latte v0.9 API
+    //END Latte based properties
+    //!
+    ///START Visual Items
+    //add new supported buttons if they dont exist in the configuration
+
     id: root
-    clip: true
-
-    Layout.fillHeight: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? true : false
-    Layout.fillWidth: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? false : true
-
-    Layout.minimumWidth: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? animatedMinimumWidth : -1
-    Layout.minimumHeight: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? -1 : animatedMinimumHeight
-    Layout.preferredHeight: Layout.minimumHeight
-    Layout.preferredWidth: Layout.minimumWidth
-    Layout.maximumHeight: Layout.minimumHeight
-    Layout.maximumWidth: Layout.minimumWidth
-
-    preferredRepresentation: fullRepresentation
-    Plasmoid.onFormFactorChanged: plasmoid.configuration.formFactor = plasmoid.formFactor;
 
     property int animatedMinimumWidth: minimumWidth
     property int animatedMinimumHeight: minimumHeight
-
     property int screen: plasmoid.containment.screen
-
     readonly property bool inEditMode: latteInEditMode || plasmoid.userConfiguring
-
     readonly property bool mustHide: {
-        if (visibility === AppletDecoration.Types.AlwaysVisible || inEditMode) {
+        if (visibility === AppletDecoration.Types.AlwaysVisible || inEditMode)
             return false;
-        }
 
-        if (visibility === AppletDecoration.Types.ActiveWindow && !existsWindowActive) {
+        if (visibility === AppletDecoration.Types.ActiveWindow && !existsWindowActive)
             return true;
-        }
 
-        if (visibility === AppletDecoration.Types.ActiveMaximizedWindow
-                && (!isLastActiveWindowMaximized || (inPlasmaPanel && !existsWindowActive))) {
+        if (visibility === AppletDecoration.Types.ActiveMaximizedWindow && (!isLastActiveWindowMaximized || (inPlasmaPanel && !existsWindowActive)))
             return true;
-        }
-        if (visibility === AppletDecoration.Types.ShownWindowExists && !existsWindowShown) {
+
+        if (visibility === AppletDecoration.Types.ShownWindowExists && !existsWindowShown)
             return true;
-        }
 
         return false;
     }
-
     readonly property bool selectedDecorationExists: decorations.decorationExists(plasmoid.configuration.selectedPlugin, plasmoid.configuration.selectedTheme)
-
-    readonly property bool slideAnimationEnabled: ( (visibility !== AppletDecoration.Types.AlwaysVisible)
-                                                   && (plasmoid.configuration.hiddenState === AppletDecoration.Types.SlideOut) )
+    readonly property bool slideAnimationEnabled: ((visibility !== AppletDecoration.Types.AlwaysVisible) && (plasmoid.configuration.hiddenState === AppletDecoration.Types.SlideOut))
     readonly property bool isEmptySpaceEnabled: plasmoid.configuration.hiddenState === AppletDecoration.Types.EmptySpace
-
     readonly property int containmentType: plasmoid.configuration.containmentType
     readonly property int visibility: plasmoid.configuration.visibility
     readonly property bool perScreenActive: plasmoid.configuration.perScreenActive
-
     readonly property int minimumWidth: {
         if (plasmoid.formFactor === PlasmaCore.Types.Horizontal) {
-            if (mustHide && !isEmptySpaceEnabled && slideAnimationEnabled && !plasmoid.userConfiguring && !latteInEditMode){
+            if (mustHide && !isEmptySpaceEnabled && slideAnimationEnabled && !plasmoid.userConfiguring && !latteInEditMode)
                 return 0;
-            }
-        }
 
+        }
         return plasmoid.formFactor === PlasmaCore.Types.Horizontal ? buttonsArea.width : -1;
     }
-
     readonly property int minimumHeight: {
         if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
-            if (mustHide && !isEmptySpaceEnabled && slideAnimationEnabled && !plasmoid.userConfiguring && !latteInEditMode){
+            if (mustHide && !isEmptySpaceEnabled && slideAnimationEnabled && !plasmoid.userConfiguring && !latteInEditMode)
                 return 0;
-            }
+
         }
-
-        return plasmoid.formFactor === PlasmaCore.Types.Horizontal ? -1 : buttonsArea.height
+        return plasmoid.formFactor === PlasmaCore.Types.Horizontal ? -1 : buttonsArea.height;
     }
-
     readonly property string buttonsStr: plasmoid.configuration.buttons
-
-    Plasmoid.status: {
-        if (mustHide && !isEmptySpaceEnabled) {
-            if ((plasmoid.formFactor === PlasmaCore.Types.Horizontal && animatedMinimumWidth === 0)
-                    || (plasmoid.formFactor === PlasmaCore.Types.Vertical && animatedMinimumHeight === 0)) {
-                return PlasmaCore.Types.HiddenStatus;
-            }
-        }
-
-        return PlasmaCore.Types.ActiveStatus;
-    }
-
     // START visual properties
     property bool inactiveStateEnabled: inEditMode ? false : plasmoid.configuration.inactiveStateEnabled
-
     property int thickPadding: {
-        if (auroraeThemeEngine.isEnabled && plasmoid.configuration.useDecorationMetrics) {
-            return plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
-                        ((root.height - auroraeThemeEngine.buttonHeight) / 2) - 1 :
-                        ((root.width - auroraeThemeEngine.buttonHeight) / 2) - 1;
-        }
+        if (auroraeThemeEngine.isEnabled && plasmoid.configuration.useDecorationMetrics)
+            return plasmoid.formFactor === PlasmaCore.Types.Horizontal ? ((root.height - auroraeThemeEngine.buttonHeight) / 2) - 1 : ((root.width - auroraeThemeEngine.buttonHeight) / 2) - 1;
 
         //! Latte padding
         if (inLatte) {
-            if (plasmoid.formFactor === PlasmaCore.Types.Horizontal) {
-                return (root.height - (latteBridge.iconSize * (plasmoid.configuration.buttonSizePercentage/100))) / 2;
-            } else {
-                return (root.width - (latteBridge.iconSize * (plasmoid.configuration.buttonSizePercentage/100))) / 2;
-            }
+            if (plasmoid.formFactor === PlasmaCore.Types.Horizontal)
+                return (root.height - (latteBridge.iconSize * (plasmoid.configuration.buttonSizePercentage / 100))) / 2;
+            else
+                return (root.width - (latteBridge.iconSize * (plasmoid.configuration.buttonSizePercentage / 100))) / 2;
         }
-
         //! Plasma panels code
-        if (plasmoid.formFactor === PlasmaCore.Types.Horizontal) {
-            return (root.height - (root.height * (plasmoid.configuration.buttonSizePercentage/100))) / 2;
-        } else {
-            return (root.width - (root.width * (plasmoid.configuration.buttonSizePercentage/100))) / 2;
-        }
+        if (plasmoid.formFactor === PlasmaCore.Types.Horizontal)
+            return (root.height - (root.height * (plasmoid.configuration.buttonSizePercentage / 100))) / 2;
+        else
+            return (root.width - (root.width * (plasmoid.configuration.buttonSizePercentage / 100))) / 2;
     }
-
     property int lengthFirstMargin: plasmoid.configuration.lengthFirstMargin
     property int lengthLastMargin: plasmoid.configuration.lengthLastMargin
-
     property int lengthFirstPadding: Math.min(lengthFirstMargin, lengthMidPadding)
     property int lengthMidPadding: spacing / 2
     property int lengthLastPadding: Math.min(lengthLastMargin, lengthMidPadding)
-
     property int spacing: {
-        if (auroraeThemeEngine.isEnabled && plasmoid.configuration.useDecorationMetrics) {
+        if (auroraeThemeEngine.isEnabled && plasmoid.configuration.useDecorationMetrics)
             return auroraeThemeEngine.buttonSpacing;
-        }
 
         return plasmoid.configuration.spacing;
     }
-    // END visual properties
-
-    // START window properties
-
     //! make sure that on startup it will always be shown
-    readonly property bool existsWindowActive: (windowInfoLoader.item && windowInfoLoader.item.existsWindowActive)
-                                               || containmentIdentifierTimer.running
-    readonly property bool existsWindowShown: (windowInfoLoader.item && windowInfoLoader.item.existsWindowShown)
-                                              || containmentIdentifierTimer.running
-
+    readonly property bool existsWindowActive: (windowInfoLoader.item && windowInfoLoader.item.existsWindowActive) || containmentIdentifierTimer.running
+    readonly property bool existsWindowShown: (windowInfoLoader.item && windowInfoLoader.item.existsWindowShown) || containmentIdentifierTimer.running
     readonly property bool isLastActiveWindowPinned: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isOnAllDesktops
     readonly property bool isLastActiveWindowMaximized: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isMaximized
     readonly property bool isLastActiveWindowKeepAbove: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isKeepAbove
-
     readonly property bool isLastActiveWindowClosable: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isClosable
     readonly property bool isLastActiveWindowMaximizable: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isMaximizable
     readonly property bool isLastActiveWindowMinimizable: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isMinimizable
     readonly property bool isLastActiveWindowVirtualDesktopsChangeable: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isVirtualDesktopsChangeable
-
     property bool hasDesktopsButton: false
     property bool hasMaximizedButton: false
     property bool hasKeepAboveButton: false
-
     readonly property bool inPlasmaPanel: latteBridge === null
     readonly property bool inLatte: latteBridge !== null
-
     readonly property Item lastActiveTaskItem: windowInfoLoader.item.lastActiveTaskItem
-    // END Window properties
-
     // START decoration properties
-    property string currentPlugin: plasmoid.configuration.useCurrentDecoration || !selectedDecorationExists ?
-                                       decorations.currentPlugin : plasmoid.configuration.selectedPlugin
-    property string currentTheme: plasmoid.configuration.useCurrentDecoration || !selectedDecorationExists ?
-                                      decorations.currentTheme : plasmoid.configuration.selectedTheme
+    property string currentPlugin: plasmoid.configuration.useCurrentDecoration || !selectedDecorationExists ? decorations.currentPlugin : plasmoid.configuration.selectedPlugin
+    property string currentTheme: plasmoid.configuration.useCurrentDecoration || !selectedDecorationExists ? decorations.currentTheme : plasmoid.configuration.selectedTheme
     property string currentScheme: {
-        if (plasmaThemeExtended.isActive) {
+        if (plasmaThemeExtended.isActive)
             return plasmaThemeExtended.colors.schemeFile;
-        }
 
-        if (enforceLattePalette && plasmoid.configuration.selectedScheme === "kdeglobals") {
+        if (enforceLattePalette && plasmoid.configuration.selectedScheme === "kdeglobals")
             return latteBridge.palette.scheme;
-        }
 
-        return plasmoid.configuration.selectedScheme === "kdeglobals" ?
-                    colorsModel.defaultSchemeFile() :
-                    plasmoid.configuration.selectedScheme
+        return plasmoid.configuration.selectedScheme === "kdeglobals" ? colorsModel.defaultSchemeFile() : plasmoid.configuration.selectedScheme;
     }
-    // END decoration properties
-
     //BEGIN Latte Dock Communicator
-    property QtObject latteBridge: null // current Latte v0.9 API
-
-    onLatteBridgeChanged: {
-        if (latteBridge) {
-            plasmoid.configuration.containmentType = AppletDecoration.Types.Latte;
-            latteBridge.actions.setProperty(plasmoid.id, "latteSideColoringEnabled", false);
-            latteBridge.actions.setProperty(plasmoid.id, "windowsTrackingEnabled", true);
-        }
-    }
+    property QtObject latteBridge: null
     //END  Latte Dock Communicator
     //BEGIN Latte based properties
     //!   This applet is a special case and thus the latteBridge.applyPalette is not used.
@@ -221,50 +146,96 @@ PlasmoidItem {
     //!   even when Latte informs the applets that need to use the default plasma theme.
     readonly property bool enforceLattePalette: latteBridge && latteBridge.palette
     readonly property bool latteInEditMode: latteBridge && latteBridge.inEditMode
+    property var tasksPreparedArray: []
 
-    //END Latte based properties
+    ///functions
+    function initButtons() {
+        if (!buttonsRecreator.running)
+            buttonsRecreator.start();
 
-    //START Behaviors
-    Behavior on animatedMinimumWidth {
-        enabled: slideAnimationEnabled && plasmoid.formFactor===PlasmaCore.Types.Horizontal
-        NumberAnimation {
-            duration: 250
-            easing.type: Easing.InCubic
+    }
+
+    function initializeControlButtonsModel() {
+        console.log("recreating buttons");
+        sharedDecorationItem.createDecoration();
+        var buttonsList = buttonsStr.split('|');
+        ModelTools.initializeControlButtonsModel(buttonsList, tasksPreparedArray, controlButtonsModel, true);
+    }
+
+    function discoverButtons() {
+        var hasMax = false;
+        var hasPin = false;
+        var hasKeepAbove = false;
+        for (var i = 0; i < tasksPreparedArray.length; ++i) {
+            if (tasksPreparedArray[i].buttonType === AppletDecoration.Types.Maximize)
+                hasMax = true;
+            else if (tasksPreparedArray[i].buttonType === AppletDecoration.Types.OnAllDesktops)
+                hasPin = true;
+            else if (tasksPreparedArray[i].buttonType === AppletDecoration.Types.KeepAbove)
+                hasKeepAbove = true;
+        }
+        hasMaximizedButton = hasMax;
+        hasDesktopsButton = hasPin;
+        hasKeepAboveButton = hasKeepAbove;
+    }
+
+    function performActiveWindowAction(windowOperation) {
+        if (windowOperation === AppletDecoration.Types.ActionClose)
+            windowInfoLoader.item.toggleClose();
+        else if (windowOperation === AppletDecoration.Types.ToggleMaximize)
+            windowInfoLoader.item.toggleMaximized();
+        else if (windowOperation === AppletDecoration.Types.ToggleMinimize)
+            windowInfoLoader.item.toggleMinimized();
+        else if (windowOperation === AppletDecoration.Types.TogglePinToAllDesktops)
+            windowInfoLoader.item.togglePinToAllDesktops();
+        else if (windowOperation === AppletDecoration.Types.ToggleKeepAbove)
+            windowInfoLoader.item.toggleKeepAbove();
+    }
+
+    clip: true
+    Layout.fillHeight: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? true : false
+    Layout.fillWidth: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? false : true
+    Layout.minimumWidth: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? animatedMinimumWidth : -1
+    Layout.minimumHeight: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? -1 : animatedMinimumHeight
+    Layout.preferredHeight: Layout.minimumHeight
+    Layout.preferredWidth: Layout.minimumWidth
+    Layout.maximumHeight: Layout.minimumHeight
+    Layout.maximumWidth: Layout.minimumWidth
+    preferredRepresentation: fullRepresentation
+    Plasmoid.onFormFactorChanged: plasmoid.configuration.formFactor = plasmoid.formFactor
+    Plasmoid.status: {
+        if (mustHide && !isEmptySpaceEnabled) {
+            if ((plasmoid.formFactor === PlasmaCore.Types.Horizontal && animatedMinimumWidth === 0) || (plasmoid.formFactor === PlasmaCore.Types.Vertical && animatedMinimumHeight === 0))
+                return PlasmaCore.Types.HiddenStatus;
+
+        }
+        return PlasmaCore.Types.ActiveStatus;
+    }
+    onLatteBridgeChanged: {
+        if (latteBridge) {
+            plasmoid.configuration.containmentType = AppletDecoration.Types.Latte;
+            latteBridge.actions.setProperty(plasmoid.id, "latteSideColoringEnabled", false);
+            latteBridge.actions.setProperty(plasmoid.id, "windowsTrackingEnabled", true);
         }
     }
-
-    Behavior on animatedMinimumHeight {
-        enabled: slideAnimationEnabled && plasmoid.formFactor===PlasmaCore.Types.Vertical
-        NumberAnimation {
-            duration: 250
-            easing.type: Easing.InCubic
-        }
-    }
-    //END Behaviors
-
-    onButtonsStrChanged: initButtons();
-
-    Connections {
-        target: bridgeItem
-        onPluginChanged: initButtons();
-    }
-
-    Connections {
-        target: buttonsRepeater
-        onCountChanged: discoverButtons();
-    }
-
+    onButtonsStrChanged: initButtons()
     Component.onCompleted: {
-        if (plasmoid.configuration.buttons.indexOf("9") === -1) {
-            //add new supported buttons if they dont exist in the configuration
+        if (plasmoid.configuration.buttons.indexOf("9") === -1)
             plasmoid.configuration.buttons = plasmoid.configuration.buttons.concat("|9");
-        }
 
         initButtons();
         containmentIdentifierTimer.start();
     }
 
-    property var tasksPreparedArray: []
+    Connections {
+        target: bridgeItem
+        onPluginChanged: initButtons()
+    }
+
+    Connections {
+        target: buttonsRepeater
+        onCountChanged: discoverButtons()
+    }
 
     ListModel {
         id: controlButtonsModel
@@ -273,43 +244,47 @@ PlasmoidItem {
     //!
     Loader {
         id: windowInfoLoader
-        sourceComponent: latteBridge
-                         && latteBridge.windowsTracker
-                         && latteBridge.windowsTracker.currentScreen.lastActiveWindow
-                         && latteBridge.windowsTracker.allScreens.lastActiveWindow ? latteTrackerComponent : plasmaTasksModel
 
-        Component{
+        sourceComponent: latteBridge && latteBridge.windowsTracker && latteBridge.windowsTracker.currentScreen.lastActiveWindow && latteBridge.windowsTracker.allScreens.lastActiveWindow ? latteTrackerComponent : plasmaTasksModel
+
+        Component {
             id: latteTrackerComponent
-            LatteWindowsTracker{
+
+            LatteWindowsTracker {
                 filterByScreen: plasmoid.configuration.filterByScreen
             }
+
         }
 
-        Component{
+        Component {
             id: plasmaTasksModel
-            PlasmaTasksModel{
+
+            PlasmaTasksModel {
                 filterByScreen: plasmoid.configuration.filterByScreen
             }
-        }
-    }
-    //!
 
+        }
+
+    }
 
     ///Decoration Items
     AppletDecoration.Bridge {
         id: bridgeItem
+
         plugin: currentPlugin
         theme: currentTheme
     }
 
     AppletDecoration.Settings {
         id: settingsItem
+
         bridge: bridgeItem.bridge
         borderSizesIndex: 0 // Normal
     }
 
     AppletDecoration.SharedDecoration {
         id: sharedDecorationItem
+
         bridge: bridgeItem.bridge
         settings: settingsItem
     }
@@ -330,87 +305,19 @@ PlasmoidItem {
 
     AppletDecoration.AuroraeTheme {
         id: auroraeThemeEngine
-        theme: isEnabled ? currentTheme : ""
 
-        readonly property bool isEnabled: decorations.isAurorae(currentPlugin, currentTheme);
+        readonly property bool isEnabled: decorations.isAurorae(currentPlugin, currentTheme)
+
+        theme: isEnabled ? currentTheme : ""
     }
 
     AppletDecoration.WindowSystem {
         id: windowSystem
     }
 
-    ///functions
-    function initButtons() {
-        if (!buttonsRecreator.running){
-            buttonsRecreator.start();
-        }
-    }
-
-    function initializeControlButtonsModel() {
-        console.log("recreating buttons");
-        sharedDecorationItem.createDecoration();
-
-        var buttonsList = buttonsStr.split('|');
-
-        ModelTools.initializeControlButtonsModel(buttonsList, tasksPreparedArray, controlButtonsModel, true);
-    }
-
-    function discoverButtons() {
-        var hasMax = false;
-        var hasPin = false;
-        var hasKeepAbove = false;
-
-        for (var i=0; i<tasksPreparedArray.length; ++i) {
-            if (tasksPreparedArray[i].buttonType === AppletDecoration.Types.Maximize) {
-                hasMax = true;
-            } else if (tasksPreparedArray[i].buttonType === AppletDecoration.Types.OnAllDesktops) {
-                hasPin = true;
-            } else if (tasksPreparedArray[i].buttonType === AppletDecoration.Types.KeepAbove) {
-                hasKeepAbove = true;
-            }
-        }
-
-        hasMaximizedButton = hasMax;
-        hasDesktopsButton = hasPin;
-        hasKeepAboveButton = hasKeepAbove;
-    }
-
-    function performActiveWindowAction(windowOperation) {
-        if (windowOperation === AppletDecoration.Types.ActionClose) {
-            windowInfoLoader.item.toggleClose();
-        } else if (windowOperation === AppletDecoration.Types.ToggleMaximize) {
-            windowInfoLoader.item.toggleMaximized();
-        } else if (windowOperation === AppletDecoration.Types.ToggleMinimize) {
-            windowInfoLoader.item.toggleMinimized();
-        } else if (windowOperation === AppletDecoration.Types.TogglePinToAllDesktops) {
-            windowInfoLoader.item.togglePinToAllDesktops();
-        } else if (windowOperation === AppletDecoration.Types.ToggleKeepAbove){
-            windowInfoLoader.item.toggleKeepAbove();
-        }
-    }
-
-    ///START Visual Items
-
     Grid {
-        id: buttonsArea
-
-        rowSpacing: 0
-        columnSpacing: 0
-
-        rows: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? 1 : 0
-        columns: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? 0 : 1
-
-        readonly property int buttonThickness: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
-                                                   root.height - 2 * thickPadding :
-                                                   root.width - 2 * thickPadding
-
-        opacity: mustHide
-                 && !inEditMode
-                 && (!root.slideAnimationEnabled /*when buttons are not sliding out*/
-                     || (root.slideAnimationEnabled && plasmoid.status === PlasmaCore.Types.HiddenStatus/*wait for slide-out animation*/)) ? 0 : 1
-        visible: opacity === 0 ? false : true
-
-       /* Behavior on opacity {
+        //when buttons are not sliding out
+        /* Behavior on opacity {
             enabled: isEmptySpaceEnabled
             NumberAnimation {
                 duration: 250
@@ -418,98 +325,30 @@ PlasmoidItem {
             }
         }*/
 
+        id: buttonsArea
+
+        readonly property int buttonThickness: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? root.height - 2 * thickPadding : root.width - 2 * thickPadding
+
+        rowSpacing: 0
+        columnSpacing: 0
+        rows: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? 1 : 0
+        columns: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? 0 : 1
+        opacity: mustHide && !inEditMode && (!root.slideAnimationEnabled || (root.slideAnimationEnabled && plasmoid.status === PlasmaCore.Types.HiddenStatus)) ? 0 : 1 //wait for slide-out animation
+        visible: opacity === 0 ? false : true
+
         Repeater {
             id: buttonsRepeater
+
             model: controlButtonsModel
             delegate: auroraeThemeEngine.isEnabled ? auroraeButton : pluginButton
         }
+
     }
 
     Component {
         id: pluginButton
+
         AppletDecoration.Button {
-            id: cButton
-            width: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
-                       buttonsArea.buttonThickness + padding.left + padding.right :
-                       buttonsArea.buttonThickness + 2 * thickPadding
-
-            height: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
-                        buttonsArea.buttonThickness + 2 * thickPadding :
-                        buttonsArea.buttonThickness + padding.top + padding.bottom
-
-
-            bridge: bridgeItem.bridge
-            sharedDecoration: sharedDecorationItem
-            scheme: root.currentScheme
-            type: buttonType
-
-            isActive: {
-                //!   FIXME-TEST PERIOD: Disabled because it shows an error from c++ theme when its value is changed
-                //!   and breaks in some cases the buttons coloring through the schemeFile
-                if (root.inactiveStateEnabled && !root.existsWindowActive){
-                    return false;
-                }
-
-                return true;
-            }
-            isOnAllDesktops: root.isLastActiveWindowPinned
-            isMaximized: root.isLastActiveWindowMaximized
-            isKeepAbove: root.isLastActiveWindowKeepAbove
-
-            localX: x
-            localY: y
-
-            opacity: isVisible ? 1 : 0
-            visible: (isVisible && !root.isEmptySpaceEnabled) || root.isEmptySpaceEnabled
-
-            readonly property bool isVisible: {
-                if (visibility === AppletDecoration.Types.AlwaysVisible || inEditMode) {
-                    return true;
-                }
-
-                if (type === AppletDecoration.Types.Close) {
-                    return root.isLastActiveWindowClosable;
-                } else if (type === AppletDecoration.Types.Maximize) {
-                    return root.isLastActiveWindowMaximizable;
-                } else if (type === AppletDecoration.Types.Minimize) {
-                    return root.isLastActiveWindowMinimizable;
-                } else if (type === AppletDecoration.Types.OnAllDesktops) {
-                    return root.isLastActiveWindowVirtualDesktopsChangeable;
-                }
-
-                return true;
-            }
-
-
-            readonly property int firstPadding: {
-                if (index === 0) {
-                    //! first button
-                    return lengthFirstMargin;
-                } else {
-                    return lengthMidPadding;
-                }
-            }
-
-            readonly property int lastPadding: {
-                if (index>=0 && index === buttonsRepeater.count - 1) {
-                    //! last button
-                    return lengthLastMargin;
-                } else {
-                    return lengthMidPadding;
-                }
-            }
-
-            padding{
-                left: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? firstPadding : thickPadding
-                right: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? lastPadding : thickPadding
-                top: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : firstPadding
-                bottom: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : lastPadding
-            }
-
-            onClicked: {
-                root.performActiveWindowAction(windowOperation);
-            }
-
             /*Rectangle{
                 anchors.fill: parent
                 color: "transparent"
@@ -527,87 +366,78 @@ PlasmoidItem {
                 border.width: 1
                 border.color: "blue"
             }*/
-        }
-    }
+            //! first button
+            //! last button
 
-    Component {
-        id: auroraeButton
-        AppletDecoration.AuroraeButton {
-            id: aButton
-            width: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
-                       auroraeTheme.buttonRatio*buttonsArea.buttonThickness + leftPadding + rightPadding :
-                       buttonsArea.buttonThickness + 2 * thickPadding
+            id: cButton
 
-            height: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
-                        buttonsArea.buttonThickness + 2 * thickPadding :
-                        buttonsArea.buttonThickness + topPadding + bottomPadding
+            readonly property bool isVisible: {
+                if (visibility === AppletDecoration.Types.AlwaysVisible || inEditMode)
+                    return true;
 
+                if (type === AppletDecoration.Types.Close)
+                    return root.isLastActiveWindowClosable;
+                else if (type === AppletDecoration.Types.Maximize)
+                    return root.isLastActiveWindowMaximizable;
+                else if (type === AppletDecoration.Types.Minimize)
+                    return root.isLastActiveWindowMinimizable;
+                else if (type === AppletDecoration.Types.OnAllDesktops)
+                    return root.isLastActiveWindowVirtualDesktopsChangeable;
+                return true;
+            }
             readonly property int firstPadding: {
-                if (index === 0) {
-                    //! first button
+                if (index === 0)
                     return lengthFirstMargin;
-                } else {
+                else
                     return lengthMidPadding;
-                }
             }
-
             readonly property int lastPadding: {
-                if (index>=0 && index === buttonsRepeater.count - 1) {
-                    //! last button
+                if (index >= 0 && index === buttonsRepeater.count - 1)
                     return lengthLastMargin;
-                } else {
+                else
                     return lengthMidPadding;
-                }
             }
 
-            leftPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? firstPadding : thickPadding
-            rightPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? lastPadding : thickPadding
-            topPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : firstPadding
-            bottomPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : lastPadding
-
+            width: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? buttonsArea.buttonThickness + padding.left + padding.right : buttonsArea.buttonThickness + 2 * thickPadding
+            height: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? buttonsArea.buttonThickness + 2 * thickPadding : buttonsArea.buttonThickness + padding.top + padding.bottom
+            bridge: bridgeItem.bridge
+            sharedDecoration: sharedDecorationItem
+            scheme: root.currentScheme
+            type: buttonType
             isActive: {
                 //!   FIXME-TEST PERIOD: Disabled because it shows an error from c++ theme when its value is changed
                 //!   and breaks in some cases the buttons coloring through the schemeFile
-                if (root.inactiveStateEnabled && !root.existsWindowActive){
+                if (root.inactiveStateEnabled && !root.existsWindowActive)
                     return false;
-                }
 
                 return true;
             }
             isOnAllDesktops: root.isLastActiveWindowPinned
             isMaximized: root.isLastActiveWindowMaximized
             isKeepAbove: root.isLastActiveWindowKeepAbove
-            buttonType: model.buttonType
-            auroraeTheme: auroraeThemeEngine
-
-            monochromeIconsEnabled: latteBridge && latteBridge.applyPalette && auroraeThemeEngine.hasMonochromeIcons
-            monochromeIconsColor: latteBridge ? latteBridge.palette.textColor : "transparent"
-
+            localX: x
+            localY: y
             opacity: isVisible ? 1 : 0
             visible: (isVisible && !root.isEmptySpaceEnabled) || root.isEmptySpaceEnabled
-
-            readonly property bool isVisible: {
-                if (visibility === AppletDecoration.Types.AlwaysVisible || inEditMode) {
-                    return true;
-                }
-
-                if (buttonType === AppletDecoration.Types.Close) {
-                    return root.isLastActiveWindowClosable;
-                } else if (buttonType === AppletDecoration.Types.Maximize) {
-                    return root.isLastActiveWindowMaximizable;
-                } else if (buttonType === AppletDecoration.Types.Minimize) {
-                    return root.isLastActiveWindowMinimizable;
-                } else if (buttonType === AppletDecoration.Types.OnAllDesktops) {
-                    return root.isLastActiveWindowVirtualDesktopsChangeable;
-                }
-
-                return true;
-            }
-
             onClicked: {
                 root.performActiveWindowAction(windowOperation);
             }
 
+            padding {
+                left: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? firstPadding : thickPadding
+                right: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? lastPadding : thickPadding
+                top: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : firstPadding
+                bottom: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : lastPadding
+            }
+
+        }
+
+    }
+
+    Component {
+        id: auroraeButton
+
+        AppletDecoration.AuroraeButton {
             /*  Rectangle{
                 anchors.fill: parent
                 color: "transparent"
@@ -625,31 +455,114 @@ PlasmoidItem {
                 border.width: 1
                 border.color: "blue"
             } */
+            //! first button
+            //! last button
+
+            id: aButton
+
+            readonly property int firstPadding: {
+                if (index === 0)
+                    return lengthFirstMargin;
+                else
+                    return lengthMidPadding;
+            }
+            readonly property int lastPadding: {
+                if (index >= 0 && index === buttonsRepeater.count - 1)
+                    return lengthLastMargin;
+                else
+                    return lengthMidPadding;
+            }
+            readonly property bool isVisible: {
+                if (visibility === AppletDecoration.Types.AlwaysVisible || inEditMode)
+                    return true;
+
+                if (buttonType === AppletDecoration.Types.Close)
+                    return root.isLastActiveWindowClosable;
+                else if (buttonType === AppletDecoration.Types.Maximize)
+                    return root.isLastActiveWindowMaximizable;
+                else if (buttonType === AppletDecoration.Types.Minimize)
+                    return root.isLastActiveWindowMinimizable;
+                else if (buttonType === AppletDecoration.Types.OnAllDesktops)
+                    return root.isLastActiveWindowVirtualDesktopsChangeable;
+                return true;
+            }
+
+            width: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? auroraeTheme.buttonRatio * buttonsArea.buttonThickness + leftPadding + rightPadding : buttonsArea.buttonThickness + 2 * thickPadding
+            height: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? buttonsArea.buttonThickness + 2 * thickPadding : buttonsArea.buttonThickness + topPadding + bottomPadding
+            leftPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? firstPadding : thickPadding
+            rightPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? lastPadding : thickPadding
+            topPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : firstPadding
+            bottomPadding: plasmoid.formFactor === PlasmaCore.Types.Horizontal ? thickPadding : lastPadding
+            isActive: {
+                //!   FIXME-TEST PERIOD: Disabled because it shows an error from c++ theme when its value is changed
+                //!   and breaks in some cases the buttons coloring through the schemeFile
+                if (root.inactiveStateEnabled && !root.existsWindowActive)
+                    return false;
+
+                return true;
+            }
+            isOnAllDesktops: root.isLastActiveWindowPinned
+            isMaximized: root.isLastActiveWindowMaximized
+            isKeepAbove: root.isLastActiveWindowKeepAbove
+            buttonType: model.buttonType
+            auroraeTheme: auroraeThemeEngine
+            monochromeIconsEnabled: latteBridge && latteBridge.applyPalette && auroraeThemeEngine.hasMonochromeIcons
+            monochromeIconsColor: latteBridge ? latteBridge.palette.textColor : "transparent"
+            opacity: isVisible ? 1 : 0
+            visible: (isVisible && !root.isEmptySpaceEnabled) || root.isEmptySpaceEnabled
+            onClicked: {
+                root.performActiveWindowAction(windowOperation);
+            }
         }
+
     }
     ///END Visual Items
 
     //! this timer is used in order to not call too many times the recreation
     //! of buttons with no reason.
-    Timer{
+    Timer {
         id: buttonsRecreator
+
         interval: 200
-        onTriggered: initializeControlButtonsModel();
+        onTriggered: initializeControlButtonsModel()
     }
 
     //! this timer is used in order to identify in which containment the applet is in
     //! it should be called only the first time an applet is created and loaded because
     //! afterwards the applet has no way to move between different processes such
     //! as Plasma and Latte
-    Timer{
+    Timer {
         id: containmentIdentifierTimer
+
         interval: 5000
         onTriggered: {
-            if (latteBridge) {
+            if (latteBridge)
                 plasmoid.configuration.containmentType = AppletDecoration.Types.Latte;
-            } else {
+            else
                 plasmoid.configuration.containmentType = AppletDecoration.Types.Plasma;
-            }
         }
     }
+
+    //START Behaviors
+    Behavior on animatedMinimumWidth {
+        enabled: slideAnimationEnabled && plasmoid.formFactor === PlasmaCore.Types.Horizontal
+
+        NumberAnimation {
+            duration: 250
+            easing.type: Easing.InCubic
+        }
+
+    }
+
+    Behavior on animatedMinimumHeight {
+        enabled: slideAnimationEnabled && plasmoid.formFactor === PlasmaCore.Types.Vertical
+
+        NumberAnimation {
+            duration: 250
+            easing.type: Easing.InCubic
+        }
+
+    }
+    //END Behaviors
+
 }

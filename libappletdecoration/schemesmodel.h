@@ -23,39 +23,33 @@
 
 #include <QAbstractListModel>
 
-namespace Decoration {
-namespace Applet {
-
 class SchemeColors;
 
 class SchemesModel : public QAbstractListModel
 {
     Q_OBJECT
 
-public:
+  public:
     explicit SchemesModel(QObject *parent = nullptr);
     virtual ~SchemesModel();
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    QHash< int, QByteArray > roleNames() const override;
+    QHash<int, QByteArray> roleNames() const override;
 
     Q_INVOKABLE int indexOf(QString file) const;
     Q_INVOKABLE QColor backgroundOf(const int &index) const;
 
     Q_INVOKABLE QString defaultSchemeFile() const;
-private slots:
+  private slots:
     void initSchemes();
 
-private:
+  private:
     void insertSchemeInList(QString file);
 
-private:
+  private:
     QString m_defaultSchemeFile;
-    QList<Decoration::Applet::SchemeColors *> m_schemes;
+    QList<SchemeColors *> m_schemes;
 };
-
-}
-}
 
 #endif
