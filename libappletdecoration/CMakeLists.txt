@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 
 set(QT_MIN_VERSION "6.6.0")
-set(KF6_MIN_VERSION "5.26.0")
+set(KF6_MIN_VERSION "6.0.0")
 
 find_package(ECM 0.0.11 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
@@ -49,7 +49,8 @@ target_link_libraries(appletdecorationplugin
     KF6::Svg
     KF6::KCMUtils
     KDecoration2::KDecoration
-    KDecoration2::KDecoration2Private)
+    KDecoration2::KDecoration2Private
+)
 
 # install plugin
 install(TARGETS appletdecorationplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/appletdecoration)
