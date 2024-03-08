@@ -121,7 +121,7 @@ void ExtendedTheme::updateDefaultSchemeValues()
 
 void ExtendedTheme::loadThemePaths()
 {
-    m_themePath = AppletDecoration::standardPath("plasma/desktoptheme/" + m_theme.themeName());
+    m_themePath = standardPath("plasma/desktoptheme/" + m_theme.themeName());
 
     if (QDir(m_themePath + "/widgets").exists())
     {
@@ -129,7 +129,7 @@ void ExtendedTheme::loadThemePaths()
     }
     else
     {
-        m_themeWidgetsPath = AppletDecoration::standardPath("plasma/desktoptheme/default/widgets");
+        m_themeWidgetsPath = standardPath("plasma/desktoptheme/default/widgets");
     }
 
     qDebug() << "Window Buttons : current plasma theme ::: " << m_theme.themeName();

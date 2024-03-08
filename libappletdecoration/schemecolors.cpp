@@ -174,7 +174,7 @@ QString SchemeColors::possibleSchemeFile(QString scheme)
     //! remove all whitespaces and "-" from scheme in order to access correctly its file
     QString schemeNameSimplified = tempScheme.simplified().remove(" ").remove("-");
 
-    return AppletDecoration::standardPath("color-schemes/" + schemeNameSimplified + ".colors");
+    return standardPath("color-schemes/" + schemeNameSimplified + ".colors");
 }
 
 QString SchemeColors::schemeName(QString originalFile)

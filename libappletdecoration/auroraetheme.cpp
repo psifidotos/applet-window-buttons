@@ -134,9 +134,7 @@ QString AuroraeTheme::monochromePrefix() const
 void AuroraeTheme::auroraeRCChanged(const QString &filename)
 {
     if (!filename.endsWith(s_auroraerc))
-    {
         return;
-    }
 
     loadSettings();
 }
@@ -145,24 +143,16 @@ void AuroraeTheme::updateAurorae(const QString &themeName)
 {
     const QString separator("__");
     const QString name = themeName.section(separator, -1, -1);
-    QString path = AppletDecoration::standardPath("aurorae/themes/" + name);
+    QString path = standardPath("aurorae/themes/" + name);
 
     if (QFileInfo(path + "/close.svg").exists())
-    {
         m_themeType = "svg";
-    }
     else if (QFileInfo(path + "/close.svgz").exists())
-    {
         m_themeType = "svgz";
-    }
     else if (QFileInfo(path + "/close.png").exists())
-    {
         m_themeType = "png";
-    }
     else
-    {
         m_themeType = "svg";
-    }
 
     m_hasRestoreButton = QFileInfo(path + "/restore." + m_themeType).exists();
 

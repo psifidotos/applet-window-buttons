@@ -45,14 +45,7 @@ DecorationPalette::DecorationPalette(const QString &colorScheme)
     }
 
     m_watcher.addPath(m_colorScheme);
-    connect(&m_watcher, &QFileSystemWatcher::fileChanged,
-            [this]()
-            {
-                m_watcher.addPath(m_colorScheme);
-                update();
-                emit changed();
-            });
-
+    connect(&m_watcher, &QFileSystemWatcher::fileChanged, [this]() { m_watcher.addPath(m_colorScheme), update(), emit changed(); });
     update();
 }
 
@@ -69,39 +62,40 @@ QColor DecorationPalette::color(KDecoration2::ColorGroup group, KDecoration2::Co
     switch (role)
     {
         case ColorRole::Frame:
+        {
             switch (group)
             {
                 case ColorGroup::Active: return m_activeFrameColor;
-
                 case ColorGroup::Inactive: return m_inactiveFrameColor;
-
-                default: return QColor();
+                default: break;
             }
-
+            break;
+        }
         case ColorRole::TitleBar:
+        {
             switch (group)
             {
                 case ColorGroup::Active: return m_activeTitleBarColor;
-
                 case ColorGroup::Inactive: return m_inactiveTitleBarColor;
-
-                default: return QColor();
+                default: break;
             }
+            break;
+        }
 
         case ColorRole::Foreground:
+        {
             switch (group)
             {
                 case ColorGroup::Active: return m_activeForegroundColor;
-
                 case ColorGroup::Inactive: return m_inactiveForegroundColor;
-
                 case ColorGroup::Warning: return m_warningForegroundColor;
-
-                default: return QColor();
+                default: break;
             }
-
-        default: return QColor();
+        }
+        default: break;
     }
+
+    return QColor();
 }
 
 QPalette DecorationPalette::palette() const
@@ -127,12 +121,7 @@ void DecorationPalette::update()
     m_activeTitleBarColor = wmConfig.readEntry("activeBackground", m_palette.color(QPalette::Active, QPalette::Highlight));
     m_inactiveTitleBarColor = wmConfig.readEntry("inactiveBackground", m_inactiveFrameColor);
     m_activeForegroundColor = wmConfig.readEntry("activeForeground", m_palette.color(QPalette::Active, QPalette::HighlightedText));
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
     m_inactiveForegroundColor = wmConfig.readEntry("inactiveForeground", m_activeForegroundColor.darker());
-#else
-    m_inactiveForegroundColor = wmConfig.readEntry("inactiveForeground", m_activeForegroundColor.dark());
-#endif
 
     KConfigGroup windowColorsConfig(config, QStringLiteral("Colors:Window"));
     m_warningForegroundColor = windowColorsConfig.readEntry("ForegroundNegative", QColor(237, 21, 2));

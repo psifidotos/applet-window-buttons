@@ -64,25 +64,15 @@ static QString buttonToName(KDecoration2::DecorationButtonType type)
     switch (type)
     {
         case KDecoration2::DecorationButtonType::Menu: return i18n("Menu");
-
         case KDecoration2::DecorationButtonType::ApplicationMenu: return i18n("Application menu");
-
         case KDecoration2::DecorationButtonType::OnAllDesktops: return i18n("On all desktops");
-
         case KDecoration2::DecorationButtonType::Minimize: return i18n("Minimize");
-
         case KDecoration2::DecorationButtonType::Maximize: return i18n("Maximize");
-
         case KDecoration2::DecorationButtonType::Close: return i18n("Close");
-
         case KDecoration2::DecorationButtonType::ContextHelp: return i18n("Context help");
-
         case KDecoration2::DecorationButtonType::Shade: return i18n("Shade");
-
         case KDecoration2::DecorationButtonType::KeepBelow: return i18n("Keep below");
-
         case KDecoration2::DecorationButtonType::KeepAbove: return i18n("Keep above");
-
         default: return QString();
     }
 }
@@ -90,15 +80,14 @@ static QString buttonToName(KDecoration2::DecorationButtonType type)
 QVariant ButtonsModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || index.row() < 0 || index.row() >= m_buttons.count() || index.column() != 0)
-    {
         return QVariant();
-    }
+
+    const auto &button = m_buttons.at(index.row());
 
     switch (role)
     {
-        case Qt::DisplayRole: return buttonToName(m_buttons.at(index.row()));
-
-        case Qt::UserRole: return QVariant::fromValue(int(m_buttons.at(index.row())));
+        case Qt::DisplayRole: return buttonToName(button);
+        case Qt::UserRole: return QVariant::fromValue(int(button));
     }
 
     return QVariant();
@@ -115,9 +104,7 @@ QHash<int, QByteArray> ButtonsModel::roleNames() const
 void ButtonsModel::remove(int row)
 {
     if (row < 0 || row >= m_buttons.count())
-    {
         return;
-    }
 
     beginRemoveRows(QModelIndex(), row, row);
     m_buttons.removeAt(row);
@@ -127,9 +114,7 @@ void ButtonsModel::remove(int row)
 void ButtonsModel::down(int index)
 {
     if (m_buttons.count() < 2 || index == m_buttons.count() - 1)
-    {
         return;
-    }
 
     beginMoveRows(QModelIndex(), index, index, QModelIndex(), index + 2);
     m_buttons.insert(index + 1, m_buttons.takeAt(index));
@@ -139,9 +124,7 @@ void ButtonsModel::down(int index)
 void ButtonsModel::up(int index)
 {
     if (m_buttons.count() < 2 || index == 0)
-    {
         return;
-    }
 
     beginMoveRows(QModelIndex(), index, index, QModelIndex(), index - 1);
     m_buttons.insert(index - 1, m_buttons.takeAt(index));

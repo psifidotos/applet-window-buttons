@@ -130,7 +130,7 @@ void SchemesModel::initSchemes()
     insertSchemeInList(currentSchemePath);
     m_defaultSchemeFile = currentSchemePath;
 
-    QStringList standardPaths = AppletDecoration::standardPathsFor("color-schemes");
+    QStringList standardPaths = standardPathsFor("color-schemes");
 
     QStringList registeredSchemes;
 
