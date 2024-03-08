@@ -31,7 +31,6 @@
 #include "schemesmodel.h"
 #include "themeextended.h"
 #include "types.h"
-#include "windowsystem.h"
 
 #include <KDecoration2/Decoration>
 #include <QQmlEngine>
@@ -50,7 +49,6 @@ void AppletDecorationPlugin::registerTypes(const char *uri)
     qmlRegisterType<SchemesModel>(uri, 0, 1, "ColorsModel");
     qmlRegisterType<SharedDecoration>(uri, 0, 1, "SharedDecoration");
     qmlRegisterType<ExtendedTheme>(uri, 0, 1, "PlasmaThemeExtended");
-    qmlRegisterType<WindowSystem>(uri, 0, 1, "WindowSystem");
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
     qmlRegisterAnonymousType<Padding>("", 1);

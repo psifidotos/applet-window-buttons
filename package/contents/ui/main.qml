@@ -311,10 +311,6 @@ PlasmoidItem {
         theme: isEnabled ? currentTheme : ""
     }
 
-    AppletDecoration.WindowSystem {
-        id: windowSystem
-    }
-
     Grid {
         //when buttons are not sliding out
         /* Behavior on opacity {
