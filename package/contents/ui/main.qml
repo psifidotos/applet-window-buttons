@@ -25,16 +25,6 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.plasmoid
 
 PlasmoidItem {
-    // END visual properties
-    // START window properties
-    // END Window properties
-    // END decoration properties
-    // current Latte v0.9 API
-    //END Latte based properties
-    //!
-    ///START Visual Items
-    //add new supported buttons if they dont exist in the configuration
-
     id: root
 
     property int animatedMinimumWidth: minimumWidth

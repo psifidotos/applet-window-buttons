@@ -27,22 +27,10 @@
 #include "previewclient.h"
 #include "previewsettings.h"
 
-#include <KCModule>
-#include <KDecoration2/DecoratedClient>
-#include <KDecoration2/Decoration>
 #include <KDirWatch>
 #include <KPluginFactory>
 #include <KPluginMetaData>
-#include <QDBusConnection>
-#include <QDBusMessage>
-#include <QDebug>
-#include <QDialog>
-#include <QDialogButtonBox>
-#include <QPushButton>
 #include <QStandardPaths>
-#include <QVBoxLayout>
-#include <kpluginfactory.h>
-#include <kpluginmetadata.h>
 
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration2");
 static const QString s_breezerc = QStringLiteral("breezerc");
@@ -63,14 +51,14 @@ PreviewBridge::~PreviewBridge() = default;
 
 std::unique_ptr<KDecoration2::DecoratedClientPrivate> PreviewBridge::createClient(KDecoration2::DecoratedClient *client, KDecoration2::Decoration *decoration)
 {
-    auto ptr = std::unique_ptr<PreviewClient>(new PreviewClient(client, decoration));
+    auto ptr = std::make_unique<PreviewClient>(client, decoration);
     m_lastCreatedClient = ptr.get();
     return ptr;
 }
 
 std::unique_ptr<KDecoration2::DecorationSettingsPrivate> PreviewBridge::settings(KDecoration2::DecorationSettings *parent)
 {
-    auto ptr = std::unique_ptr<PreviewSettings>(new PreviewSettings(parent));
+    auto ptr = std::make_unique<PreviewSettings>(parent);
     m_lastCreatedSettings = ptr.get();
     return ptr;
 }
@@ -88,9 +76,7 @@ void PreviewBridge::unregisterButton(PreviewButtonItem *button)
 void PreviewBridge::setPlugin(const QString &plugin)
 {
     if (m_plugin == plugin)
-    {
         return;
-    }
 
     m_plugin = plugin;
     qDebug() << "Plugin changed to: " << m_plugin;
@@ -105,9 +91,7 @@ QString PreviewBridge::theme() const
 void PreviewBridge::setTheme(const QString &theme)
 {
     if (m_theme == theme)
-    {
         return;
-    }
 
     m_theme = theme;
     emit themeChanged();
@@ -147,9 +131,7 @@ bool PreviewBridge::isValid() const
 void PreviewBridge::setValid(bool valid)
 {
     if (m_valid == valid)
-    {
         return;
-    }
 
     m_valid = valid;
     emit validChanged();
