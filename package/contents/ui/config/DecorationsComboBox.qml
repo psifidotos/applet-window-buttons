@@ -84,7 +84,7 @@ ComboBox {
                 anchors.left: parent.left
                 anchors.leftMargin: Kirigami.Units.smallSpacing
                 anchors.verticalCenter: parent.verticalCenter
-                text: display + " (" + plugin + ")"
+                text: display
                 color: containsMouse ? palette.highlightedText : palette.text
             }
 
