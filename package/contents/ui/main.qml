@@ -30,7 +30,7 @@ PlasmoidItem {
     property int animatedMinimumWidth: minimumWidth
     property int animatedMinimumHeight: minimumHeight
     property int screen: plasmoid.containment.screen
-    readonly property bool inEditMode: latteInEditMode || plasmoid.userConfiguring
+    readonly property bool inEditMode: latteInEditMode || plasmoid.userConfiguring || plasmoid.containment.corona.editMode
     readonly property bool mustHide: {
         if (visibility === AppletDecoration.Types.AlwaysVisible || inEditMode)
             return false;
