@@ -121,7 +121,7 @@ Item {
                 }
 
                 function togglePinToAllDesktops() {
-                    tasksModel.requestVirtualDesktops(modelIndex(), 0);
+                    tasksModel.requestVirtualDesktops(modelIndex(), isOnAllDesktops ? [virtualDesktopInfo.currentDesktop] : []);
                 }
 
                 function toggleKeepAbove() {
