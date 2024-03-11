@@ -1,4 +1,5 @@
 {
+    "KPackageStructure": "Plasma/Applet",
     "KPlugin": {
         "Authors": [
             {
@@ -12,9 +13,6 @@
         "Id": "org.kde.windowbuttons",
         "License": "GPLv2",
         "Name": "Window Buttons",
-        "ServiceTypes": [
-            "Plasma/Applet"
-        ],
         "Version": "0.11.1",
         "Website": "https://github.com/psifidotos/applet-window-buttons"
     },
