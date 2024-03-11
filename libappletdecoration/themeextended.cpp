@@ -20,26 +20,18 @@
 
 #include "themeextended.h"
 
-// local
 #include "commontools.h"
 #include "schemecolors.h"
 
-// Qt
+#include <KConfigGroup>
+#include <KDirWatch>
+#include <KSharedConfig>
 #include <QDebug>
 #include <QDir>
 
-// KDE
-#include <KDirWatch>
-#include <KConfigGroup>
-#include <KSharedConfig>
-
 #define DEFAULTCOLORSCHEME "default.colors"
 
-namespace Decoration {
-namespace Applet {
-
-ExtendedTheme::ExtendedTheme(QObject *parent) :
-    QObject(parent)
+ExtendedTheme::ExtendedTheme(QObject *parent) : QObject(parent)
 {
     load();
 
@@ -64,7 +56,8 @@ QObject *ExtendedTheme::colors() const
 
 void ExtendedTheme::setOriginalSchemeFile(const QString &file)
 {
-    if (m_originalSchemePath == file) {
+    if (m_originalSchemePath == file)
+    {
         return;
     }
 
@@ -84,7 +77,8 @@ void ExtendedTheme::setOriginalSchemeFile(const QString &file)
 void ExtendedTheme::updateDefaultScheme()
 {
     QString defaultFilePath = m_extendedThemeDir.path() + "/" + DEFAULTCOLORSCHEME;
-    if (QFileInfo(defaultFilePath).exists()) {
+    if (QFileInfo(defaultFilePath).exists())
+    {
         QFile(defaultFilePath).remove();
     }
 
@@ -93,10 +87,11 @@ void ExtendedTheme::updateDefaultScheme()
 
     updateDefaultSchemeValues();
 
-    if (m_colorsScheme) {
+    if (m_colorsScheme)
+    {
         disconnect(m_colorsScheme, &SchemeColors::colorsChanged, this, &ExtendedTheme::themeChanged);
         m_colorsScheme->deleteLater();
-    }    
+    }
 
     m_colorsScheme = new SchemeColors(this, m_colorsSchemePath, true);
     connect(m_colorsScheme, &SchemeColors::colorsChanged, this, &ExtendedTheme::themeChanged);
@@ -112,9 +107,10 @@ void ExtendedTheme::updateDefaultSchemeValues()
     KSharedConfigPtr originalPtr = KSharedConfig::openConfig(m_originalSchemePath);
     KSharedConfigPtr defaultPtr = KSharedConfig::openConfig(m_colorsSchemePath);
 
-    if (originalPtr && defaultPtr) {
-        KConfigGroup normalWindowGroup(originalPtr, "Colors:Window");
-        KConfigGroup defaultWMGroup(defaultPtr, "WM");
+    if (originalPtr && defaultPtr)
+    {
+        KConfigGroup normalWindowGroup(originalPtr, u"Colors:Window"_qs);
+        KConfigGroup defaultWMGroup(defaultPtr, u"WM"_qs);
 
         defaultWMGroup.writeEntry("activeBackground", normalWindowGroup.readEntry("BackgroundNormal", QColor()));
         defaultWMGroup.writeEntry("activeForeground", normalWindowGroup.readEntry("ForegroundNormal", QColor()));
@@ -125,12 +121,15 @@ void ExtendedTheme::updateDefaultSchemeValues()
 
 void ExtendedTheme::loadThemePaths()
 {
-    m_themePath = AppletDecoration::standardPath("plasma/desktoptheme/" + m_theme.themeName());
+    m_themePath = standardPath("plasma/desktoptheme/" + m_theme.themeName());
 
-    if (QDir(m_themePath+"/widgets").exists()) {
+    if (QDir(m_themePath + "/widgets").exists())
+    {
         m_themeWidgetsPath = m_themePath + "/widgets";
-    } else {
-        m_themeWidgetsPath = AppletDecoration::standardPath("plasma/desktoptheme/default/widgets");
+    }
+    else
+    {
+        m_themeWidgetsPath = standardPath("plasma/desktoptheme/default/widgets");
     }
 
     qDebug() << "Window Buttons : current plasma theme ::: " << m_theme.themeName();
@@ -138,37 +137,44 @@ void ExtendedTheme::loadThemePaths()
     qDebug() << "Window Buttons : theme widgets path ::: " << m_themeWidgetsPath;
 
     //! clear kde connections
-    for (auto &c : m_kdeConnections) {
+    for (auto &c : m_kdeConnections)
+    {
         disconnect(c);
     }
 
     //! assign color schemes
     QString themeColorScheme = m_themePath + "/colors";
 
-    if (QFileInfo(themeColorScheme).exists()) {
+    if (QFileInfo(themeColorScheme).exists())
+    {
         setOriginalSchemeFile(themeColorScheme);
-    } else {
+    }
+    else
+    {
         //! when plasma theme uses the kde colors
         //! we track when kde color scheme is changing
         QString kdeSettingsFile = QDir::homePath() + "/.config/kdeglobals";
 
         KDirWatch::self()->addFile(kdeSettingsFile);
 
-        m_kdeConnections[0] = connect(KDirWatch::self(), &KDirWatch::dirty, this, [ &, kdeSettingsFile](const QString & path) {
-            if (path == kdeSettingsFile) {
-                this->setOriginalSchemeFile(SchemeColors::possibleSchemeFile("kdeglobals"));
-            }
-        });
+        m_kdeConnections[0] = connect(KDirWatch::self(), &KDirWatch::dirty, this,
+                                      [&, kdeSettingsFile](const QString &path)
+                                      {
+                                          if (path == kdeSettingsFile)
+                                          {
+                                              this->setOriginalSchemeFile(SchemeColors::possibleSchemeFile("kdeglobals"));
+                                          }
+                                      });
 
-        m_kdeConnections[1] = connect(KDirWatch::self(), &KDirWatch::created, this, [ &, kdeSettingsFile](const QString & path) {
-            if (path == kdeSettingsFile) {
-                this->setOriginalSchemeFile(SchemeColors::possibleSchemeFile("kdeglobals"));
-            }
-        });
+        m_kdeConnections[1] = connect(KDirWatch::self(), &KDirWatch::created, this,
+                                      [&, kdeSettingsFile](const QString &path)
+                                      {
+                                          if (path == kdeSettingsFile)
+                                          {
+                                              this->setOriginalSchemeFile(SchemeColors::possibleSchemeFile("kdeglobals"));
+                                          }
+                                      });
 
         setOriginalSchemeFile(SchemeColors::possibleSchemeFile("kdeglobals"));
     }
-}
-
-}
 }

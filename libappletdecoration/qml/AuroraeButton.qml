@@ -18,10 +18,9 @@
 */
 
 import QtQuick 2.7
-import QtGraphicalEffects 1.0
 
 import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.ksvg as KSvg
 
 import org.kde.appletdecoration 0.1 as AppletDecoration
 
@@ -34,7 +33,7 @@ MouseArea{
     property bool isKeepAbove: false
     property bool isMaximized: false
     readonly property bool isToggledActivated: {
-        return ((isOnAllDesktops && buttonType === AppletDecoration.Types.OnAllDesktops) || 
+        return ((isOnAllDesktops && buttonType === AppletDecoration.Types.OnAllDesktops) ||
                       (isKeepAbove && buttonType === AppletDecoration.Types.KeepAbove)
         );
     }
@@ -72,7 +71,7 @@ MouseArea{
         return containsPress || isToggledActivated ? "pressed-center" : "hover-center";
     }
 
-    PlasmaCore.Svg {
+    KSvg.Svg {
         id: buttonSvg
         imagePath: buttonImagePath
     }
@@ -88,7 +87,7 @@ MouseArea{
 
         opacity: !containsMouse && !containsPress && !isToggledActivated ? 1 : 0
 
-        PlasmaCore.SvgItem {
+        KSvg.SvgItem {
             x: (parent.width / 2) - (width / 2)
             y: (parent.height / 2 ) - (height / 2)
 
@@ -114,14 +113,14 @@ MouseArea{
     Loader {
         anchors.fill: svgNormalItem
         active: monochromeIconsEnabled
-        sourceComponent:    ColorOverlay {
-            color: monochromeIconsColor
-            source: svgNormalItem
-        }
+        // sourceComponent:    ColorOverlay {
+        //     color: monochromeIconsColor
+        //     source: svgNormalItem
+        // }
     }
 
     // hovered icon
-    PlasmaCore.SvgItem {
+    KSvg.SvgItem {
         id: svgHoveredItem
         anchors.fill: parent
         anchors.topMargin: topPadding
@@ -131,7 +130,7 @@ MouseArea{
 
         opacity: Math.abs(svgNormalItem.opacity - 1)
 
-        PlasmaCore.SvgItem {
+        KSvg.SvgItem {
             x: (parent.width / 2) - (width / 2)
             y: (parent.height / 2 ) - (height / 2)
 
@@ -149,9 +148,9 @@ MouseArea{
     Loader {
         anchors.fill: svgHoveredItem
         active: monochromeIconsEnabled && svgHoveredItem.opacity>0
-        sourceComponent:    ColorOverlay {
-            color: monochromeIconsColor
-            source: svgHoveredItem
-        }
+        // sourceComponent:    ColorOverlay {
+        //     color: monochromeIconsColor
+        //     source: svgHoveredItem
+        // }
     }
 }

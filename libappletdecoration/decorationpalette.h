@@ -27,13 +27,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFileSystemWatcher>
 #include <QPalette>
 
-namespace Decoration {
-namespace Applet {
-
 class DecorationPalette : public QObject
 {
     Q_OBJECT
-public:
+  public:
     DecorationPalette(const QString &colorScheme);
 
     bool isValid() const;
@@ -41,9 +38,10 @@ public:
     QColor color(KDecoration2::ColorGroup group, KDecoration2::ColorRole role) const;
     QPalette palette() const;
 
-Q_SIGNALS:
+  Q_SIGNALS:
     void changed();
-private:
+
+  private:
     void update();
 
     QString m_colorScheme;
@@ -61,8 +59,5 @@ private:
     QColor m_inactiveForegroundColor;
     QColor m_warningForegroundColor;
 };
-
-}
-}
 
 #endif

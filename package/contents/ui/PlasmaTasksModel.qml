@@ -17,21 +17,49 @@
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.7
 import QtQml.Models 2.2
-
-import org.kde.plasma.plasmoid 2.0
+import QtQuick 2.7
 import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.plasmoid 2.0
 import org.kde.taskmanager 0.1 as TaskManager
 
 Item {
     id: plasmaTasksItem
+
     property bool filterByScreen: true
-
-    readonly property bool existsWindowActive: lastActiveTaskItem && tasksRepeater.count > 0 && lastActiveTaskItem.isActive
+    readonly property bool existsWindowActive: lastActiveTaskItem && tasksRepeater.count > 0 && (root.perScreenActive || lastActiveTaskItem.isActive)
     readonly property bool existsWindowShown: lastActiveTaskItem && tasksRepeater.count > 0 && !lastActiveTaskItem.isMinimized
-
     property Item lastActiveTaskItem: null
+
+    function toggleMaximized() {
+        if (lastActiveTaskItem)
+            lastActiveTaskItem.toggleMaximized();
+
+    }
+
+    function toggleMinimized() {
+        if (lastActiveTaskItem)
+            lastActiveTaskItem.toggleMinimized();
+
+    }
+
+    function toggleClose() {
+        if (lastActiveTaskItem)
+            lastActiveTaskItem.toggleClose();
+
+    }
+
+    function togglePinToAllDesktops() {
+        if (lastActiveTaskItem)
+            lastActiveTaskItem.togglePinToAllDesktops();
+
+    }
+
+    function toggleKeepAbove() {
+        if (lastActiveTaskItem)
+            lastActiveTaskItem.toggleKeepAbove();
+
+    }
 
     // To get current activity name
     TaskManager.ActivityInfo {
@@ -45,48 +73,38 @@ Item {
 
     TaskManager.TasksModel {
         id: tasksModel
+
         sortMode: TaskManager.TasksModel.SortVirtualDesktop
         groupMode: TaskManager.TasksModel.GroupDisabled
-        screenGeometry: plasmoid.screenGeometry
+        screenGeometry: root.screenGeometry
         activity: activityInfo.currentActivity
         virtualDesktop: virtualDesktopInfo.currentDesktop
-
         filterByScreen: plasmaTasksItem.filterByScreen
         filterByVirtualDesktop: true
         filterByActivity: true
     }
 
-    Repeater{
+    Repeater {
         id: tasksRepeater
-        model:DelegateModel {
+
+        model: DelegateModel {
             model: tasksModel
-            delegate: Item{
+
+            delegate: Item {
                 id: task
+
                 readonly property string title: display
                 readonly property bool isMinimized: IsMinimized === true ? true : false
                 readonly property bool isMaximized: IsMaximized === true ? true : false
                 readonly property bool isActive: IsActive === true ? true : false
                 readonly property bool isOnAllDesktops: IsOnAllVirtualDesktops === true ? true : false
                 readonly property bool isKeepAbove: IsKeepAbove === true ? true : false
-
                 readonly property bool isClosable: IsClosable === true ? true : false
                 readonly property bool isMinimizable: IsMinimizable === true ? true : false
                 readonly property bool isMaximizable: IsMaximizable === true ? true : false
                 readonly property bool isVirtualDesktopsChangeable: IsVirtualDesktopsChangeable === true ? true : false
 
-                onIsActiveChanged: {
-                    if (isActive) {
-                        plasmaTasksItem.lastActiveTaskItem = task;
-                    }
-                }
-
-                Component.onDestruction: {
-                    if (plasmaTasksItem.lastActiveTaskItem === task) {
-                        plasmaTasksItem.lastActiveTaskItem = null;
-                    }
-                }
-
-                function modelIndex(){
+                function modelIndex() {
                     return tasksModel.makeModelIndex(index);
                 }
 
@@ -103,47 +121,27 @@ Item {
                 }
 
                 function togglePinToAllDesktops() {
-                    if (root.plasma515) {
-                        tasksModel.requestVirtualDesktops(modelIndex(), 0);
-                    } else {
-                        tasksModel.requestVirtualDesktop(modelIndex(), 0);
-                    }
+                    tasksModel.requestVirtualDesktops(modelIndex(), isOnAllDesktops ? [virtualDesktopInfo.currentDesktop] : []);
                 }
 
-                function toggleKeepAbove(){
+                function toggleKeepAbove() {
                     tasksModel.requestToggleKeepAbove(modelIndex());
                 }
+
+                onIsActiveChanged: {
+                    if (isActive)
+                        plasmaTasksItem.lastActiveTaskItem = task;
+
+                }
+                Component.onDestruction: {
+                    if (plasmaTasksItem.lastActiveTaskItem === task)
+                        plasmaTasksItem.lastActiveTaskItem = null;
+
+                }
             }
+
         }
+
     }
 
-    function toggleMaximized() {
-        if (lastActiveTaskItem) {
-            lastActiveTaskItem.toggleMaximized();
-        }
-    }
-
-    function toggleMinimized() {
-        if (lastActiveTaskItem) {
-            lastActiveTaskItem.toggleMinimized();
-        }
-    }
-
-    function toggleClose() {
-        if (lastActiveTaskItem) {
-            lastActiveTaskItem.toggleClose();
-        }
-    }
-
-    function togglePinToAllDesktops() {
-        if (lastActiveTaskItem) {
-            lastActiveTaskItem.togglePinToAllDesktops();
-        }
-    }
-
-    function toggleKeepAbove(){
-        if (lastActiveTaskItem) {
-            lastActiveTaskItem.toggleKeepAbove();
-        }
-    }
 }

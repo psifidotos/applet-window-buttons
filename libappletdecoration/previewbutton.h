@@ -24,28 +24,22 @@
 #ifndef KDECORATIONS_PREVIEW_BUTTON_ITEM_H
 #define KDECORATIONS_PREVIEW_BUTTON_ITEM_H
 
-#include <QMargins>
-#include <QQuickPaintedItem>
-#include <QPointer>
+#include "previewshareddecoration.h"
+
 #include <KDecoration2/DecorationButton>
-
-namespace KDecoration2 {
-class Decoration;
-}
-
-namespace Decoration {
-namespace Applet {
+#include <QMargins>
+#include <QPointer>
+#include <QQuickPaintedItem>
 
 class Padding;
 class PreviewBridge;
 class PreviewClient;
-class SharedDecoration;
 
 class PreviewButtonItem : public QQuickPaintedItem
 {
     Q_OBJECT
-    Q_PROPERTY(Decoration::Applet::PreviewBridge *bridge READ bridge WRITE setBridge NOTIFY bridgeChanged)
-    Q_PROPERTY(Decoration::Applet::SharedDecoration *sharedDecoration READ sharedDecoration WRITE setSharedDecoration NOTIFY sharedDecorationChanged)
+    Q_PROPERTY(PreviewBridge *bridge READ bridge WRITE setBridge NOTIFY bridgeChanged)
+    Q_PROPERTY(SharedDecoration *sharedDecoration READ sharedDecoration WRITE setSharedDecoration NOTIFY sharedDecorationChanged)
 
     Q_PROPERTY(bool isActive READ isActive WRITE setIsActive NOTIFY isActiveChanged);
     Q_PROPERTY(bool isMaximized READ isMaximized WRITE setIsMaximized NOTIFY isMaximizedChanged)
@@ -58,9 +52,9 @@ class PreviewButtonItem : public QQuickPaintedItem
     Q_PROPERTY(int type READ typeAsInt WRITE setType NOTIFY typeChanged)
 
     Q_PROPERTY(QString scheme READ scheme WRITE setScheme NOTIFY schemeChanged)
-    Q_PROPERTY(Decoration::Applet::Padding *padding READ padding NOTIFY paddingChanged)
+    Q_PROPERTY(Padding *padding READ padding NOTIFY paddingChanged)
 
-public:
+  public:
     explicit PreviewButtonItem(QQuickItem *parent = nullptr);
     virtual ~PreviewButtonItem();
     void paint(QPainter *painter) override;
@@ -81,7 +75,7 @@ public:
 
     bool isOnAllDesktops() const;
     void setIsOnAllDesktops(bool onalldesktops);
-    
+
     bool isKeepAbove() const;
     void setIsKeepAbove(bool keepabove);
 
@@ -103,7 +97,7 @@ public:
 
     QRect visualGeometry() const;
 
-Q_SIGNALS:
+  Q_SIGNALS:
     void bridgeChanged();
     void isActiveChanged();
     void isMaximizedChanged();
@@ -118,7 +112,7 @@ Q_SIGNALS:
 
     void clicked();
 
-protected:
+  protected:
     void mouseDoubleClickEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
@@ -130,27 +124,26 @@ protected:
 
     void componentComplete() override;
 
-private Q_SLOTS:
+  private Q_SLOTS:
     void createButton();
     void syncInternalGeometry();
 
     void onButtonDamaged();
     void onDecorationDamaged(const QRegion &region);
 
-private:
-
-    QPointer<Decoration::Applet::PreviewBridge> m_bridge;
-    QPointer<Decoration::Applet::PreviewClient> m_client;
-    QPointer<Decoration::Applet::SharedDecoration> m_sharedDecoration;
+  private:
+    QPointer<PreviewBridge> m_bridge;
+    QPointer<PreviewClient> m_client;
+    QPointer<SharedDecoration> m_sharedDecoration;
     QPointer<KDecoration2::Decoration> m_lastAppliedDecoration;
 
     KDecoration2::DecorationButton *m_button = nullptr;
     KDecoration2::DecorationButtonType m_type = KDecoration2::DecorationButtonType::Custom;
 
-    bool m_isActive{true};
-    bool m_isMaximized{false};
-    bool m_isOnAllDesktops{false};
-    bool m_isKeepAbove{false};
+    bool m_isActive{ true };
+    bool m_isMaximized{ false };
+    bool m_isOnAllDesktops{ false };
+    bool m_isKeepAbove{ false };
 
     int m_localX;
     int m_localY;
@@ -162,8 +155,5 @@ private:
 
     Padding *m_padding;
 };
-
-} // namespace Applet
-} // namespace Decoration
 
 #endif

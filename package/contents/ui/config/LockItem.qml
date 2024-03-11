@@ -17,36 +17,34 @@
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.9
-import QtQuick.Controls 1.3
-import QtQuick.Layouts 1.0
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.kquickcontrolsaddons 2.0 as KQuickAddons
-
-Item{
+Item {
     id: main
 
     property bool locked: true
-
-    readonly property int verticalSubHeight: height - (button.height/2)
+    readonly property int verticalSubHeight: height - (button.height / 2)
 
     SystemPalette {
         id: palette
     }
 
-    ColumnLayout{
+    ColumnLayout {
         id: column
+
         spacing: 0
         opacity: locked ? 1 : 0.5
 
-        Rectangle{
+        Rectangle {
             id: subRectTop
-            Layout.minimumWidth: button.width/2 + Layout.minimumHeight/2
+
+            Layout.minimumWidth: button.width / 2 + Layout.minimumHeight / 2
             Layout.minimumHeight: 3
             Layout.maximumWidth: Layout.minimumWidth
             Layout.maximumHeight: Layout.minimumHeight
-
             color: palette.text
         }
 
@@ -59,11 +57,12 @@ Item{
             color: palette.text
         }
 
-        KQuickAddons.QIconItem{
+        Kirigami.Icon {
             id: button
+
             width: 24
             height: 24
-            icon: locked ? "lock" : "unlock"
+            source: locked ? "lock" : "unlock"
         }
 
         Rectangle {
@@ -75,19 +74,19 @@ Item{
             color: palette.text
         }
 
-        Rectangle{
+        Rectangle {
             Layout.minimumWidth: subRectTop.Layout.minimumWidth
             Layout.minimumHeight: subRectTop.Layout.minimumHeight
             Layout.maximumWidth: Layout.minimumWidth
             Layout.maximumHeight: Layout.minimumHeight
-
             color: palette.text
         }
+
     }
 
-    MouseArea{
+    MouseArea {
         anchors.fill: column
-        onClicked: locked = !locked;
+        onClicked: locked = !locked
     }
 
 }

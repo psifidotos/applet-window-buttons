@@ -21,13 +21,10 @@
 #ifndef SCHEMECOLORS_H
 #define SCHEMECOLORS_H
 
-#include <QObject>
 #include <QColor>
+#include <QObject>
 
-namespace Decoration {
-namespace Applet {
-
-class SchemeColors: public QObject
+class SchemeColors : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString schemeFile READ schemeFile NOTIFY schemeFileChanged)
@@ -48,7 +45,7 @@ class SchemeColors: public QObject
     Q_PROPERTY(QColor buttonHoverColor READ buttonHoverColor NOTIFY colorsChanged)
     Q_PROPERTY(QColor buttonFocusColor READ buttonFocusColor NOTIFY colorsChanged)
 
-public:
+  public:
     SchemeColors(QObject *parent, QString scheme, bool plasmaTheme = false);
     ~SchemeColors() override;
 
@@ -75,15 +72,15 @@ public:
     static QString possibleSchemeFile(QString scheme);
     static QString schemeName(QString originalFile);
 
-signals:
+  signals:
     void colorsChanged();
     void schemeFileChanged();
 
-public slots:
+  public slots:
     void updateScheme();
 
-private:
-    bool m_basedOnPlasmaTheme{false};
+  private:
+    bool m_basedOnPlasmaTheme{ false };
 
     QString m_schemeName;
     QString m_schemeFile;
@@ -105,8 +102,5 @@ private:
     QColor m_buttonHoverColor;
     QColor m_buttonFocusColor;
 };
-
-}
-}
 
 #endif

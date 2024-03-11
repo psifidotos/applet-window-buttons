@@ -24,16 +24,12 @@
 #ifndef KDECORATIONS_PREVIEW_BRIDGE_H
 #define KDECORATIONS_PREVIEW_BRIDGE_H
 
-#include <KDecoration2/Private/DecorationBridge>
 #include <KDecoration2/DecorationButton>
-
+#include <KDecoration2/Private/DecorationBridge>
 #include <QList>
 #include <QPointer>
 
 class KPluginFactory;
-
-namespace Decoration {
-namespace Applet {
 
 class PreviewButtonItem;
 class PreviewClient;
@@ -46,16 +42,18 @@ class PreviewBridge : public KDecoration2::DecorationBridge
     Q_PROPERTY(QString theme READ theme WRITE setTheme NOTIFY themeChanged)
     Q_PROPERTY(bool valid READ isValid NOTIFY validChanged)
 
-public:
+  public:
     explicit PreviewBridge(QObject *parent = nullptr);
     virtual ~PreviewBridge();
     std::unique_ptr<KDecoration2::DecoratedClientPrivate> createClient(KDecoration2::DecoratedClient *client, KDecoration2::Decoration *decoration) override;
     std::unique_ptr<KDecoration2::DecorationSettingsPrivate> settings(KDecoration2::DecorationSettings *parent) override;
 
-    PreviewClient *lastCreatedClient() {
+    PreviewClient *lastCreatedClient()
+    {
         return m_lastCreatedClient;
     }
-    PreviewSettings *lastCreatedSettings() {
+    PreviewSettings *lastCreatedSettings()
+    {
         return m_lastCreatedSettings;
     }
 
@@ -71,18 +69,18 @@ public:
     KDecoration2::Decoration *createDecoration(QObject *parent = nullptr);
     KDecoration2::DecorationButton *createButton(KDecoration2::Decoration *decoration, KDecoration2::DecorationButtonType type, QObject *parent = nullptr);
 
-public Q_SLOTS:
+  public Q_SLOTS:
     void reconfigure();
 
-Q_SIGNALS:
+  Q_SIGNALS:
     void pluginChanged();
     void themeChanged();
     void validChanged();
 
-private slots:
+  private slots:
     void settingsFileChanged(const QString &filename);
 
-private:
+  private:
     void createFactory();
     void setValid(bool valid);
     PreviewClient *m_lastCreatedClient;
@@ -100,45 +98,47 @@ class BridgeItem : public QObject
     Q_PROPERTY(QString plugin READ plugin WRITE setPlugin NOTIFY pluginChanged)
     Q_PROPERTY(QString theme READ theme WRITE setTheme NOTIFY themeChanged)
     Q_PROPERTY(bool valid READ isValid NOTIFY validChanged)
-    Q_PROPERTY(Decoration::Applet::PreviewBridge *bridge READ bridge CONSTANT)
+    Q_PROPERTY(PreviewBridge *bridge READ bridge CONSTANT)
 
-public:
+  public:
     explicit BridgeItem(QObject *parent = nullptr);
     virtual ~BridgeItem();
 
-    void setPlugin(const QString &plugin) {
+    void setPlugin(const QString &plugin)
+    {
         m_bridge->setPlugin(plugin);
     }
-    QString plugin() const {
+    QString plugin() const
+    {
         return m_bridge->plugin();
     }
-    void setTheme(const QString &theme) {
+    void setTheme(const QString &theme)
+    {
         m_bridge->setTheme(theme);
     }
-    QString theme() const {
+    QString theme() const
+    {
         return m_bridge->theme();
     }
-    bool isValid() const {
+    bool isValid() const
+    {
         return m_bridge->isValid();
     }
 
-    PreviewBridge *bridge() const {
+    PreviewBridge *bridge() const
+    {
         return m_bridge;
     }
 
-Q_SIGNALS:
+  Q_SIGNALS:
     void pluginChanged();
     void themeChanged();
     void validChanged();
 
-private:
+  private:
     PreviewBridge *m_bridge;
-
 };
 
-}
-}
-
-Q_DECLARE_METATYPE(Decoration::Applet::PreviewBridge *)
+Q_DECLARE_METATYPE(PreviewBridge *)
 
 #endif

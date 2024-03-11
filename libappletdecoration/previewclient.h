@@ -26,18 +26,17 @@
 
 #include "decorationpalette.h"
 
-#include <config-decoration.h>
-
 #include <KDecoration2/Private/DecoratedClientPrivate>
 #include <QObject>
 #include <QPalette>
+#include <config-decoration.h>
+#include <kdecoration2/decoration.h>
 
 class QAbstractItemModel;
 
-namespace Decoration {
-namespace Applet {
-
-class PreviewClient : public QObject, public KDecoration2::ApplicationMenuEnabledDecoratedClientPrivate
+class PreviewClient
+    : public QObject
+    , public KDecoration2::ApplicationMenuEnabledDecoratedClientPrivate
 {
     Q_OBJECT
     Q_PROPERTY(KDecoration2::Decoration *decoration READ decoration CONSTANT)
@@ -63,18 +62,18 @@ class PreviewClient : public QObject, public KDecoration2::ApplicationMenuEnable
     Q_PROPERTY(bool providesContextHelp READ providesContextHelp WRITE setProvidesContextHelp NOTIFY providesContextHelpChanged)
     Q_PROPERTY(int width READ width WRITE setWidth NOTIFY widthChanged)
     Q_PROPERTY(int height READ height WRITE setHeight NOTIFY heightChanged)
-    Q_PROPERTY(bool bordersTopEdge    READ bordersTopEdge    WRITE setBordersTopEdge    NOTIFY bordersTopEdgeChanged)
-    Q_PROPERTY(bool bordersLeftEdge   READ bordersLeftEdge   WRITE setBordersLeftEdge   NOTIFY bordersLeftEdgeChanged)
-    Q_PROPERTY(bool bordersRightEdge  READ bordersRightEdge  WRITE setBordersRightEdge  NOTIFY bordersRightEdgeChanged)
+    Q_PROPERTY(bool bordersTopEdge READ bordersTopEdge WRITE setBordersTopEdge NOTIFY bordersTopEdgeChanged)
+    Q_PROPERTY(bool bordersLeftEdge READ bordersLeftEdge WRITE setBordersLeftEdge NOTIFY bordersLeftEdgeChanged)
+    Q_PROPERTY(bool bordersRightEdge READ bordersRightEdge WRITE setBordersRightEdge NOTIFY bordersRightEdgeChanged)
     Q_PROPERTY(bool bordersBottomEdge READ bordersBottomEdge WRITE setBordersBottomEdge NOTIFY bordersBottomEdgeChanged)
-public:
+  public:
     explicit PreviewClient(KDecoration2::DecoratedClient *client, KDecoration2::Decoration *decoration);
     virtual ~PreviewClient();
 
     QString caption() const override;
     WId decorationId() const override;
     WId windowId() const override;
-    int desktop() const override;
+    int desktop() const;
     QIcon icon() const override;
     bool isActive() const override;
     bool isCloseable() const override;
@@ -92,6 +91,7 @@ public:
     bool isShadeable() const override;
     bool isShaded() const override;
     bool providesContextHelp() const override;
+    QString windowClass() const override;
 
     int width() const override;
     int height() const override;
@@ -102,16 +102,16 @@ public:
     bool hasApplicationMenu() const override;
     bool isApplicationMenuActive() const override;
 
-#if KDECORATION2_VERSION_MINOR >= 13
+#if KDECORATION2_VERSION_MAJOR > 5 || KDECORATION2_VERSION_MINOR >= 13
     void requestShowToolTip(const QString &text) override;
     void requestHideToolTip() override;
 #endif
 
-#if KDECORATION2_VERSION_MINOR >= 18
+#if KDECORATION2_VERSION_MAJOR > 5 || KDECORATION2_VERSION_MINOR >= 18
     QSize size() const override;
 #endif
 
-#if KDECORATION2_VERSION_MINOR <= 20
+#if KDECORATION2_VERSION_MAJOR <= 5 && KDECORATION2_VERSION_MINOR <= 20
     void requestShowWindowMenu() override;
 #else
     void requestShowWindowMenu(const QRect &rect) override;
@@ -164,7 +164,7 @@ public:
     void setBordersRightEdge(bool enabled);
     void setBordersBottomEdge(bool enabled);
 
-Q_SIGNALS:
+  Q_SIGNALS:
     void captionChanged(const QString &);
     void iconChanged(const QIcon &);
     void iconNameChanged(const QString &);
@@ -198,12 +198,12 @@ Q_SIGNALS:
     void minimizeRequested();
     void closeRequested();
 
-private:
+  private:
     QString m_caption;
     QIcon m_icon;
     QString m_iconName;
     QString m_colorScheme;
-    Decoration::Applet::DecorationPalette *m_palette{nullptr};
+    DecorationPalette *m_palette{ nullptr };
     bool m_active;
     bool m_closeable;
     bool m_keepBelow;
@@ -226,8 +226,5 @@ private:
     bool m_bordersRightEdge;
     bool m_bordersBottomEdge;
 };
-
-} // namespace Applet
-} // namespace Decoration
 
 #endif

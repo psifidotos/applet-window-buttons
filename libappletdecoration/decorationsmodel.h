@@ -26,9 +26,6 @@
 
 #include <QAbstractListModel>
 
-namespace Decoration {
-namespace Applet {
-
 class DecorationsModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -36,17 +33,18 @@ class DecorationsModel : public QAbstractListModel
     Q_PROPERTY(QString currentPlugin READ currentPlugin NOTIFY currentPluginChanged)
     Q_PROPERTY(QString currentTheme READ currentTheme NOTIFY currentThemeChanged)
 
-public:
+  public:
     explicit DecorationsModel(QObject *parent = nullptr);
     virtual ~DecorationsModel();
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    QHash< int, QByteArray > roleNames() const override;
+    QHash<int, QByteArray> roleNames() const override;
 
     QModelIndex findDecoration(const QString &pluginName, const QString &themeName = QString()) const;
 
-    QMap<QString, QString> knsProviders() const {
+    QMap<QString, QString> knsProviders() const
+    {
         return m_knsProvides;
     }
 
@@ -55,27 +53,26 @@ public:
     QString currentPlugin() const;
     QString currentTheme() const;
 
-public Q_SLOTS:
+  public Q_SLOTS:
     Q_INVOKABLE bool decorationExists(const QString &plugin, const QString &theme);
     Q_INVOKABLE bool isAurorae(const QString &plugin, const QString &theme);
 
-signals:
+  signals:
     void countChanged();
     void currentThemeChanged();
     void currentPluginChanged();
 
-private slots:
+  private slots:
     void init();
     void loadCurrents();
     void kwinChanged(const QString &filename);
     void setCurrentPlugin(QString plugin);
     void setCurrentTheme(QString theme);
 
-private:
-
+  private:
     bool pluginExists(const QString &plugin);
 
-private:
+  private:
     struct Data
     {
         QString pluginName;
@@ -91,8 +88,5 @@ private:
     std::vector<Data> m_plugins;
     QMap<QString, QString> m_knsProvides;
 };
-
-}
-}
 
 #endif

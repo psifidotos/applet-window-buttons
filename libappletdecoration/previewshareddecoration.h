@@ -23,17 +23,10 @@
 #ifndef PREVIEWSHAREDDECORATION_H
 #define PREVIEWSHAREDDECORATION_H
 
-#include <QObject>
-
 #include "previewbridge.h"
+#include "previewsettings.h"
 
-
-namespace KDecoration2 {
-class Decoration;
-}
-
-namespace Decoration {
-namespace Applet {
+#include <QObject>
 
 class PreviewBridge;
 class PreviewButton;
@@ -42,10 +35,10 @@ class Settings;
 class SharedDecoration : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(Decoration::Applet::PreviewBridge *bridge READ bridge WRITE setBridge NOTIFY bridgeChanged)
-    Q_PROPERTY(Decoration::Applet::Settings *settings READ settings WRITE setSettings NOTIFY settingsChanged)
+    Q_PROPERTY(PreviewBridge *bridge READ bridge WRITE setBridge NOTIFY bridgeChanged)
+    Q_PROPERTY(Settings *settings READ settings WRITE setSettings NOTIFY settingsChanged)
 
-public:
+  public:
     explicit SharedDecoration(QObject *parent = nullptr);
     virtual ~SharedDecoration();
 
@@ -59,27 +52,24 @@ public:
 
     void initDecoration();
 
-public Q_SLOTS:
+  public Q_SLOTS:
     Q_INVOKABLE void createDecoration();
 
-Q_SIGNALS:
+  Q_SIGNALS:
     void bridgeChanged();
     void decorationChanged();
     void settingsChanged();
 
-private Q_SLOTS:
+  private Q_SLOTS:
     void applySettings();
 
-private:
-    QPointer<Decoration::Applet::PreviewBridge> m_bridge;
+  private:
+    QPointer<PreviewBridge> m_bridge;
     QPointer<KDecoration2::Decoration> m_decoration;
-    QPointer<Decoration::Applet::Settings> m_settings;
+    QPointer<Settings> m_settings;
 
     QString m_lastPlugin;
     QString m_lastTheme;
 };
-
-}
-}
 
 #endif

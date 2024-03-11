@@ -22,23 +22,23 @@
  */
 
 #include "decorationsmodel.h"
-// KDecoration2
+
+#include "previewbridge.h"
+
+#include <KConfigGroup>
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationSettings>
 #include <KDecoration2/DecorationThemeProvider>
-// KDE
 #include <KDirWatch>
-#include <KPluginInfo>
-#include <KPluginLoader>
 #include <KPluginFactory>
-#include <KPluginTrader>
 #include <KSharedConfig>
-// Qt
+#include <Plasma/PluginLoader>
 #include <QDebug>
 #include <QDir>
+#include <kdecoration2/decorationthemeprovider.h>
+#include <qloggingcategory.h>
 
-namespace Decoration {
-namespace Applet {
+Q_LOGGING_CATEGORY(decorations_model, "DecorationsModel");
 
 static const QString s_defaultPlugin = QStringLiteral("org.kde.breeze");
 static const QString s_defaultTheme;
@@ -48,14 +48,12 @@ static const QString s_auroraeSvgTheme = QStringLiteral("__aurorae__svg__");
 static const QString s_kwinrc = QStringLiteral("kwinrc");
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration2");
 
-DecorationsModel::DecorationsModel(QObject *parent)
-    : QAbstractListModel(parent)
+DecorationsModel::DecorationsModel(QObject *parent) : QAbstractListModel(parent)
 {
     init();
     loadCurrents();
 
-    const auto kwinRc = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) +
-                        QLatin1Char('/') + s_kwinrc;
+    const auto kwinRc = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QLatin1Char('/') + s_kwinrc;
 
     KDirWatch::self()->addFile(kwinRc);
 
@@ -77,7 +75,8 @@ QString DecorationsModel::currentPlugin() const
 
 void DecorationsModel::setCurrentPlugin(QString plugin)
 {
-    if (m_currentPlugin == plugin) {
+    if (m_currentPlugin == plugin)
+    {
         return;
     }
 
@@ -92,7 +91,8 @@ QString DecorationsModel::currentTheme() const
 
 void DecorationsModel::setCurrentTheme(QString theme)
 {
-    if (m_currentTheme == theme) {
+    if (m_currentTheme == theme)
+    {
         return;
     }
 
@@ -102,7 +102,8 @@ void DecorationsModel::setCurrentTheme(QString theme)
 
 int DecorationsModel::rowCount(const QModelIndex &parent) const
 {
-    if (parent.isValid()) {
+    if (parent.isValid())
+    {
         return 0;
     }
 
@@ -111,136 +112,112 @@ int DecorationsModel::rowCount(const QModelIndex &parent) const
 
 QVariant DecorationsModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || index.column() != 0 || index.row() < 0 || index.row() >= int(m_plugins.size())) {
+    if (!index.isValid() || index.column() != 0 || index.row() < 0 || index.row() >= int(m_plugins.size()))
+    {
         return QVariant();
     }
 
     const Data &d = m_plugins.at(index.row());
 
-    switch (role) {
-        case Qt::DisplayRole:
-            return d.visibleName;
+    switch (role)
+    {
+        case Qt::DisplayRole: return d.visibleName;
 
-        case Qt::UserRole +4:
-            return d.pluginName;
+        case Qt::UserRole + 4: return d.pluginName;
 
-        case Qt::UserRole +5:
-            return d.themeName;
+        case Qt::UserRole + 5: return d.themeName;
 
-        case Qt::UserRole +6:
-            return d.isAuroraeTheme;
+        case Qt::UserRole + 6: return d.isAuroraeTheme;
 
-        case Qt::UserRole +7:
-            return d.configuration;
+        case Qt::UserRole + 7: return d.configuration;
     }
 
     return QVariant();
 }
 
-QHash< int, QByteArray > DecorationsModel::roleNames() const
+QHash<int, QByteArray> DecorationsModel::roleNames() const
 {
-    QHash<int, QByteArray> roles({
-        {Qt::DisplayRole, QByteArrayLiteral("display")},
-        {Qt::UserRole + 4, QByteArrayLiteral("plugin")},
-        {Qt::UserRole + 5, QByteArrayLiteral("theme")},
-        {Qt::UserRole + 6, QByteArrayLiteral("isAuroraeTheme")},
-        {Qt::UserRole + 7, QByteArrayLiteral("configureable")}
-    });
+    QHash<int, QByteArray> roles({ { Qt::DisplayRole, QByteArrayLiteral("display") },
+                                   { Qt::UserRole + 4, QByteArrayLiteral("plugin") },
+                                   { Qt::UserRole + 5, QByteArrayLiteral("theme") },
+                                   { Qt::UserRole + 6, QByteArrayLiteral("isAuroraeTheme") },
+                                   { Qt::UserRole + 7, QByteArrayLiteral("configureable") } });
     return roles;
 }
 
 static bool isThemeEngine(const QVariantMap &decoSettingsMap)
 {
-    auto it = decoSettingsMap.find(QStringLiteral("themes"));
-
-    if (it == decoSettingsMap.end()) {
-        return false;
-    }
-
-    return it.value().toBool();
+    return decoSettingsMap["themes"].toBool();
 }
 
 static bool isConfigureable(const QVariantMap &decoSettingsMap)
 {
-    auto it = decoSettingsMap.find(QStringLiteral("kcmodule"));
-
-    if (it == decoSettingsMap.end()) {
-        return false;
-    }
-
-    return it.value().toBool();
+    return decoSettingsMap["kcmodule"].toBool();
 }
 
 static QString themeListKeyword(const QVariantMap &decoSettingsMap)
 {
-    auto it = decoSettingsMap.find(QStringLiteral("themeListKeyword"));
-
-    if (it == decoSettingsMap.end()) {
-        return QString();
-    }
-
-    return it.value().toString();
+    return decoSettingsMap["themeListKeyword"].toString();
 }
 
 static QString findKNewStuff(const QVariantMap &decoSettingsMap)
 {
-    auto it = decoSettingsMap.find(QStringLiteral("KNewStuff"));
-
-    if (it == decoSettingsMap.end()) {
-        return QString();
-    }
-
-    return it.value().toString();
+    return decoSettingsMap["KNewStuff"].toString();
 }
 
 void DecorationsModel::init()
 {
     beginResetModel();
     m_plugins.clear();
+
     const auto plugins = KPluginMetaData::findPlugins(s_pluginName);
-    for (const auto &info : plugins) {
-        QScopedPointer<KDecoration2::DecorationThemeProvider> themeFinder(
-            KPluginFactory::instantiatePlugin<KDecoration2::DecorationThemeProvider>(info).plugin);
-
+    for (const auto &info : plugins)
+    {
         const auto decoSettingsMap = info.rawData().value("org.kde.kdecoration2").toObject().toVariantMap();
-        bool config = false;
-        if (themeFinder) {
-            const QString &kns = findKNewStuff(decoSettingsMap);
-            if (!kns.isEmpty() && !m_knsProvides.contains(kns)) {
-                m_knsProvides.insert(kns, info.name().isEmpty() ? info.pluginId() : info.name());
-            }
-            if (isThemeEngine(decoSettingsMap)) {
-                const QString keyword = themeListKeyword(decoSettingsMap);
-                if (keyword.isNull()) {
-                    // We cannot list the themes
-                    continue;
-                }
-                const auto themesList = themeFinder->themes();
-                for (const KDecoration2::DecorationThemeMetaData &data : themesList) {
-                    Data d;
-                    d.pluginName = info.pluginId();
-                    d.themeName = data.themeName();
-                    d.visibleName = data.visibleName();
 
-                    if (d.pluginName == s_auroraePlugin && d.themeName.startsWith(s_auroraeSvgTheme)) {
-                        d.isAuroraeTheme = true;
-                    }
+        const QString &kns = findKNewStuff(decoSettingsMap);
+        if (!kns.isEmpty() && !m_knsProvides.contains(kns))
+            m_knsProvides.insert(kns, info.name().isEmpty() ? info.pluginId() : info.name());
 
-                    m_plugins.emplace_back(std::move(d));
-                }
-
-                // it's a theme engine, we don't want to show this entry
+        if (isThemeEngine(decoSettingsMap))
+        {
+            const QString keyword = themeListKeyword(decoSettingsMap);
+            if (keyword.isNull())
+            {
+                // We cannot list the themes
+                qWarning() << "No theme list keyword for" << info.pluginId();
                 continue;
             }
 
-            config = isConfigureable(decoSettingsMap);
-        }
-        Data data;
-        data.pluginName = info.pluginId();
-        data.visibleName = info.name().isEmpty() ? info.pluginId() : info.name();
-        data.configuration = config;
+            const auto themeProvider = KPluginFactory::instantiatePlugin<KDecoration2::DecorationThemeProvider>(info).plugin;
+            for (const auto &t : themeProvider->themes())
+            {
+                Data data;
+                data.pluginName = t.pluginId();
+                data.themeName = t.themeName();
+                data.visibleName = t.visibleName();
 
-        m_plugins.emplace_back(std::move(data));
+                if (data.pluginName == s_auroraePlugin && data.themeName.startsWith(s_auroraeSvgTheme))
+                    data.isAuroraeTheme = true;
+
+                qCInfo(decorations_model) << "Adding theme" << data.visibleName << "from" << data.pluginName;
+                m_plugins.emplace_back(std::move(data));
+            }
+        }
+        else
+        {
+
+            const Data data{
+                .pluginName = info.pluginId(),
+                .themeName = QString(),
+                .visibleName = info.name().isEmpty() ? info.pluginId() : info.name(),
+                .isAuroraeTheme = false,
+                .configuration = isConfigureable(decoSettingsMap),
+            };
+
+            qCInfo(decorations_model) << "Adding theme" << data.visibleName << "from" << data.pluginName;
+            m_plugins.emplace_back(std::move(data));
+        }
     }
     endResetModel();
 }
@@ -251,11 +228,11 @@ void DecorationsModel::loadCurrents()
     const QString plugin = config.readEntry("library", s_defaultPlugin);
     const QString theme = config.readEntry("theme", s_defaultTheme);
 
-    bool exists{false};
-    bool isAur{isAurorae(plugin,theme)};
+    bool exists{ false };
+    bool isAur{ isAurorae(plugin, theme) };
 
-    if ((!isAur && pluginExists(plugin))
-            || (isAur && decorationExists(plugin, theme))) {
+    if ((!isAur && pluginExists(plugin)) || (isAur && decorationExists(plugin, theme)))
+    {
         exists = true;
     }
 
@@ -265,7 +242,8 @@ void DecorationsModel::loadCurrents()
 
 void DecorationsModel::kwinChanged(const QString &filename)
 {
-    if (!filename.endsWith(s_kwinrc)) {
+    if (!filename.endsWith(s_kwinrc))
+    {
         return;
     }
 
@@ -274,12 +252,10 @@ void DecorationsModel::kwinChanged(const QString &filename)
 
 bool DecorationsModel::isAurorae(const QString &plugin, const QString &theme)
 {
-    auto it = std::find_if(m_plugins.cbegin(), m_plugins.cend(),
-    [plugin, theme](const Data & d) {
-        return d.pluginName == plugin && d.themeName == theme;
-    });
+    auto it = std::find_if(m_plugins.cbegin(), m_plugins.cend(), [plugin, theme](const Data &d) { return d.pluginName == plugin && d.themeName == theme; });
 
-    if (it == m_plugins.cend()) {
+    if (it == m_plugins.cend())
+    {
         return false;
     }
 
@@ -288,12 +264,10 @@ bool DecorationsModel::isAurorae(const QString &plugin, const QString &theme)
 
 bool DecorationsModel::decorationExists(const QString &plugin, const QString &theme)
 {
-    auto it = std::find_if(m_plugins.cbegin(), m_plugins.cend(),
-    [plugin, theme](const Data & d) {
-        return d.pluginName == plugin && d.themeName == theme;
-    });
+    auto it = std::find_if(m_plugins.cbegin(), m_plugins.cend(), [plugin, theme](const Data &d) { return d.pluginName == plugin && d.themeName == theme; });
 
-    if (it == m_plugins.cend()) {
+    if (it == m_plugins.cend())
+    {
         return false;
     }
 
@@ -302,12 +276,10 @@ bool DecorationsModel::decorationExists(const QString &plugin, const QString &th
 
 bool DecorationsModel::pluginExists(const QString &plugin)
 {
-    auto it = std::find_if(m_plugins.cbegin(), m_plugins.cend(),
-    [plugin](const Data & d) {
-        return d.pluginName == plugin;
-    });
+    auto it = std::find_if(m_plugins.cbegin(), m_plugins.cend(), [plugin](const Data &d) { return d.pluginName == plugin; });
 
-    if (it == m_plugins.cend()) {
+    if (it == m_plugins.cend())
+    {
         return false;
     }
 
@@ -316,19 +288,14 @@ bool DecorationsModel::pluginExists(const QString &plugin)
 
 QModelIndex DecorationsModel::findDecoration(const QString &pluginName, const QString &themeName) const
 {
-    auto it = std::find_if(m_plugins.cbegin(), m_plugins.cend(),
-    [pluginName, themeName](const Data & d) {
-        return d.pluginName == pluginName && d.themeName == themeName;
-    }
-                          );
+    auto it =
+        std::find_if(m_plugins.cbegin(), m_plugins.cend(), [pluginName, themeName](const Data &d) { return d.pluginName == pluginName && d.themeName == themeName; });
 
-    if (it == m_plugins.cend()) {
+    if (it == m_plugins.cend())
+    {
         return QModelIndex();
     }
 
     const auto distance = std::distance(m_plugins.cbegin(), it);
     return createIndex(distance, 0);
-}
-
-}
 }

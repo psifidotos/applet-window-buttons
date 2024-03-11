@@ -22,11 +22,7 @@
 
 #include "padding.h"
 
-namespace Decoration {
-namespace Applet {
-
-Padding::Padding(QObject *parent) :
-    QObject(parent)
+Padding::Padding(QObject *parent) : QObject(parent)
 {
 }
 
@@ -41,7 +37,8 @@ int Padding::top() const
 
 void Padding::setTop(int top)
 {
-    if (m_top == top) {
+    if (m_top == top)
+    {
         return;
     }
 
@@ -56,7 +53,8 @@ int Padding::left() const
 
 void Padding::setLeft(int left)
 {
-    if (m_left == left) {
+    if (m_left == left)
+    {
         return;
     }
 
@@ -64,14 +62,15 @@ void Padding::setLeft(int left)
     emit leftChanged();
 }
 
-int Padding::bottom()const
+int Padding::bottom() const
 {
     return m_bottom;
 }
 
 void Padding::setBottom(int bottom)
 {
-    if (m_bottom == bottom) {
+    if (m_bottom == bottom)
+    {
         return;
     }
 
@@ -86,13 +85,11 @@ int Padding::right() const
 
 void Padding::setRight(int right)
 {
-    if (m_right == right) {
+    if (m_right == right)
+    {
         return;
     }
 
     m_right = right;
     emit rightChanged();
-}
-
-}
 }
